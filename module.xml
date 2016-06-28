@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--@PREPROC:  ./proc/pre.sh-->
+<!--@POSTPROC: ./proc/post.sh-->
+<module suppressWarnings="false">
+
+<Login f="nodata">
+  <Login>
+    <User t="list" f="user" l="Control"/>
+  </Login>
+</Login>
+
+<Control f="nodata">
+  <Control>
+    <Create_New_Box t="button" l="Box"/>
+  </Control>
+  <Defaults>
+    <autonum/>
+  </Defaults>
+  <search/>
+  <Revisit>
+    <Revisit t="group">
+      <!--TODO: Make this into a table view-->
+    </Revisit>
+  </Revisit>
+</Control>
+
+<Box>
+  <Box>
+    <Box_Box_ID f="id autonum noannotation nocertainty">
+      Box ID
+      <str>
+        <pos>2</pos>
+        <fmt>$2</fmt>
+      </str>
+    </Box_Box_ID>
+    <Location_Name f="id">
+      <str>
+        <pos>1</pos>
+        <fmt>BOX-$1-</fmt>
+      </str>
+      <opts>
+        <opt>Gap Hills</opt>
+        <opt>Saloon</opt>
+        <opt>Sandsone</opt>
+        <opt>White Tank</opt>
+        <opt>Old Aviary</opt>
+        <opt>New Aviary</opt>
+        <opt>W19G</opt>
+        <opt>W19F</opt>
+      </opts>
+    </Location_Name>
+    <gps/>
+    <Height_m b="decimal">
+      <desc>Measure height above ground in metres.</desc>
+      Height (m)
+    </Height_m>
+    <Orientation_degrees b="decimal">
+      <desc>Enter degrees of azimuth.</desc>
+      Orientation (degrees)
+    </Orientation_degrees>
+    <Comments/>
+    <Box_Status>
+      <opts>
+        <opt>Empty</opt>
+        <opt>Active</opt>
+        <opt>Terminated</opt>
+        <opt>No Observation</opt>
+      </opts>
+    </Box_Status>
+    <Create_New_Nest lc="Nest"/>
+    <Started_Nest>
+      <!--TODO:-->
+    </Started_Nest>
+  </Box>
+</Box>
+
+<Nest>
+  <Nest>
+    <Nest_Box_ID f="id noannotation nocertainty readonly">
+      Box ID
+      <!--TODO: Inherit -->
+      <str>
+        <pos>2</pos>
+        <fmt>Box-$2-</fmt>
+      </str>
+    </Nest_Box_ID>
+    <Nest_ID f="id autonum noannotation nocertainty">
+      <str>
+        <pos>3</pos>
+        <fmt>Nest-$2</fmt>
+      </str>
+    </Nest_ID>
+    <GPS_Point/>
+    <timestamp f="id">
+      <str>
+        <pos>1</pos>
+        <fmt>N-$2-</fmt>
+      </str>
+    </timestamp>
+    <Nest_Status>
+      <desc>If near 100%, go visit the next day.</desc>
+      <opts>
+        <opt>&lt;25%</opt>
+        <opt>25-50%</opt>
+        <opt>50-75%</opt>
+        <opt>75-100%</opt>
+      </opts>
+    </Nest_Status>
+    <Egg_Count b="decimal"/>
+    <Day_of_Hatching_Estimate/>
+    <Day_of_Lay/>
+    <Hatched_Chick_Count_Live t="decimal"/>
+    <Hatched_Chick_Count_Dead t="decimal"/>
+  </Nest>
+</Nest>
+
+<Egg>
+  <Egg>
+    <Egg_Box_ID f="id noannotation nocertainty readonly">
+      Box ID
+      <!--TODO: Inherit-->
+      <str>
+        <pos>2</pos>
+        <fmt>Box-$2-</fmt>
+      </str>
+    </Egg_Box_ID>
+    <Egg_Nest_ID f="id noannotation nocertainty readonly">
+      Nest ID
+      <!--TODO: Inherit-->
+      <str>
+        <pos>3</pos>
+        <fmt>Nest-$2-</fmt>
+      </str>
+    </Egg_Nest_ID>
+    <Egg_ID f="id autonum noannotation nocertainty">
+      <str>
+        <pos>4</pos>
+        <fmt>Egg-$2</fmt>
+      </str>
+    </Egg_ID>
+    <timestamp f="id">
+      <str>
+        <pos>1</pos>
+        <fmt>E-$2-</fmt>
+      </str>
+    </timestamp>
+    <Egg_Length_mm>
+      Egg Length (mm)
+    </Egg_Length_mm>
+    <Egg_Width_mm>
+      Egg Width (mm)
+    </Egg_Width_mm>
+    <Egg_Weight_mm>
+      Egg Weight (mm)
+    </Egg_Weight_mm>
+  </Egg>
+</Egg>
+
+<Chick>
+  <Chick>
+    <Chick_Box_ID f="id noannotation nocertainty readonly">
+      Box ID
+      <!--TODO: Inherit-->
+      <str>
+        <pos>2</pos>
+        <fmt>Box-$2-</fmt>
+      </str>
+    </Chick_Box_ID>
+    <Chick_Nest_ID f="id noannotation nocertainty readonly">
+      Nest ID
+      <!--TODO: Inherit-->
+      <str>
+        <pos>3</pos>
+        <fmt>Nest-$2-</fmt>
+      </str>
+    </Chick_Nest_ID>
+    <Chick_ID f="id autonum noannotation nocertainty">
+      <str>
+        <pos>4</pos>
+        <fmt>Chick-$2</fmt>
+      </str>
+    </Chick_ID>
+    <timestamp f="id">
+      <str>
+        <pos>1</pos>
+        <fmt>C-$2-</fmt>
+      </str>
+    </timestamp>
+    <Chick_Age_days b="decimal">
+      Chick Age (days)
+    </Chick_Age_days>
+    <Chick_Alive>
+      Chick Alive?
+      <opts>
+        <opt>Yes</opt>
+        <opt>No</opt>
+        <opt>No Observation</opt>
+      </opts>
+    </Chick_Alive>
+    <Weight_g b="decimal">
+      Weight (g)
+    </Weight_g>
+    <Head_Length_mm b="decimal">
+      Head Length (mm)
+    </Head_Length_mm>
+    <Wing_Length_mm b="decimal">
+      Wing Length (mm)
+    </Wing_Length_mm>
+    <Tarsus_Length_mm b="decimal">
+      Tarsus Length (mm)
+    </Tarsus_Length_mm>
+    <Notes/>
+    <Band_Number/>
+    <Picture t="camera"/>
+    <Bird_Species>
+      <opts>
+        <opt>Zebra Finch</opt>
+        <opt>Long Tailed Finch</opt>
+        <opt>House Sparrow</opt>
+        <opt>Other</opt>
+        <opt>No Observation</opt>
+      </opts>
+    </Bird_Species>
+  </Chick>
+</Chick>
+
+<logic><![CDATA[
+  <!--@SOURCE: logic/utils.bsh-->
+  <!--@SOURCE: logic/shared.bsh-->
+  <!--@SOURCE: logic/relationships-shared.bsh-->
+
+  <!--@SOURCE: logic/vocab-population.bsh-->
+  <!--@SOURCE: logic/user-tab-validation.bsh-->
+  <!--@SOURCE: logic/field-inheritance.bsh-->
+  <!--@SOURCE: logic/relationships-context-to-context.bsh-->
+  <!--@SOURCE: logic/relationships-context-group-to-context.bsh-->
+  <!--@SOURCE: logic/local-settings-access.bsh-->
+  <!--@SOURCE: logic/dynamic-ui-context.bsh-->
+  <!--@SOURCE: logic/context-dates.bsh-->
+  <!--@SOURCE: logic/soil-texture-helper.bsh-->
+  <!--@SOURCE: logic/webview-population.bsh-->
+]]></logic>
+</module>
