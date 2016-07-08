@@ -1,0 +1,45 @@
+/***************************** FIELD INHERITANCE ******************************/
+/* Careful! I'm using weird formatting in here for my if statements.          */
+/******************************************************************************/
+copyFieldValue(src, dst) {
+  String val = getFieldValue(src);
+  setFieldValue(dst, val);
+}
+
+inheritBoxFields() {
+  return;
+}
+
+inheritNestFields() {
+  if (parentTabgroup__.equals("Box"))
+  copyFieldValue(
+    "Box/Box/Box_Box_ID",
+    "Nest/Nest/Nest_Box_ID"
+  );
+}
+
+inheritEggFields() {
+  if (parentTabgroup__.equals("Nest"))
+  copyFieldValue(
+    "Nest/Nest/Nest_Box_ID",
+    "Egg/Egg/Egg_Box_ID"
+  );
+  if (parentTabgroup__.equals("Nest"))
+  copyFieldValue(
+    "Nest/Nest/Nest_Nest_ID",
+    "Egg/Egg/Egg_Nest_ID"
+  );
+}
+
+inheritChickFields() {
+  if (parentTabgroup__.equals("Egg"))
+  copyFieldValue(
+    "Egg/Egg/Egg_Box_ID",
+    "Chick/Chick/Chick_Box_ID"
+  );
+  if (parentTabgroup__.equals("Egg"))
+  copyFieldValue(
+    "Egg/Egg/Egg_Nest_ID",
+    "Chick/Chick/Chick_Nest_ID"
+  );
+}

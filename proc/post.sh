@@ -15,9 +15,4 @@ replacement="\\1
   inherit\\2Fields();"
 perl -0777 -i.original -pe "s/$string/$replacement/igs" ui_logic.bsh
 
-string="(newNest\\(\\){((?!\\n}).)+)"
-replacement="\\1
-  populateDayOfHatchingEstimate();"
-perl -0777 -i.original -pe "s/$string/$replacement/igs" ui_logic.bsh
-
 rm ui_logic.bsh.original

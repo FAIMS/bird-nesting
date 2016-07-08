@@ -68,7 +68,7 @@
       </opts>
     </Box_Status>
     <Create_New_Nest lc="Nest" t="button"/>
-    <Started_Nest t="dropdown" ec="Nest">
+    <Started_Nest t="dropdown" ec="Nest"/>
   </Box>
 </Box>
 
@@ -105,10 +105,9 @@
       </opts>
     </Nest_Status>
     <Egg_Count b="decimal"/>
+    <Day_of_Lay b="date"/>
     <Day_of_Hatching_Estimate f="readonly"/>
-    <Day_of_Lay>
-      <!--TODO: Calculated from the Egg Count, see notes in Egg Count.-->
-    </Day_of_Lay>
+    <Estimate_Day_of_Hatching t="button"/>
     <Hatched_Chick_Count_Live b="decimal"/>
     <Hatched_Chick_Count_Dead b="decimal"/>
     <Create_New_Egg lc="Egg" t="button"/>
@@ -224,7 +223,7 @@
 
 <logic><![CDATA[
   <!--@SOURCE: logic/field-inheritance.bsh-->
-  <!--@SOURCE: logic/day-of-hatching-estimate-population.bsh-->
   <!--@SOURCE: logic/create-new-nest-button.bsh-->
+  <!--@SOURCE: logic/compute-day-of-hatching-estimate-button.bsh-->
 ]]></logic>
 </module>
