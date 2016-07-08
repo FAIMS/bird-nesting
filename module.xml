@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--@PREPROC:  ./proc/pre.sh-->
 <!--@POSTPROC: ./proc/post.sh-->
-<module suppressWarnings="false">
+<module suppressWarnings="true">
 
 <Login f="nodata">
   <Login>
-    <User t="list" f="user" l="Control"/>
+    <User t="list" f="user nolabel" l="Control"/>
   </Login>
 </Login>
 
@@ -51,12 +51,12 @@
     </Location_Name>
     <gps/>
     <Height_m b="decimal">
-      <desc>Measure height above ground in metres.</desc>
       Height (m)
+      <desc>Measure height above ground in metres.</desc>
     </Height_m>
     <Orientation_degrees b="decimal">
-      <desc>Enter degrees of azimuth.</desc>
       Orientation (degrees)
+      <desc>Enter degrees of azimuth.</desc>
     </Orientation_degrees>
     <Comments/>
     <Box_Status>
@@ -67,10 +67,8 @@
         <opt>No Observation</opt>
       </opts>
     </Box_Status>
-    <Create_New_Nest lc="Nest"/>
-    <Started_Nest>
-      <!--TODO:-->
-    </Started_Nest>
+    <Create_New_Nest lc="Nest" t="button"/>
+    <Started_Nest t="dropdown" ec="Nest">
   </Box>
 </Box>
 
@@ -78,19 +76,19 @@
   <Nest>
     <Nest_Box_ID f="id noannotation nocertainty readonly">
       Box ID
-      <!--TODO: Inherit -->
       <str>
         <pos>2</pos>
         <fmt>Box-$2-</fmt>
       </str>
     </Nest_Box_ID>
-    <Nest_ID f="id autonum noannotation nocertainty">
+    <Nest_Nest_ID f="id autonum noannotation nocertainty">
+      Nest ID
       <str>
         <pos>3</pos>
         <fmt>Nest-$2</fmt>
       </str>
-    </Nest_ID>
-    <GPS_Point/>
+    </Nest_Nest_ID>
+    <gps/>
     <timestamp f="id">
       <str>
         <pos>1</pos>
@@ -107,10 +105,13 @@
       </opts>
     </Nest_Status>
     <Egg_Count b="decimal"/>
-    <Day_of_Hatching_Estimate/>
-    <Day_of_Lay/>
-    <Hatched_Chick_Count_Live t="decimal"/>
-    <Hatched_Chick_Count_Dead t="decimal"/>
+    <Day_of_Hatching_Estimate f="readonly"/>
+    <Day_of_Lay>
+      <!--TODO: Calculated from the Egg Count, see notes in Egg Count.-->
+    </Day_of_Lay>
+    <Hatched_Chick_Count_Live b="decimal"/>
+    <Hatched_Chick_Count_Dead b="decimal"/>
+    <Create_New_Egg lc="Egg" t="button"/>
   </Nest>
 </Nest>
 
@@ -118,7 +119,6 @@
   <Egg>
     <Egg_Box_ID f="id noannotation nocertainty readonly">
       Box ID
-      <!--TODO: Inherit-->
       <str>
         <pos>2</pos>
         <fmt>Box-$2-</fmt>
@@ -126,7 +126,6 @@
     </Egg_Box_ID>
     <Egg_Nest_ID f="id noannotation nocertainty readonly">
       Nest ID
-      <!--TODO: Inherit-->
       <str>
         <pos>3</pos>
         <fmt>Nest-$2-</fmt>
@@ -144,15 +143,16 @@
         <fmt>E-$2-</fmt>
       </str>
     </timestamp>
-    <Egg_Length_mm>
+    <Egg_Length_mm b="decimal">
       Egg Length (mm)
     </Egg_Length_mm>
-    <Egg_Width_mm>
+    <Egg_Width_mm b="decimal">
       Egg Width (mm)
     </Egg_Width_mm>
-    <Egg_Weight_mm>
+    <Egg_Weight_mm b="decimal">
       Egg Weight (mm)
     </Egg_Weight_mm>
+    <Create_New_Chick lc="Chick" t="button"/>
   </Egg>
 </Egg>
 
@@ -160,7 +160,6 @@
   <Chick>
     <Chick_Box_ID f="id noannotation nocertainty readonly">
       Box ID
-      <!--TODO: Inherit-->
       <str>
         <pos>2</pos>
         <fmt>Box-$2-</fmt>
@@ -168,7 +167,6 @@
     </Chick_Box_ID>
     <Chick_Nest_ID f="id noannotation nocertainty readonly">
       Nest ID
-      <!--TODO: Inherit-->
       <str>
         <pos>3</pos>
         <fmt>Nest-$2-</fmt>
@@ -225,19 +223,8 @@
 </Chick>
 
 <logic><![CDATA[
-  <!--@SOURCE: logic/utils.bsh-->
-  <!--@SOURCE: logic/shared.bsh-->
-  <!--@SOURCE: logic/relationships-shared.bsh-->
-
-  <!--@SOURCE: logic/vocab-population.bsh-->
-  <!--@SOURCE: logic/user-tab-validation.bsh-->
   <!--@SOURCE: logic/field-inheritance.bsh-->
-  <!--@SOURCE: logic/relationships-context-to-context.bsh-->
-  <!--@SOURCE: logic/relationships-context-group-to-context.bsh-->
-  <!--@SOURCE: logic/local-settings-access.bsh-->
-  <!--@SOURCE: logic/dynamic-ui-context.bsh-->
-  <!--@SOURCE: logic/context-dates.bsh-->
-  <!--@SOURCE: logic/soil-texture-helper.bsh-->
-  <!--@SOURCE: logic/webview-population.bsh-->
+  <!--@SOURCE: logic/day-of-hatching-estimate-population.bsh-->
+  <!--@SOURCE: logic/create-new-nest-button.bsh-->
 ]]></logic>
 </module>
