@@ -12,7 +12,7 @@
 <Control f="nodata">
   <Control f="noscroll">
     <Create_New_Box t="button" l="Box"/>
-    <Existing_Nests t="list" e="Nest"/>
+    <Existing_Boxes t="list" e="Box"/>
   </Control>
   <Defaults>
     <autonum/>
