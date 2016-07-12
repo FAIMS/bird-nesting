@@ -91,6 +91,7 @@
     </Nest_Nest_ID>
     <gps/>
     <timestamp f="id">
+      Nest Created at
       <str>
         <pos>1</pos>
         <fmt>N-$2-</fmt>
