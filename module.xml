@@ -10,8 +10,9 @@
 </Login>
 
 <Control f="nodata">
-  <Control>
+  <Control f="noscroll">
     <Create_New_Box t="button" l="Box"/>
+    <Existing_Nests t="list" e="Nest"/>
   </Control>
   <Defaults>
     <autonum/>
