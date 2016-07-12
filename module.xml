@@ -111,8 +111,8 @@
     <Day_of_Lay b="date"/>
     <Estimated_Day_of_Hatching f="readonly"/>
     <Compute_Estimated_Day_of_Hatching t="button"/>
-    <Hatched_Chick_Count_Live b="decimal"/>
-    <Hatched_Chick_Count_Dead b="decimal"/>
+    <Hatched_Chick_Count_Live b="decimal" f="nodata"/>
+    <Hatched_Chick_Count_Dead b="decimal" f="nodata"/>
     <Nest_Completed t="button"/>
     <Create_New_Egg t="button" lc="Egg"/>
     <Started_Eggs t="dropdown" ec="Egg"/>
@@ -234,5 +234,6 @@
   <!--@SOURCE: logic/create-new-nest-button.bsh-->
   <!--@SOURCE: logic/compute-day-of-hatching-estimate-button.bsh-->
   <!--@SOURCE: logic/nest-completed-button.bsh-->
+  <!--@SOURCE: logic/hatched-chick-count-population.bsh-->
 ]]></logic>
 </module>
