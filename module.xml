@@ -29,13 +29,13 @@
     <Box_Box_ID f="id autonum noannotation nocertainty">
       Box ID
       <str>
-        <pos>2</pos>
+        <pos>1</pos>
         <fmt>$2</fmt>
       </str>
     </Box_Box_ID>
     <Location_Name f="id">
       <str>
-        <pos>1</pos>
+        <pos>2</pos>
         <fmt>BOX-$1-</fmt>
       </str>
       <opts>
