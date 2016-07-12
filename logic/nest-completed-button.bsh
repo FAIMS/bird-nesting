@@ -1,0 +1,24 @@
+/*************************** NEST COMPLETED BUTTON ****************************/
+addOnEvent("Nest/Nest/Nest_Completed", "click", "nestCompleted()");
+
+nestCompleted() {
+  String msgHead;
+  String msgBody;
+
+  msgHead  = "Are You Sure?";
+  msgBody  = "Tap 'OK' to set the 'Nest Completed at' field to the current ";
+  msgBody += "time.";
+
+  showAlert(msgHead, msgBody, "nestCompletedOk()", "nestCompletedCancel()");
+}
+
+nestCompletedOk() {
+  String refTimestamp = "Nest/Nest/Nest_Completed_at";
+  String timestamp = getTimestampNow();
+
+  setFieldValue(refTimestamp, timestamp);
+}
+
+nestCompletedCancel() {
+  return;
+}

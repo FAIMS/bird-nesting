@@ -97,6 +97,7 @@
         <fmt>N-$2-</fmt>
       </str>
     </timestamp>
+    <Nest_Completed_at f="readonly"/>
     <Nest_Status>
       <desc>If near 100%, go visit the next day.</desc>
       <opts>
@@ -113,6 +114,7 @@
     <Hatched_Chick_Count_Live b="decimal"/>
     <Hatched_Chick_Count_Dead b="decimal"/>
     <Create_New_Egg lc="Egg" t="button"/>
+    <Nest_Completed t="button"/>
   </Nest>
 </Nest>
 
@@ -229,5 +231,6 @@
   <!--@SOURCE: logic/field-inheritance.bsh-->
   <!--@SOURCE: logic/create-new-nest-button.bsh-->
   <!--@SOURCE: logic/compute-day-of-hatching-estimate-button.bsh-->
+  <!--@SOURCE: logic/nest-completed-button.bsh-->
 ]]></logic>
 </module>
