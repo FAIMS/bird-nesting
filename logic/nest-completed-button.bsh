@@ -5,9 +5,10 @@ nestCompleted() {
   String msgHead;
   String msgBody;
 
-  msgHead  = "Are You Sure?";
-  msgBody  = "Tap 'OK' to set the 'Nest Completed at' field to the current ";
-  msgBody += "time.";
+  msgHead  = "Is this Nest Really Complete?";
+  msgBody  = "If this Nest is complete, tap 'OK' to set the 'Nest Completed ";
+  msgBody += "at' field to the current time, or tap 'Cancel' to continue ";
+  msgBody += "editing.";
 
   showAlert(msgHead, msgBody, "nestCompletedOk()", "nestCompletedCancel()");
 }
