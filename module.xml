@@ -139,6 +139,7 @@
       </str>
     </Egg_ID>
     <timestamp f="id">
+      Egg recorded at
       <str>
         <pos>1</pos>
         <fmt>E-$2-</fmt>
@@ -180,6 +181,7 @@
       </str>
     </Chick_ID>
     <timestamp f="id">
+      Chick Recorded at
       <str>
         <pos>1</pos>
         <fmt>C-$2-</fmt>
