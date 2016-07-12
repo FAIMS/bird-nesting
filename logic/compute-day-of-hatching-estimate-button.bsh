@@ -1,11 +1,11 @@
 /****************** COMPUTE DAY OF HATCHING ESTIMATE BUTTON *******************/
-addOnEvent("Nest/Nest/Estimate_Day_of_Hatching", "click", "estimateDayOfHatching()");
+addOnEvent("Nest/Nest/Compute_Estimated_Day_of_Hatching", "click", "estimateDayOfHatching()");
 
 estimateDayOfHatching() {
   Integer daysToHatch = 12;
 
   String refDayOfLay      = "Nest/Nest/Day_of_Lay";
-  String refDayOfHatching = "Nest/Nest/Day_of_Hatching_Estimate";
+  String refDayOfHatching = "Nest/Nest/Estimated_Day_of_Hatching";
 
   String dayOfLay      = getFieldValue(refDayOfLay     );
   String dayOfHatching = getFieldValue(refDayOfHatching);
