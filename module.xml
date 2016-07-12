@@ -192,7 +192,7 @@
     <Chick_Age_days b="decimal">
       Chick Age (days)
     </Chick_Age_days>
-    <Chick_Alive>
+    <Chick_Alive t="radio">
       Chick Alive?
       <opts>
         <opt>Yes</opt>
