@@ -68,8 +68,8 @@
         <opt>No Observation</opt>
       </opts>
     </Box_Status>
-    <Create_New_Nest lc="Nest" t="button"/>
-    <Started_Nest t="dropdown" ec="Nest"/>
+    <Create_New_Nest t="button" lc="Nest"/>
+    <Started_Nests t="dropdown" ec="Nest"/>
   </Box>
 </Box>
 
@@ -113,8 +113,9 @@
     <Compute_Estimated_Day_of_Hatching t="button"/>
     <Hatched_Chick_Count_Live b="decimal"/>
     <Hatched_Chick_Count_Dead b="decimal"/>
-    <Create_New_Egg lc="Egg" t="button"/>
     <Nest_Completed t="button"/>
+    <Create_New_Egg t="button" lc="Egg"/>
+    <Started_Eggs t="dropdown" ec="Egg"/>
   </Nest>
 </Nest>
 
@@ -156,7 +157,8 @@
     <Egg_Weight_mm b="decimal">
       Egg Weight (mm)
     </Egg_Weight_mm>
-    <Create_New_Chick lc="Chick" t="button"/>
+    <Create_New_Chick t="button" lc="Chick"/>
+    <Started_Chicks t="dropdown" ec="Chick"/>
   </Egg>
 </Egg>
 
