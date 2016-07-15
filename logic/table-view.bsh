@@ -5,11 +5,11 @@ populateTable() {
   String q = "";
 
   q += " select nest.nestuuid, 'Nest '|| nest.nest ||' in Box '||box.box||' was completed at '||nestCompletedAt.nestCompletedAt||'. Revisit is needed at '||nestCompletedAt.revisit||'.'";
-  q += "   from (select uuid as nestuuid, datetime(rtrim(measure,'0')||':00', 'localtime') as nestCompletedAt, datetime(rtrim(measure,'0')||':00', 'localtime', '+1 day') as revisit";
+  q += "   from (select uuid as nestuuid, datetime(measure, 'localtime') as nestCompletedAt, datetime(measure, 'localtime', '+1 day') as revisit";
   q += "           from latestnondeletedaentvalue ";
   q += "           join attributekey using (attributeid)";
   q += "          where attributename = 'Nest Completed at'";
-  q += "            and datetime(rtrim(measure,'0')||':00', '+1 day') ";
+  q += "            and datetime(measure, '+1 day') ";
   q += "                <=  current_timestamp) as nestCompletedAt";
   q += "   join  (select uuid as nestuuid, measure as nest";
   q += "           from latestnondeletedaentvalue join attributekey using (attributeid)";
@@ -32,11 +32,11 @@ populateTable() {
   q += "        ) as box on (parentuuid = box.uuid)";
   q += " union";
   q += " select egg.egguuid, 'Egg '||egg.egg||' in Nest '|| nest.nest ||' in Box '|| box.box ||' was created at '|| eggCompletedAt.eggCompletedAt ||'. Revisit is needed on '||eggCompletedAt.revisit||'.'";
-  q += "   from (select uuid as egguuid, measure as eggCompletedAt, datetime(rtrim(measure,'0')||':00', 'localtime', '+1 day') as revisit";
+  q += "   from (select uuid as egguuid, measure as eggCompletedAt, datetime(measure, 'localtime', '+1 day') as revisit";
   q += "           from latestnondeletedaentvalue ";
   q += "           join attributekey using (attributeid)";
   q += "          where attributename = 'Egg timestamp'";
-  q += "            and datetime(rtrim(measure,'0')||':00', '+1 day') ";
+  q += "            and datetime(measure, '+1 day') ";
   q += "                <=  current_timestamp) as eggCompletedAt";
   q += "   join  (select uuid as egguuid, measure as egg";
   q += "           from latestnondeletedaentvalue join attributekey using (attributeid)";
@@ -64,11 +64,11 @@ populateTable() {
   q += "        ) as box on (nestbox.parentuuid = box.uuid)";
   q += " union";
   q += " select chick.chickuuid, 'Chick '||chick.chick||' in Nest '|| nest.nest ||' in Box '|| box.box ||' was recorded at '|| chickCompletedAt.chickCompletedAt ||'. Revisit is needed on '|| chickCompletedAt.revisit ||' to measure the chick.'";
-  q += "   from (select uuid as chickuuid, datetime(rtrim(measure,'0')||':00', 'localtime') as chickCompletedAt, datetime(rtrim(measure,'0')||':00', 'localtime', '+7 day') as revisit";
+  q += "   from (select uuid as chickuuid, datetime(measure, 'localtime') as chickCompletedAt, datetime(measure, 'localtime', '+7 day') as revisit";
   q += "           from latestnondeletedaentvalue ";
   q += "           join attributekey using (attributeid)";
   q += "          where attributename = 'Chick timestamp'";
-  q += "            and datetime(rtrim(measure,'0')||':00', '+7 day') ";
+  q += "            and datetime(measure, '+7 day') ";
   q += "                <=  current_timestamp) as chickCompletedAt";
   q += "   join  (select uuid as chickuuid, measure as chick";
   q += "           from latestnondeletedaentvalue join attributekey using (attributeid)";
@@ -101,11 +101,11 @@ populateTable() {
   q += "        ) as box on (nestbox.parentuuid = box.boxuuid)";
   q += " union";
   q += " select chick.chickuuid, 'Chick '||chick.chick||' in Nest '|| nest.nest ||' in Box '|| box.box ||' was recorded at '|| chickCompletedAt.chickCompletedAt ||'. Revisit is needed on '|| chickCompletedAt.revisit ||' to measure the chick.'";
-  q += "   from (select uuid as chickuuid, datetime(rtrim(measure,'0')||':00', 'localtime') as chickCompletedAt, datetime(rtrim(measure,'0')||':00', 'localtime', '+12 day') as revisit";
+  q += "   from (select uuid as chickuuid, datetime(measure, 'localtime') as chickCompletedAt, datetime(measure, 'localtime', '+12 day') as revisit";
   q += "           from latestnondeletedaentvalue ";
   q += "           join attributekey using (attributeid)";
   q += "          where attributename = 'Chick timestamp'";
-  q += "            and datetime(rtrim(measure,'0')||':00', '+12 day') ";
+  q += "            and datetime(measure, '+12 day') ";
   q += "                <=  current_timestamp) as chickCompletedAt";
   q += "   join  (select uuid as chickuuid, measure as chick";
   q += "           from latestnondeletedaentvalue join attributekey using (attributeid)";
