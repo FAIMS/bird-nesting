@@ -753,6 +753,13 @@ getTimestampNow(String fmt) {
   dateFmt = new java.text.SimpleDateFormat(fmt);
   dateStr = dateFmt.format(date);
 
+  // Insert colon into timezone (e.g. +1000 -> +10:00)
+  String left; String right;
+
+  left    = dateStr.substring(0, dateStr.length() - 2);
+  right   = dateStr.substring(   dateStr.length() - 2);
+  dateStr = left + ":" + right;
+
   return dateStr;
 }
 
