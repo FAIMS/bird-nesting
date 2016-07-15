@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<ValidationSchema>
+  <ArchaeologicalElement name="Box"/>
+  <ArchaeologicalElement name="Nest"/>
+  <ArchaeologicalElement name="Egg"/>
+  <ArchaeologicalElement name="Chick"/>
+  <ArchaeologicalElement name="Measurement"/>
+</ValidationSchema>
