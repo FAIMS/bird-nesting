@@ -11,7 +11,7 @@
 
 <Control f="nodata">
   <Control f="noscroll">
-    <Create_New_Box t="button" l="Box"/>
+    <Add_New_Box t="button" l="Box"/>
     <Existing_Boxes t="list" e="Box"/>
   </Control>
   <Defaults>
@@ -31,13 +31,14 @@
       Box ID
       <str>
         <pos>1</pos>
-        <fmt>$2</fmt>
+        <fmt>Box-$2</fmt>
       </str>
     </Box_Box_ID>
-    <Location_Name f="id">
+    <Box_Location_Name f="id">
+      Location Name
       <str>
         <pos>2</pos>
-        <fmt>BOX-$1-</fmt>
+        <fmt>$1</fmt>
       </str>
       <opts>
         <opt>Gap Hills</opt>
@@ -49,7 +50,7 @@
         <opt>W19G</opt>
         <opt>W19F</opt>
       </opts>
-    </Location_Name>
+    </Box_Location_Name>
     <gps/>
     <Height_m b="decimal">
       Height (m)
@@ -60,6 +61,8 @@
       <desc>Enter degrees of azimuth.</desc>
     </Orientation_degrees>
     <Comments/>
+    <Add_Box_Status t="button" lc="Box_Status"/>
+    <Box_Statuses t="dropdown" ec="Box_Status"/>
     <Box_Status>
       <opts>
         <opt>Empty</opt>
@@ -68,10 +71,27 @@
         <opt>No Observation</opt>
       </opts>
     </Box_Status>
-    <Create_New_Nest t="button" lc="Nest"/>
-    <Started_Nests t="dropdown" ec="Nest"/>
+    <Add_New_Nest t="button" lc="Nest"/>
+    <Existing_Nests t="dropdown" ec="Nest"/>
   </Box>
 </Box>
+
+<Box_Status>
+  <Box_Status>
+    <Box_Status_Box_ID f="id">
+      Box ID
+    </Box_Status_Box_ID>
+    <timestamp/>
+    <Box_Status>
+      <opts>
+        <opt>Empty</opt>
+        <opt>Active</opt>
+        <opt>Terminated</opt>
+        <opt>No Observation</opt>
+      </opts>
+    </Box_Status>
+  </Box_Status>
+</Box_Status>
 
 <Nest>
   <Nest>
@@ -82,22 +102,49 @@
         <fmt>Box-$2-</fmt>
       </str>
     </Nest_Box_ID>
+    <Nest_Location_Name f="id">
+      Location Name
+      <!--TODO: Inherit from Box-->
+      <str>
+        <pos>3</pos>
+        <fmt>$2</fmt>
+      </str>
+    </Nest_Location_Name>
     <Nest_Nest_ID f="id autonum noannotation nocertainty">
       Nest ID
       <str>
-        <pos>3</pos>
-        <fmt>Nest-$2</fmt>
+        <pos>1</pos>
+        <fmt>Nest-$2-</fmt>
       </str>
     </Nest_Nest_ID>
-    <gps/>
-    <timestamp f="id">
+    <timestamp>
       Nest Created at
+    </timestamp>
+    <Day_of_Lay b="date"/>
+    <Compute_Estimated_Day_of_Hatching t="button"/>
+    <Estimated_Day_of_Hatching f="readonly"/>
+    <Nest_Completed t="button"/>
+    <Nest_Completed_at f="readonly"/>
+    <Add_Nest_Measurement t="button" lc="Nest_Measurement"/>
+    <Nest_Measurements  t="dropdown" ec="Nest_Measurement"/>
+    <Add_New_Egg t="button" lc="Egg"/>
+    <Existing_Eggs t="dropdown" ec="Egg"/>
+    <Add_New_Chick t="button" lc="Chick"/>
+    <Existing_Chicks t="dropdown" ec="Chick"/>
+  </Nest>
+</Nest>
+
+<Nest_Measurement>
+  <Nest_Measurement>
+    <Nest_Measurement_Nest_ID f="id">
+      Nest ID
+      <!--TODO: Inherit-->
       <str>
         <pos>1</pos>
-        <fmt>N-$2-</fmt>
+        <fmt>Nest-$2-</fmt>
       </str>
-    </timestamp>
-    <Nest_Completed_at f="readonly"/>
+    </Nest_Measurement_Nest_ID>
+    <Egg_Count b="decimal"/>
     <Nest_Status>
       <desc>If near 100%, go visit the next day.</desc>
       <opts>
@@ -107,45 +154,53 @@
         <opt>75-100%</opt>
       </opts>
     </Nest_Status>
-    <Egg_Count b="decimal"/>
-    <Day_of_Lay b="date"/>
-    <Estimated_Day_of_Hatching f="readonly"/>
-    <Compute_Estimated_Day_of_Hatching t="button"/>
+    <timestamp f="id">
+      Egg Count Recorded at
+      <str>
+        <pos>2</pos>
+        <fmt>$2</fmt>
+      </str>
+    </timestamp>
     <Hatched_Chick_Count_Live b="decimal"/>
     <Hatched_Chick_Count_Dead b="decimal"/>
-    <Nest_Completed t="button"/>
-    <Create_New_Egg t="button" lc="Egg"/>
-    <Started_Eggs t="dropdown" ec="Egg"/>
-  </Nest>
-</Nest>
+  </Nest_Measurement>
+</Nest_Measurement>
 
 <Egg>
   <Egg>
     <Egg_Box_ID f="id noannotation nocertainty readonly">
       Box ID
       <str>
-        <pos>2</pos>
+        <pos>3</pos>
         <fmt>Box-$2-</fmt>
       </str>
     </Egg_Box_ID>
+    <Egg_Location_Name f="id">
+      Location Name
+      <!--TODO: Inherit from Box-->
+      <str>
+        <pos>4</pos>
+        <fmt>$2-</fmt>
+      </str>
+    </Egg_Location_Name>
     <Egg_Nest_ID f="id noannotation nocertainty readonly">
       Nest ID
       <str>
-        <pos>3</pos>
+        <pos>2</pos>
         <fmt>Nest-$2-</fmt>
       </str>
     </Egg_Nest_ID>
     <Egg_ID f="id autonum noannotation nocertainty">
       <str>
-        <pos>4</pos>
-        <fmt>Egg-$2</fmt>
+        <pos>1</pos>
+        <fmt>Egg-$2-</fmt>
       </str>
     </Egg_ID>
     <timestamp f="id">
       Egg recorded at
       <str>
-        <pos>1</pos>
-        <fmt>E-$2-</fmt>
+        <pos>5</pos>
+        <fmt>$2</fmt>
       </str>
     </timestamp>
     <Egg_Length_mm b="decimal">
@@ -157,8 +212,6 @@
     <Egg_Weight_g b="decimal">
       Egg Weight (g)
     </Egg_Weight_g>
-    <Create_New_Chick t="button" lc="Chick"/>
-    <Started_Chicks t="dropdown" ec="Chick"/>
   </Egg>
 </Egg>
 
@@ -167,29 +220,38 @@
     <Chick_Box_ID f="id noannotation nocertainty readonly">
       Box ID
       <str>
-        <pos>2</pos>
+        <pos>3</pos>
         <fmt>Box-$2-</fmt>
       </str>
     </Chick_Box_ID>
+    <Chick_Location_Name f="id">
+      Location Name
+      <!--TODO: Inherit from Box-->
+      <str>
+        <pos>4</pos>
+        <fmt>$2-</fmt>
+      </str>
+    </Chick_Location_Name>
     <Chick_Nest_ID f="id noannotation nocertainty readonly">
       Nest ID
       <str>
-        <pos>3</pos>
+        <pos>2</pos>
         <fmt>Nest-$2-</fmt>
       </str>
     </Chick_Nest_ID>
     <Chick_Chick_ID f="id autonum noannotation nocertainty">
+      Chick ID
       <!--TODO: Make sure that the table view query contains "Chick Chick ID" and not 'Chick ID'-->
       <str>
-        <pos>4</pos>
-        <fmt>Chick-$2</fmt>
+        <pos>1</pos>
+        <fmt>Chick-$2-</fmt>
       </str>
     </Chick_Chick_ID>
     <timestamp f="id">
       Chick Recorded at
       <str>
-        <pos>1</pos>
-        <fmt>C-$2-</fmt>
+        <pos>5</pos>
+        <fmt>$2</fmt>
       </str>
     </timestamp>
     <Bird_Species>
@@ -203,17 +265,28 @@
     </Bird_Species>
     <Band_Number/>
     <Notes/>
-    <Add_Measurement t="button" lc="Measurement"/>
+    <Add_Chick_Measurement t="button" lc="Chick_Measurement"/>
+    <Existing_Chick_Measurements t="dropdown" ec="Chick_Measurement"/>
   </Chick>
 </Chick>
 
-<Measurement>
-  <Measurement>
-    <Measurement_Chick_ID f="id">
+<Chick_Measurement>
+  <Chick_Measurement>
+    <Chick_Measurement_Chick_ID f="id">
+      <!--TODO: Inherit-->
+      <!--TODO: Ensure that Measurement_Chick_ID is changed to Chick_Measurement_Chick_ID in query-->
       Chick ID
-    </Measurement_Chick_ID>
-    <timestamp>
+      <str>
+        <pos>1</pos>
+        <fmt>Chick-$2-</fmt>
+      </str>
+    </Chick_Measurement_Chick_ID>
+    <timestamp f="id">
       Recorded at
+      <str>
+        <pos>2</pos>
+        <fmt>$2</fmt>
+      </str>
     </timestamp>
     <Chick_Alive t="radio">
       Chick Alive?
@@ -240,8 +313,8 @@
     </Tarsus_Length_mm>
     <Notes/>
     <Picture t="camera"/>
-  </Measurement>
-</Measurement>
+  </Chick_Measurement>
+</Chick_Measurement>
 
 <logic><![CDATA[
   <!--@SOURCE: logic/field-inheritance.bsh-->
