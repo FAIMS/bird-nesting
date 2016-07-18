@@ -34,7 +34,7 @@
         <fmt>Box-$2</fmt>
       </str>
     </Box_Box_ID>
-    <Box_Location_Name f="id">
+    <Box_Location_Name f="id readonly">
       Location Name
       <str>
         <pos>2</pos>
@@ -63,14 +63,6 @@
     <Comments/>
     <Add_Box_Status t="button" lc="Box_Status"/>
     <Box_Statuses t="dropdown" ec="Box_Status"/>
-    <Box_Status>
-      <opts>
-        <opt>Empty</opt>
-        <opt>Active</opt>
-        <opt>Terminated</opt>
-        <opt>No Observation</opt>
-      </opts>
-    </Box_Status>
     <Add_New_Nest t="button" lc="Nest"/>
     <Existing_Nests t="dropdown" ec="Nest"/>
   </Box>
@@ -80,8 +72,18 @@
   <Box_Status>
     <Box_Status_Box_ID f="id">
       Box ID
+      <str>
+        <pos>1</pos>
+        <fmt>$2-</fmt>
+      </str>
     </Box_Status_Box_ID>
-    <timestamp/>
+    <timestamp f="id">
+      Box Status Recorded at
+      <str>
+        <pos>2</pos>
+        <fmt>$2</fmt>
+      </str>
+    </timestamp>
     <Box_Status>
       <opts>
         <opt>Empty</opt>
@@ -102,9 +104,8 @@
         <fmt>Box-$2-</fmt>
       </str>
     </Nest_Box_ID>
-    <Nest_Location_Name f="id">
+    <Nest_Location_Name f="id readonly">
       Location Name
-      <!--TODO: Inherit from Box-->
       <str>
         <pos>3</pos>
         <fmt>$2</fmt>
@@ -138,12 +139,18 @@
   <Nest_Measurement>
     <Nest_Measurement_Nest_ID f="id">
       Nest ID
-      <!--TODO: Inherit-->
       <str>
         <pos>1</pos>
         <fmt>Nest-$2-</fmt>
       </str>
     </Nest_Measurement_Nest_ID>
+    <timestamp f="id">
+      Nest Measurement Recorded at
+      <str>
+        <pos>2</pos>
+        <fmt>$2</fmt>
+      </str>
+    </timestamp>
     <Egg_Count b="decimal"/>
     <Nest_Status>
       <desc>If near 100%, go visit the next day.</desc>
@@ -154,13 +161,6 @@
         <opt>75-100%</opt>
       </opts>
     </Nest_Status>
-    <timestamp f="id">
-      Egg Count Recorded at
-      <str>
-        <pos>2</pos>
-        <fmt>$2</fmt>
-      </str>
-    </timestamp>
     <Hatched_Chick_Count_Live b="decimal"/>
     <Hatched_Chick_Count_Dead b="decimal"/>
   </Nest_Measurement>
@@ -175,9 +175,8 @@
         <fmt>Box-$2-</fmt>
       </str>
     </Egg_Box_ID>
-    <Egg_Location_Name f="id">
+    <Egg_Location_Name f="id readonly">
       Location Name
-      <!--TODO: Inherit from Box-->
       <str>
         <pos>4</pos>
         <fmt>$2-</fmt>
@@ -224,9 +223,8 @@
         <fmt>Box-$2-</fmt>
       </str>
     </Chick_Box_ID>
-    <Chick_Location_Name f="id">
+    <Chick_Location_Name f="id readonly">
       Location Name
-      <!--TODO: Inherit from Box-->
       <str>
         <pos>4</pos>
         <fmt>$2-</fmt>
@@ -273,7 +271,6 @@
 <Chick_Measurement>
   <Chick_Measurement>
     <Chick_Measurement_Chick_ID f="id">
-      <!--TODO: Inherit-->
       <!--TODO: Ensure that Measurement_Chick_ID is changed to Chick_Measurement_Chick_ID in query-->
       Chick ID
       <str>
@@ -282,7 +279,7 @@
       </str>
     </Chick_Measurement_Chick_ID>
     <timestamp f="id">
-      Recorded at
+      Chick Measurement Recorded at
       <str>
         <pos>2</pos>
         <fmt>$2</fmt>
