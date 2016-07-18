@@ -34,7 +34,7 @@
         <fmt>Box-$2</fmt>
       </str>
     </Box_Box_ID>
-    <Box_Location_Name f="id readonly">
+    <Box_Location_Name f="id">
       Location Name
       <str>
         <pos>2</pos>
@@ -104,7 +104,7 @@
         <fmt>Box-$2-</fmt>
       </str>
     </Nest_Box_ID>
-    <Nest_Location_Name f="id readonly">
+    <Nest_Location_Name f="id readonly noannotation nocertainty">
       Location Name
       <str>
         <pos>3</pos>
@@ -175,7 +175,7 @@
         <fmt>Box-$2-</fmt>
       </str>
     </Egg_Box_ID>
-    <Egg_Location_Name f="id readonly">
+    <Egg_Location_Name f="id readonly noannotation nocertainty">
       Location Name
       <str>
         <pos>4</pos>
@@ -223,7 +223,7 @@
         <fmt>Box-$2-</fmt>
       </str>
     </Chick_Box_ID>
-    <Chick_Location_Name f="id readonly">
+    <Chick_Location_Name f="id readonly noannotation nocertainty">
       Location Name
       <str>
         <pos>4</pos>
