@@ -1,0 +1,75 @@
+/*********************** HATCHED CHICK COUNT POPULATION ***********************/
+//addOnEvent("Nest", "show", "populateHatchedChickCount()");
+
+populateHatchedChickCount() {
+  Boolean isLive   = true;
+  String  nestUuid = getUuid("Nest");
+
+  String refLive = "Nest/Nest/Hatched_Chick_Count_Live";
+  String refDead = "Nest/Nest/Hatched_Chick_Count_Dead";
+
+  // Produce queries
+  isLive = true;  qLive = getHatchedChickCountQuery(isLive, nestUuid);
+  isLive = false; qDead = getHatchedChickCountQuery(isLive, nestUuid);
+
+  // Set up callbacks
+  FetchCallback populateLive = new FetchCallback() {
+    onFetch(result) {
+      String count = result.get(0).get(0);
+      setFieldValue(refLive, count);
+    }
+  };
+
+  FetchCallback populateDead = new FetchCallback() {
+    onFetch(result) {
+      String count = result.get(0).get(0);
+      setFieldValue(refDead, count);
+    }
+  };
+
+  // Fetch
+  fetchAll(qLive, populateLive);
+  fetchAll(qDead, populateDead);
+}
+
+getHatchedChickCountQuery(Boolean isLive, nestUuid) {
+  String chickAliveVocabName = "";
+  if (isLive) chickAliveVocabName = "{Yes}";
+  else        chickAliveVocabName = "{No}";
+
+  String q = "";
+
+  q += " SELECT COUNT(*)";
+  q += " FROM   latestnondeletedaentvalue";
+  q += " JOIN   attributekey USING (attributeid)";
+  q += " JOIN   vocabulary   USING (attributeid, vocabid)";
+  q += " WHERE  attributename = 'Chick Alive'";
+  q += " AND    vocabname     = '{chickAliveVocabName}'";
+  q += " AND    uuid IN (";
+  q += " ";
+  q += "        /* Get all Chick UUID's which are children of the";
+  q += "         * Egg in the nested query.";
+  q += "         */";
+  q += "        SELECT childuuid";
+  q += "        FROM   parentchild";
+  q += "        WHERE  parentaenttypename = 'Egg'";
+  q += "        AND    childaenttypename  = 'Chick'";
+  q += "        AND  parentuuid IN (";
+  q += " ";
+  q += "               /* Get all Egg UUID's which are children of";
+  q += "                * this Nest.";
+  q += "                */";
+  q += "               SELECT childuuid";
+  q += "               FROM   parentchild";
+  q += "               WHERE  parentaenttypename = 'Nest'";
+  q += "               AND    childaenttypename  = 'Egg'";
+  q += "               AND    parentuuid = '{nestUuid}'";
+  q += " ";
+  q += "        )";
+  q += " ";
+  q += " )";
+  q  = replaceFirst(q, "{chickAliveVocabName}", chickAliveVocabName);
+  q  = replaceFirst(q, "{nestUuid}",            nestUuid           );
+
+  return q;
+}

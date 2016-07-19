@@ -19,6 +19,8 @@
   </Defaults>
   <search/>
   <Revisit f="noscroll">
+    <Days t="dropdown"/>
+    <Compute_Revisits t="button"/>
     <Revisit f="nolabel">
       <!--This is replaced with a table view using @POSTPROC-->
     </Revisit>
@@ -70,7 +72,7 @@
 
 <Box_Status>
   <Box_Status>
-    <Box_Status_Box_ID f="id">
+    <Box_Status_Box_ID f="id noannotation nocertainty">
       Box ID
       <str>
         <pos>1</pos>
@@ -137,7 +139,7 @@
 
 <Nest_Measurement>
   <Nest_Measurement>
-    <Nest_Measurement_Nest_ID f="id">
+    <Nest_Measurement_Nest_ID f="id noannotation nocertainty">
       Nest ID
       <str>
         <pos>1</pos>
@@ -161,8 +163,12 @@
         <opt>75-100%</opt>
       </opts>
     </Nest_Status>
-    <Hatched_Chick_Count_Live b="decimal"/>
-    <Hatched_Chick_Count_Dead b="decimal"/>
+    <Hatched_Chick_Count_Live b="decimal">
+      <!--TODO: Automatically populate-->
+    </Hatched_Chick_Count_Live>
+    <Hatched_Chick_Count_Dead b="decimal">
+      <!--TODO: Automatically populate-->
+    </Hatched_Chick_Count_Dead>
   </Nest_Measurement>
 </Nest_Measurement>
 
@@ -196,7 +202,7 @@
       </str>
     </Egg_ID>
     <timestamp f="id">
-      Egg recorded at
+      Egg Recorded at
       <str>
         <pos>5</pos>
         <fmt>$2</fmt>
@@ -239,7 +245,6 @@
     </Chick_Nest_ID>
     <Chick_Chick_ID f="id autonum noannotation nocertainty">
       Chick ID
-      <!--TODO: Make sure that the table view query contains "Chick Chick ID" and not 'Chick ID'-->
       <str>
         <pos>1</pos>
         <fmt>Chick-$2-</fmt>
@@ -270,8 +275,7 @@
 
 <Chick_Measurement>
   <Chick_Measurement>
-    <Chick_Measurement_Chick_ID f="id">
-      <!--TODO: Ensure that Measurement_Chick_ID is changed to Chick_Measurement_Chick_ID in query-->
+    <Chick_Measurement_Chick_ID f="id readonly noannotation nocertainty">
       Chick ID
       <str>
         <pos>1</pos>
@@ -319,5 +323,6 @@
   <!--@SOURCE: logic/compute-day-of-hatching-estimate-button.bsh-->
   <!--@SOURCE: logic/nest-completed-button.bsh-->
   <!--@SOURCE: logic/table-view.bsh-->
+  <!--@SOURCE: logic/hatched-chick-count-population.bsh-->
 ]]></logic>
 </module>
