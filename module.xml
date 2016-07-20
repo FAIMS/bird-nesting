@@ -33,7 +33,7 @@
       Box ID
       <str>
         <pos>1</pos>
-        <fmt>Box-$2</fmt>
+        <fmt>Box-$2-</fmt>
       </str>
     </Box_Box_ID>
     <Box_Location_Name f="id">
@@ -126,10 +126,10 @@
     <Day_of_Lay b="date"/>
     <Compute_Estimated_Day_of_Hatching t="button"/>
     <Estimated_Day_of_Hatching f="readonly"/>
-    <Nest_Completed t="button"/>
-    <Nest_Completed_at f="readonly"/>
     <Add_Nest_Measurement t="button" lc="Nest_Measurement"/>
     <Nest_Measurements  t="dropdown" ec="Nest_Measurement"/>
+    <Nest_Completed t="button"/>
+    <Nest_Completed_at f="readonly"/>
     <Add_New_Egg t="button" lc="Egg"/>
     <Existing_Eggs t="dropdown" ec="Egg"/>
     <Add_New_Chick t="button" lc="Chick"/>
@@ -153,7 +153,6 @@
         <fmt>$2</fmt>
       </str>
     </timestamp>
-    <Egg_Count b="decimal"/>
     <Nest_Status>
       <desc>If near 100%, go visit the next day.</desc>
       <opts>
@@ -163,12 +162,9 @@
         <opt>75-100%</opt>
       </opts>
     </Nest_Status>
-    <Hatched_Chick_Count_Live b="decimal">
-      <!--TODO: Automatically populate-->
-    </Hatched_Chick_Count_Live>
-    <Hatched_Chick_Count_Dead b="decimal">
-      <!--TODO: Automatically populate-->
-    </Hatched_Chick_Count_Dead>
+    <Egg_Count b="decimal"/>
+    <Hatched_Chick_Count_Live b="decimal"/>
+    <Hatched_Chick_Count_Dead b="decimal"/>
     <Take_Current_Chick_Counts t="button"/>
   </Nest_Measurement>
 </Nest_Measurement>
