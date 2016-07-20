@@ -1,16 +1,20 @@
 /*********************** HATCHED CHICK COUNT POPULATION ***********************/
-//addOnEvent("Nest", "show", "populateHatchedChickCount()");
+addOnEvent("Nest_Measurement/Nest_Measurement/Take_Current_Chick_Counts", "click", "populateHatchedChickCount()");
 
 populateHatchedChickCount() {
-  Boolean isLive   = true;
-  String  nestUuid = getUuid("Nest");
+  String nestMeasurementUuid = getUuid("Nest_Measurement");
+  if (isNull(nestMeasurementUuid)) {
+    showToast("{You_must_save_this_tabgroup_first}");
+    return;
+  }
 
-  String refLive = "Nest/Nest/Hatched_Chick_Count_Live";
-  String refDead = "Nest/Nest/Hatched_Chick_Count_Dead";
+  String refLive = "Nest_Measurement/Nest_Measurement/Hatched_Chick_Count_Live";
+  String refDead = "Nest_Measurement/Nest_Measurement/Hatched_Chick_Count_Dead";
 
   // Produce queries
-  isLive = true;  qLive = getHatchedChickCountQuery(isLive, nestUuid);
-  isLive = false; qDead = getHatchedChickCountQuery(isLive, nestUuid);
+  Boolean isLive;
+  isLive = true;  qLive = getHatchedChickCountQuery(isLive, nestMeasurementUuid);
+  isLive = false; qDead = getHatchedChickCountQuery(isLive, nestMeasurementUuid);
 
   // Set up callbacks
   FetchCallback populateLive = new FetchCallback() {
@@ -19,7 +23,6 @@ populateHatchedChickCount() {
       setFieldValue(refLive, count);
     }
   };
-
   FetchCallback populateDead = new FetchCallback() {
     onFetch(result) {
       String count = result.get(0).get(0);
@@ -32,44 +35,33 @@ populateHatchedChickCount() {
   fetchAll(qDead, populateDead);
 }
 
-getHatchedChickCountQuery(Boolean isLive, nestUuid) {
+getHatchedChickCountQuery(Boolean isLive, nestMeasurementUuid) {
   String chickAliveVocabName = "";
   if (isLive) chickAliveVocabName = "{Yes}";
   else        chickAliveVocabName = "{No}";
 
   String q = "";
-
-  q += " SELECT COUNT(*)";
-  q += " FROM   latestnondeletedaentvalue";
-  q += " JOIN   attributekey USING (attributeid)";
-  q += " JOIN   vocabulary   USING (attributeid, vocabid)";
-  q += " WHERE  attributename = 'Chick Alive'";
-  q += " AND    vocabname     = '{chickAliveVocabName}'";
-  q += " AND    uuid IN (";
+  q += " SELECT COUNT(uuid)";
+  q += "   FROM latestnondeletedaentvalue";
+  q += "   JOIN attributekey USING (attributeid)";
+  q += "   JOIN vocabulary USING (vocabid)";
+  q += "  WHERE vocabname = '{chickAliveVocabName}'";
+  q += "    AND uuid IN (";
+  q += " SELECT childuuid";
+  q += "                   FROM parentchild JOIN latestnondeletedarchent on (uuid = childuuid)";
+  q += "                  WHERE childaenttypename = 'Chick Measurement'";
+  q += "                    AND parentuuid IN (SELECT childuuid";
+  q += "                                         FROM parentchild";
+  q += "                                        WHERE childaenttypename = 'Chick'";
+  q += "                                          AND parentuuid in (select parentuuid";
+  q += "                                                                  from parentchild";
+  q += "                                                              where childuuid = '{nestMeasurementUuid}'";
+  q += "                                                                and parentaenttypename = 'Nest'))";
   q += " ";
-  q += "        /* Get all Chick UUID's which are children of the";
-  q += "         * Egg in the nested query.";
-  q += "         */";
-  q += "        SELECT childuuid";
-  q += "        FROM   parentchild";
-  q += "        WHERE  parentaenttypename = 'Egg'";
-  q += "        AND    childaenttypename  = 'Chick'";
-  q += "        AND  parentuuid IN (";
-  q += " ";
-  q += "               /* Get all Egg UUID's which are children of";
-  q += "                * this Nest.";
-  q += "                */";
-  q += "               SELECT childuuid";
-  q += "               FROM   parentchild";
-  q += "               WHERE  parentaenttypename = 'Nest'";
-  q += "               AND    childaenttypename  = 'Egg'";
-  q += "               AND    parentuuid = '{nestUuid}'";
-  q += " ";
-  q += "        )";
-  q += " ";
-  q += " )";
+  q += "     GROUP BY parentuuid";
+  q += "     HAVING   aenttimestamp = max(aenttimestamp))";
   q  = replaceFirst(q, "{chickAliveVocabName}", chickAliveVocabName);
-  q  = replaceFirst(q, "{nestUuid}",            nestUuid           );
+  q  = replaceFirst(q, "{nestMeasurementUuid}", nestMeasurementUuid);
 
   return q;
 }

@@ -21,34 +21,18 @@ computeRevisits() {
 
   String q = "";
   q += " select uuid, dayDue, response, tasks";
-  q += "   from (select dayDue, group_concat(taskName, ', ') as tasks, parentchild.parentuuid as uuid";
-  q += "           from (select date(measure, 'localtime', '+1 day') as dayDue, 'Check '||response as taskName, parentchild.parentuuid as nestuuid";
-  q += "                   from latestnondeletedaentvalue";
-  q += "                   join latestNonDeletedArchEntFormattedIdentifiers as task using (uuid)";
-  q += "                   join attributekey using (attributeid)";
-  q += "                   join parentchild on (parentchild.childuuid = task.uuid)";
-  q += "                  where attributename in ('Chick timestamp', 'Nest Completed at', 'Egg timestamp')";
-  q += "                  union";
-  q += "                 select date(measure, 'localtime', '+7 day') as dayDue, 'Check '||response as taskName, parentchild.parentuuid as nestuuid";
-  q += "                   from latestnondeletedaentvalue";
-  q += "                   join latestNonDeletedArchEntFormattedIdentifiers as task using (uuid)";
-  q += "                   join attributekey using (attributeid)";
-  q += "                   join parentchild on (parentchild.childuuid = task.uuid)";
-  q += "                  where attributename in ('Chick timestamp')";
-  q += "                  union";
-  q += "                 select date(measure, 'localtime', '+12 day') as deayDue, 'Check '||response as taskName, parentchild.parentuuid as nestuuid";
-  q += "                   from latestnondeletedaentvalue";
-  q += "                   join latestNonDeletedArchEntFormattedIdentifiers as task using (uuid)";
-  q += "                   join attributekey using (attributeid)";
-  q += "                   join parentchild on (parentchild.childuuid = task.uuid)";
-  q += "                  where attributename in ('Chick timestamp')";
-  q += "                  order by dayDue)";
+  q += "   from (select dayDue, tasks, parentchild.parentuuid as uuid";
+  q += "         from (select dayDue, 'Check: '||group_concat(taskName, ', ') as tasks, nestuuid";
+  q += "                 from taskList";
+  q += "               group by nestuuid, dayDue";
+  q += "               order by aenttypenameorder, dayDue";
+  q += "                )";
   q += "           JOIN parentchild on (parentchild.childuuid = nestuuid)";
   q += "          where parentchild.parentaenttypename = 'Box'";
   q += "            and dayDue >= date(current_date, '{days}')";
-  q += "          group by parentchild.parentuuid, dayDue";
   q += "          order by dayDue";
   q += "           ) JOIN latestNonDeletedArchEntFormattedIdentifiers USING (uuid)";
+  q += " ";
   q += "   order by dayDue";
   q  = replaceFirst(q, "{days}", daysVal);
 
@@ -78,3 +62,49 @@ loadEntityFromTable() {
   uuid = getTableValue();
   loadEntityFrom(uuid); // Auto-gen'd function
 }
+
+makeTableViewViews() {
+  fetchOne("drop view if exists truncFormattedIdentifier;", null);
+  fetchOne("create view truncFormattedIdentifier as " + 
+           "    select uuid, format(trim(formatstring,'-'), null, measure, freetext, certainty) as response " + 
+           "                                from latestnondeletedaentvalue join attributekey using (attributeid)" + 
+           "                                where attributename in ('Nest Nest ID', 'Egg ID', 'Chick Chick ID');", null);
+
+  fetchOne("drop view if exists tasklist;", null);
+  fetchOne("create view tasklist as  " +
+           "select date(measure, 'localtime', '+1 day') as dayDue, response as taskName, parentchild.parentuuid as nestuuid, 2 as aenttypenameorder  " +
+           "                        from latestnondeletedaentvalue " +
+           "                        join truncFormattedIdentifier as task using (uuid) " +
+           "                        join attributekey using (attributeid) " +
+           "                        join parentchild on (parentchild.childuuid = task.uuid) " +
+           "                       where attributename = 'Egg timestamp' " +
+           "                       union " +
+           "                        select date(measure, 'localtime', '+1 day') as dayDue, response as taskName, parentchild.parentuuid as nestuuid, 3 as aenttypenameorder  " +
+           "                        from latestnondeletedaentvalue " +
+           "                        join truncFormattedIdentifier as task using (uuid) " +
+           "                        join attributekey using (attributeid) " +
+           "                        join parentchild on (parentchild.childuuid = task.uuid) " +
+           "                       where attributename = 'Chick timestamp'                       " +
+           "                       union " +
+           "                      select date(measure, 'localtime', '+1 day') as dayDue, response as taskName, uuid as nestuuid, 1 as aenttypenameorder  " +
+           "                        from latestnondeletedaentvalue " +
+           "                        join truncFormattedIdentifier as task using (uuid) " +
+           "                        join attributekey using (attributeid) " +
+           "                       where attributename = 'Nest Completed at' " +
+           "                       union                        " +
+           "                      select date(measure, 'localtime', '+7 day') as dayDue, response as taskName, parentchild.parentuuid as nestuuid, 2 as aenttypenameorder  " +
+           "                        from latestnondeletedaentvalue " +
+           "                        join truncFormattedIdentifier as task using (uuid) " +
+           "                        join attributekey using (attributeid) " +
+           "                        join parentchild on (parentchild.childuuid = task.uuid) " +
+           "                       where attributename = 'Chick timestamp' " +
+           "                       union " +
+           "                      select date(measure, 'localtime', '+12 day') as deayDue, response as taskName, parentchild.parentuuid as nestuuid, 2 as aenttypenameorder  " +
+           "                        from latestnondeletedaentvalue " +
+           "                        join truncFormattedIdentifier as task using (uuid) " +
+           "                        join attributekey using (attributeid) " +
+           "                        join parentchild on (parentchild.childuuid = task.uuid) " +
+           "                       where attributename = 'Chick timestamp' " +
+           "                       order by taskName desc, aenttypenameorder, dayDue; ", null);
+}
+makeTableViewViews();

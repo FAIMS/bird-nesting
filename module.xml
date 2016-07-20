@@ -169,6 +169,7 @@
     <Hatched_Chick_Count_Dead b="decimal">
       <!--TODO: Automatically populate-->
     </Hatched_Chick_Count_Dead>
+    <Take_Current_Chick_Counts t="button"/>
   </Nest_Measurement>
 </Nest_Measurement>
 
