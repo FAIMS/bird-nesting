@@ -20,6 +20,7 @@
   <search/>
   <Revisit f="noscroll">
     <Days t="dropdown"/>
+    <Perform_Next_Revisit t="button"/>
     <Compute_Revisits t="button"/>
     <Revisit f="nolabel">
       <!--This is replaced with a table view using @POSTPROC-->
@@ -319,7 +320,7 @@
   <!--@SOURCE: logic/create-new-nest-button.bsh-->
   <!--@SOURCE: logic/compute-day-of-hatching-estimate-button.bsh-->
   <!--@SOURCE: logic/nest-completed-button.bsh-->
-  <!--@SOURCE: logic/table-view.bsh-->
+  <!--@SOURCE: logic/revisits.bsh-->
   <!--@SOURCE: logic/hatched-chick-count-population.bsh-->
 ]]></logic>
 </module>
