@@ -68,9 +68,9 @@ performNextRevisit() {
   String q = getRevisitsQuery();
   FetchCallback loadNextEntity = new FetchCallback() {
     onFetch(result){
-      if      ( result        == null) ;
-      else if ( result.size() == 0   ) ;
-      else if ( result.get(0) == null) ;
+      if      ( result        == null) { ; }
+      else if ( result.size() == 0   ) { ; }
+      else if ( result.get(0) == null) { ; }
       else                             loadEntityFrom(result.get(0));
     }
   };
