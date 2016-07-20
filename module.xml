@@ -20,6 +20,7 @@
   <search/>
   <Revisit f="noscroll">
     <Days t="dropdown"/>
+    <Perform_Next_Revisit t="button"/>
     <Compute_Revisits t="button"/>
     <Revisit f="nolabel">
       <!--This is replaced with a table view using @POSTPROC-->
@@ -33,7 +34,7 @@
       Box ID
       <str>
         <pos>1</pos>
-        <fmt>Box-$2</fmt>
+        <fmt>Box-$2-</fmt>
       </str>
     </Box_Box_ID>
     <Box_Location_Name f="id">
@@ -137,10 +138,10 @@
     <Day_of_Lay b="date"/>
     <Compute_Estimated_Day_of_Hatching t="button"/>
     <Estimated_Day_of_Hatching f="readonly"/>
-    <Nest_Completed t="button"/>
-    <Nest_Completed_at f="readonly"/>
     <Add_Nest_Measurement t="button" lc="Nest_Measurement"/>
     <Nest_Measurements  t="dropdown" ec="Nest_Measurement"/>
+    <Nest_Completed t="button"/>
+    <Nest_Completed_at f="readonly"/>
   </Nest>
   <Egg_Chick>
     <cols>
@@ -172,7 +173,6 @@
         <fmt>$2</fmt>
       </str>
     </timestamp>
-    <Egg_Count b="decimal"/>
     <Nest_Status>
       <desc>If near 100%, go visit the next day.</desc>
       <opts>
@@ -182,12 +182,9 @@
         <opt>75-100%</opt>
       </opts>
     </Nest_Status>
-    <Hatched_Chick_Count_Live b="decimal">
-      <!--TODO: Automatically populate-->
-    </Hatched_Chick_Count_Live>
-    <Hatched_Chick_Count_Dead b="decimal">
-      <!--TODO: Automatically populate-->
-    </Hatched_Chick_Count_Dead>
+    <Egg_Count b="decimal"/>
+    <Hatched_Chick_Count_Live b="decimal"/>
+    <Hatched_Chick_Count_Dead b="decimal"/>
     <Take_Current_Chick_Counts t="button"/>
   </Nest_Measurement>
 </Nest_Measurement>
@@ -342,7 +339,7 @@
   <!--@SOURCE: logic/create-new-nest-button.bsh-->
   <!--@SOURCE: logic/compute-day-of-hatching-estimate-button.bsh-->
   <!--@SOURCE: logic/nest-completed-button.bsh-->
-  <!--@SOURCE: logic/table-view.bsh-->
+  <!--@SOURCE: logic/revisits.bsh-->
   <!--@SOURCE: logic/hatched-chick-count-population.bsh-->
 ]]></logic>
 </module>
