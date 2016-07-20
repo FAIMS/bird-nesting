@@ -63,10 +63,17 @@
       <desc>Enter degrees of azimuth.</desc>
     </Orientation_degrees>
     <Comments/>
-    <Add_Box_Status t="button" lc="Box_Status"/>
-    <Box_Statuses t="dropdown" ec="Box_Status"/>
-    <Add_New_Nest t="button" lc="Nest"/>
-    <Existing_Nests t="dropdown" ec="Nest"/>
+    <Take_Photo t="camera"/>
+    <cols>
+      <col>
+        <Add_Box_Status t="button" lc="Box_Status"/>
+        <Box_Statuses t="dropdown" ec="Box_Status"/>
+      </col>
+      <col>
+        <Add_New_Nest t="button" lc="Nest"/>
+        <Existing_Nests t="dropdown" ec="Nest"/>
+      </col>
+    </cols>
   </Box>
 </Box>
 
@@ -99,30 +106,34 @@
 
 <Nest>
   <Nest>
-    <Nest_Box_ID f="id noannotation nocertainty readonly">
-      Box ID
-      <str>
-        <pos>2</pos>
-        <fmt>Box-$2-</fmt>
-      </str>
-    </Nest_Box_ID>
-    <Nest_Location_Name f="id readonly noannotation nocertainty">
-      Location Name
-      <str>
-        <pos>3</pos>
-        <fmt>$2</fmt>
-      </str>
-    </Nest_Location_Name>
-    <Nest_Nest_ID f="id autonum noannotation nocertainty">
-      Nest ID
-      <str>
-        <pos>1</pos>
-        <fmt>Nest-$2-</fmt>
-      </str>
-    </Nest_Nest_ID>
-    <timestamp>
-      Nest Created at
-    </timestamp>
+    <cols>
+      <Nest_Box_ID f="id noannotation nocertainty readonly">
+        Box ID
+        <str>
+          <pos>2</pos>
+          <fmt>Box-$2-</fmt>
+        </str>
+      </Nest_Box_ID>
+      <Nest_Location_Name f="id readonly noannotation nocertainty">
+        Location Name
+        <str>
+          <pos>3</pos>
+          <fmt>$2</fmt>
+        </str>
+      </Nest_Location_Name>
+    </cols>
+    <cols>
+      <Nest_Nest_ID f="id autonum noannotation nocertainty">
+        Nest ID
+        <str>
+          <pos>1</pos>
+          <fmt>Nest-$2-</fmt>
+        </str>
+      </Nest_Nest_ID>
+      <timestamp>
+        Nest Created at
+      </timestamp>
+    </cols>
     <Day_of_Lay b="date"/>
     <Compute_Estimated_Day_of_Hatching t="button"/>
     <Estimated_Day_of_Hatching f="readonly"/>
@@ -130,11 +141,19 @@
     <Nest_Completed_at f="readonly"/>
     <Add_Nest_Measurement t="button" lc="Nest_Measurement"/>
     <Nest_Measurements  t="dropdown" ec="Nest_Measurement"/>
-    <Add_New_Egg t="button" lc="Egg"/>
-    <Existing_Eggs t="dropdown" ec="Egg"/>
-    <Add_New_Chick t="button" lc="Chick"/>
-    <Existing_Chicks t="dropdown" ec="Chick"/>
   </Nest>
+  <Egg_Chick>
+    <cols>
+      <col>
+        <Add_New_Chick t="button" lc="Chick"/>
+        <Existing_Chicks t="list" ec="Chick"/>
+      </col>
+      <col>
+        <Add_New_Egg t="button" lc="Egg"/>
+        <Existing_Eggs t="list" ec="Egg"/>
+      </col>
+    </cols>
+  </Egg_Chick>
 </Nest>
 
 <Nest_Measurement>
