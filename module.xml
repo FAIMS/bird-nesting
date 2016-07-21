@@ -66,13 +66,21 @@
     <Comments/>
     <Take_Photo t="camera"/>
     <cols>
+      <Box_Status f="nodata readonly"/>
+      <Box_Status_Spacer t="group"/>
+    </cols>
+    <cols>
       <col>
         <Add_Box_Status t="button" lc="Box_Status"/>
-        <Box_Statuses t="dropdown" ec="Box_Status"/>
+        <Box_Statuses t="list" ec="Box_Status" c="fixedheightfive">
+          Last 5 Recorded Box Statuses
+        </Box_Statuses>
       </col>
       <col>
         <Add_New_Nest t="button" lc="Nest"/>
-        <Existing_Nests t="dropdown" ec="Nest"/>
+        <Existing_Nests t="list" ec="Nest" c="fixedheightfive">
+          Last 5 Recorded Nests
+        </Existing_Nests>
       </col>
     </cols>
   </Box>
@@ -132,33 +140,53 @@
         </str>
       </Nest_Nest_ID>
       <timestamp>
-        Nest Created at
+        Nest Record Created at
       </timestamp>
     </cols>
-    <Day_of_Lay b="date"/>
-    <Compute_Estimated_Day_of_Hatching t="button"/>
-    <Estimated_Day_of_Hatching f="readonly"/>
-    <Add_Nest_Measurement t="button" lc="Nest_Measurement"/>
-    <Nest_Measurements  t="dropdown" ec="Nest_Measurement"/>
     <Nest_Completed t="button"/>
-    <Nest_Completed_at f="readonly"/>
+    <Nest_Completed_at f="readonly">
+      Date Nest Completed
+    </Nest_Completed_at>
+    <Day_of_Lay f="readonly"/>
+    <Set_Day_of_Lay t="button" l="Day_of_Lay">
+      Set Day of Lay...
+    </Set_Day_of_Lay>
+    <Compute_Estimated_Day_of_Hatching t="button"/>
+    <Click_Button_for_Automated_Date_Insertion_1 t="webview" f="nolabel"/>
+    <Estimated_Day_of_Hatching/>
+    <Add_Nest_Measurement t="button" lc="Nest_Measurement">
+      Add Nest Visit
+    </Add_Nest_Measurement>
+    <Nest_Measurements  t="list" ec="Nest_Measurement" c="fixedheightfive">
+      Last 5 Recorded Nest Visits
+    </Nest_Measurements>
   </Nest>
-  <Egg_Chick>
+  <Egg_Chick f="noscroll">
     <cols>
-      <col>
-        <Add_New_Chick t="button" lc="Chick"/>
-        <Existing_Chicks t="list" ec="Chick"/>
-      </col>
       <col>
         <Add_New_Egg t="button" lc="Egg"/>
         <Existing_Eggs t="list" ec="Egg"/>
+      </col>
+      <col>
+        <Add_New_Chick t="button" lc="Chick"/>
+        <Existing_Chicks t="list" ec="Chick"/>
       </col>
     </cols>
   </Egg_Chick>
 </Nest>
 
+<Day_of_Lay f="nodata">
+  <Day_of_Lay>
+    <Day_of_Lay b="date"/>
+    <Set_Day_of_Lay t="button"/>
+    <Cancel t="button"/>
+  </Day_of_Lay>
+</Day_of_Lay>
+
 <Nest_Measurement>
+  Nest Visit
   <Nest_Measurement>
+    Nest Visit
     <Nest_Measurement_Nest_ID f="id noannotation nocertainty">
       Nest ID
       <str>
@@ -167,7 +195,7 @@
       </str>
     </Nest_Measurement_Nest_ID>
     <timestamp f="id">
-      Nest Measurement Recorded at
+      Nest Visit Recorded at
       <str>
         <pos>2</pos>
         <fmt>$2</fmt>
@@ -182,10 +210,15 @@
         <opt>75-100%</opt>
       </opts>
     </Nest_Status>
-    <Egg_Count b="decimal"/>
-    <Hatched_Chick_Count_Live b="decimal"/>
-    <Hatched_Chick_Count_Dead b="decimal"/>
-    <Take_Current_Chick_Counts t="button"/>
+    <Spacer t="webview" f="nolabel"/>
+    <cols>
+      <Egg_Count b="decimal"/>
+      <Hatched_Chick_Count_Live b="decimal"/>
+      <Hatched_Chick_Count_Dead b="decimal"/>
+    </cols>
+    <Take_Current_Chick_Counts t="button">
+      Compute Current Chick Counts
+    </Take_Current_Chick_Counts>
   </Nest_Measurement>
 </Nest_Measurement>
 
@@ -239,34 +272,38 @@
 
 <Chick>
   <Chick>
-    <Chick_Box_ID f="id noannotation nocertainty readonly">
-      Box ID
-      <str>
-        <pos>3</pos>
-        <fmt>Box-$2-</fmt>
-      </str>
-    </Chick_Box_ID>
-    <Chick_Location_Name f="id readonly noannotation nocertainty">
-      Location Name
-      <str>
-        <pos>4</pos>
-        <fmt>$2-</fmt>
-      </str>
-    </Chick_Location_Name>
-    <Chick_Nest_ID f="id noannotation nocertainty readonly">
-      Nest ID
-      <str>
-        <pos>2</pos>
-        <fmt>Nest-$2-</fmt>
-      </str>
-    </Chick_Nest_ID>
-    <Chick_Chick_ID f="id autonum noannotation nocertainty">
-      Chick ID
-      <str>
-        <pos>1</pos>
-        <fmt>Chick-$2-</fmt>
-      </str>
-    </Chick_Chick_ID>
+    <cols>
+      <Chick_Box_ID f="id noannotation nocertainty readonly">
+        Box ID
+        <str>
+          <pos>3</pos>
+          <fmt>Box-$2-</fmt>
+        </str>
+      </Chick_Box_ID>
+      <Chick_Location_Name f="id readonly noannotation nocertainty">
+        Location Name
+        <str>
+          <pos>4</pos>
+          <fmt>$2-</fmt>
+        </str>
+      </Chick_Location_Name>
+    </cols>
+    <cols>
+      <Chick_Nest_ID f="id noannotation nocertainty readonly">
+        Nest ID
+        <str>
+          <pos>2</pos>
+          <fmt>Nest-$2-</fmt>
+        </str>
+      </Chick_Nest_ID>
+      <Chick_Chick_ID f="id autonum noannotation nocertainty">
+        Chick ID
+        <str>
+          <pos>1</pos>
+          <fmt>Chick-$2-</fmt>
+        </str>
+      </Chick_Chick_ID>
+    </cols>
     <timestamp f="id">
       Chick Recorded at
       <str>
@@ -286,7 +323,9 @@
     <Band_Number/>
     <Notes/>
     <Add_Chick_Measurement t="button" lc="Chick_Measurement"/>
-    <Existing_Chick_Measurements t="dropdown" ec="Chick_Measurement"/>
+    <Existing_Chick_Measurements t="list" ec="Chick_Measurement" c="fixedheightfive">
+      Last 5 Recorded Chick Measurements
+    </Existing_Chick_Measurements>
   </Chick>
 </Chick>
 
@@ -341,5 +380,9 @@
   <!--@SOURCE: logic/nest-completed-button.bsh-->
   <!--@SOURCE: logic/revisits.bsh-->
   <!--@SOURCE: logic/hatched-chick-count-population.bsh-->
+  <!--@SOURCE: logic/web-view.bsh-->
+  <!--@SOURCE: logic/day-of-lay.bsh-->
+  <!--@SOURCE: logic/init-nest-status.bsh-->
+  <!--@SOURCE: logic/box-status-inheritance.bsh-->
 ]]></logic>
 </module>

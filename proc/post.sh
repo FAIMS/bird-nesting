@@ -15,6 +15,11 @@ replacement="\\1
   inherit\\2Fields();"
 perl -0777 -i.original -pe "s/$string/$replacement/igs" ui_logic.bsh
 
+string="(newNestMeasurement\\(\\){((?!\\n}).)+)"
+replacement="\\1
+  initNestStatus();"
+perl -0777 -i.original -pe "s/$string/$replacement/igs" ui_logic.bsh
+
 string="<input ref=\"Revisit\">"
 replacement="<input ref=\"Revisit\" faims_table=\"true\">"
 perl -0777 -i.original -pe "s/\\Q$string/$replacement/igs" ui_schema.xml
@@ -35,6 +40,12 @@ string="
 "
 replacement=""
 perl -0777 -i.original -pe "s/\\Q$string/$replacement/igs" ui_logic.bsh
+
+echo "
+.fixedheightfive {
+  height: 250px;
+}
+" >> ui_styling.css
 
 rm ui_logic.bsh.original
 rm ui_schema.xml.original

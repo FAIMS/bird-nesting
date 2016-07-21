@@ -1,0 +1,42 @@
+initNestStatus() {
+  String parentTabgroup = "Nest";
+  String nestUuid       = getUuid(parentTabgroup);
+  String refNestStatus  = "Nest_Measurement/Nest_Measurement/Nest_Status";
+
+  String q = "";
+  q += " /* Get the Nest Status attribute.";
+  q += "  */";
+  q += " SELECT vocabId, vocabName";
+  q += " FROM   latestnondeletedaentvalue";
+  q += " JOIN   attributekey USING (attributeid)";
+  q += " JOIN   vocabulary   USING (attributeid, vocabid)";
+  q += " WHERE  attributename = 'Nest Status'";
+  q += " AND    uuid IN (";
+  q += " ";
+  q += "     /* Select latest Nest Measurement uuid";
+  q += "      */";
+  q += "     SELECT    childuuid";
+  q += "       FROM    parentchild";
+  q += "       JOIN    createdmodifiedatby ON (uuid=childuuid)";
+  q += "      WHERE    parentuuid         = '{nestUuid}'";
+  q += "        AND    parentaenttypename = 'Nest'";
+  q += "        AND    childaenttypename  = 'Nest Measurement'";
+  q += "      ORDER BY createdat DESC";
+  q += "      LIMIT    1";
+  q += " ";
+  q += " )";
+  q  = replaceFirst(q, "{nestUuid}", nestUuid);
+
+  FetchCallback cb = new FetchCallback() {
+    onFetch(result) {
+      if      ( result                   == null ) { ; }
+      else if ( result.size()            == 0    ) { ; }
+      else if ( result.get(1)            == null ) { ; }
+      else if (!result.get(1).equals("{75_100_}")) { ; }
+      else
+        setFieldValue(refNestStatus, result.get(0));
+    }
+  };
+
+  fetchOne(q, cb);
+}

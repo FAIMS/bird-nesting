@@ -46,6 +46,7 @@
             </Search>
             <Revisit>
               <Days/>
+              <Perform_Next_Revisit/>
               <Compute_Revisits/>
               <Revisit/>
             </Revisit>
@@ -77,10 +78,26 @@
               <Height_m/>
               <Orientation_degrees/>
               <Comments/>
-              <Add_Box_Status/>
-              <Box_Statuses/>
-              <Add_New_Nest/>
-              <Existing_Nests/>
+              <Take_Photo/>
+              <Button_Take_Photo/>
+              <Colgroup_0>
+                <Col_0>
+                  <Box_Status/>
+                </Col_0>
+                <Col_1>
+                  <Box_Status_Spacer/>
+                </Col_1>
+              </Colgroup_0>
+              <Colgroup_1>
+                <Col_0>
+                  <Add_Box_Status/>
+                  <Box_Statuses/>
+                </Col_0>
+                <Col_1>
+                  <Add_New_Nest/>
+                  <Existing_Nests/>
+                </Col_1>
+              </Colgroup_1>
             </Box>
           </Box>
           <Box_Status>
@@ -92,31 +109,70 @@
           </Box_Status>
           <Nest>
             <Nest>
-              <Nest_Box_ID/>
-              <Nest_Location_Name/>
-              <Nest_Nest_ID/>
-              <timestamp/>
-              <Day_of_Lay/>
-              <Compute_Estimated_Day_of_Hatching/>
-              <Estimated_Day_of_Hatching/>
+              <Colgroup_0>
+                <Col_0>
+                  <Nest_Box_ID/>
+                </Col_0>
+                <Col_1>
+                  <Nest_Location_Name/>
+                </Col_1>
+              </Colgroup_0>
+              <Colgroup_1>
+                <Col_0>
+                  <Nest_Nest_ID/>
+                </Col_0>
+                <Col_1>
+                  <timestamp/>
+                </Col_1>
+              </Colgroup_1>
               <Nest_Completed/>
               <Nest_Completed_at/>
+              <Day_of_Lay/>
+              <Set_Day_of_Lay/>
+              <Compute_Estimated_Day_of_Hatching/>
+              <Click_Button_for_Automated_Date_Insertion_1/>
+              <Estimated_Day_of_Hatching/>
               <Add_Nest_Measurement/>
               <Nest_Measurements/>
-              <Add_New_Egg/>
-              <Existing_Eggs/>
-              <Add_New_Chick/>
-              <Existing_Chicks/>
             </Nest>
+            <Egg_Chick>
+              <Colgroup_0>
+                <Col_0>
+                  <Add_New_Egg/>
+                  <Existing_Eggs/>
+                </Col_0>
+                <Col_1>
+                  <Add_New_Chick/>
+                  <Existing_Chicks/>
+                </Col_1>
+              </Colgroup_0>
+            </Egg_Chick>
           </Nest>
+          <Day_of_Lay>
+            <Day_of_Lay>
+              <Day_of_Lay/>
+              <Set_Day_of_Lay/>
+              <Cancel/>
+            </Day_of_Lay>
+          </Day_of_Lay>
           <Nest_Measurement>
             <Nest_Measurement>
               <Nest_Measurement_Nest_ID/>
               <timestamp/>
-              <Egg_Count/>
               <Nest_Status/>
-              <Hatched_Chick_Count_Live/>
-              <Hatched_Chick_Count_Dead/>
+              <Spacer/>
+              <Colgroup_0>
+                <Col_0>
+                  <Egg_Count/>
+                </Col_0>
+                <Col_1>
+                  <Hatched_Chick_Count_Live/>
+                </Col_1>
+                <Col_2>
+                  <Hatched_Chick_Count_Dead/>
+                </Col_2>
+              </Colgroup_0>
+              <Take_Current_Chick_Counts/>
             </Nest_Measurement>
           </Nest_Measurement>
           <Egg>
@@ -133,10 +189,22 @@
           </Egg>
           <Chick>
             <Chick>
-              <Chick_Box_ID/>
-              <Chick_Location_Name/>
-              <Chick_Nest_ID/>
-              <Chick_Chick_ID/>
+              <Colgroup_0>
+                <Col_0>
+                  <Chick_Box_ID/>
+                </Col_0>
+                <Col_1>
+                  <Chick_Location_Name/>
+                </Col_1>
+              </Colgroup_0>
+              <Colgroup_1>
+                <Col_0>
+                  <Chick_Nest_ID/>
+                </Col_0>
+                <Col_1>
+                  <Chick_Chick_ID/>
+                </Col_1>
+              </Colgroup_1>
               <timestamp/>
               <Bird_Species/>
               <Band_Number/>
@@ -170,16 +238,16 @@
       <bind type="decimal" nodeset="/faims/Box/Box/Box_Box_ID"/>
       <bind type="decimal" nodeset="/faims/Box/Box/Height_m"/>
       <bind type="decimal" nodeset="/faims/Box/Box/Orientation_degrees"/>
-      <bind type="decimal" nodeset="/faims/Nest/Nest/Nest_Nest_ID"/>
-      <bind type="date" nodeset="/faims/Nest/Nest/Day_of_Lay"/>
-      <bind type="decimal" nodeset="/faims/Nest_Measurement/Nest_Measurement/Egg_Count"/>
-      <bind type="decimal" nodeset="/faims/Nest_Measurement/Nest_Measurement/Hatched_Chick_Count_Live"/>
-      <bind type="decimal" nodeset="/faims/Nest_Measurement/Nest_Measurement/Hatched_Chick_Count_Dead"/>
+      <bind type="decimal" nodeset="/faims/Nest/Nest/Colgroup_1/Col_0/Nest_Nest_ID"/>
+      <bind type="date" nodeset="/faims/Day_of_Lay/Day_of_Lay/Day_of_Lay"/>
+      <bind type="decimal" nodeset="/faims/Nest_Measurement/Nest_Measurement/Colgroup_0/Col_0/Egg_Count"/>
+      <bind type="decimal" nodeset="/faims/Nest_Measurement/Nest_Measurement/Colgroup_0/Col_1/Hatched_Chick_Count_Live"/>
+      <bind type="decimal" nodeset="/faims/Nest_Measurement/Nest_Measurement/Colgroup_0/Col_2/Hatched_Chick_Count_Dead"/>
       <bind type="decimal" nodeset="/faims/Egg/Egg/Egg_ID"/>
       <bind type="decimal" nodeset="/faims/Egg/Egg/Egg_Length_mm"/>
       <bind type="decimal" nodeset="/faims/Egg/Egg/Egg_Width_mm"/>
       <bind type="decimal" nodeset="/faims/Egg/Egg/Egg_Weight_g"/>
-      <bind type="decimal" nodeset="/faims/Chick/Chick/Chick_Chick_ID"/>
+      <bind type="decimal" nodeset="/faims/Chick/Chick/Colgroup_1/Col_1/Chick_Chick_ID"/>
       <bind type="decimal" nodeset="/faims/Chick_Measurement/Chick_Measurement/Chick_Age_days"/>
       <bind type="decimal" nodeset="/faims/Chick_Measurement/Chick_Measurement/Weight_g"/>
       <bind type="decimal" nodeset="/faims/Chick_Measurement/Chick_Measurement/Head_Length_mm"/>
@@ -293,6 +361,9 @@
             <value>0</value>
           </item>
         </select1>
+        <trigger ref="Perform_Next_Revisit">
+          <label>{Perform_Next_Revisit}</label>
+        </trigger>
         <trigger ref="Compute_Revisits">
           <label>{Compute_Revisits}</label>
         </trigger>
@@ -363,26 +434,60 @@
         <input faims_attribute_type="measure" ref="Comments" faims_attribute_name="Comments">
           <label>{Comments}</label>
         </input>
-        <trigger ref="Add_Box_Status">
-          <label>{Add_Box_Status}</label>
-        </trigger>
-        <select1 ref="Box_Statuses" faims_annotation="false" faims_certainty="false">
-          <label>{Box_Statuses}</label>
+        <select type="camera" faims_attribute_type="measure" faims_sync="true" ref="Take_Photo" faims_attribute_name="Take Photo">
+          <label>{Take_Photo}</label>
           <item>
             <label>Options not loaded</label>
             <value>0</value>
           </item>
-        </select1>
-        <trigger ref="Add_New_Nest">
-          <label>{Add_New_Nest}</label>
+        </select>
+        <trigger ref="Button_Take_Photo">
+          <label>{Button_Take_Photo}</label>
         </trigger>
-        <select1 ref="Existing_Nests" faims_annotation="false" faims_certainty="false">
-          <label>{Existing_Nests}</label>
-          <item>
-            <label>Options not loaded</label>
-            <value>0</value>
-          </item>
-        </select1>
+        <group ref="Colgroup_0" faims_style="orientation">
+          <label/>
+          <group ref="Col_0" faims_style="even">
+            <label/>
+            <input ref="Box_Status" faims_read_only="true" faims_certainty="false" faims_annotation="false">
+              <label>{Box_Status}</label>
+            </input>
+          </group>
+          <group ref="Col_1" faims_style="even">
+            <label/>
+            <group ref="Box_Status_Spacer">
+              <label>{Box_Status_Spacer}</label>
+            </group>
+          </group>
+        </group>
+        <group ref="Colgroup_1" faims_style="orientation">
+          <label/>
+          <group ref="Col_0" faims_style="even">
+            <label/>
+            <trigger ref="Add_Box_Status">
+              <label>{Add_Box_Status}</label>
+            </trigger>
+            <select1 appearance="compact" ref="Box_Statuses" faims_style_class="fixedheightfive" faims_annotation="false" faims_certainty="false">
+              <label>{Last_5_Recorded_Box_Statuses}</label>
+              <item>
+                <label>Options not loaded</label>
+                <value>0</value>
+              </item>
+            </select1>
+          </group>
+          <group ref="Col_1" faims_style="even">
+            <label/>
+            <trigger ref="Add_New_Nest">
+              <label>{Add_New_Nest}</label>
+            </trigger>
+            <select1 appearance="compact" ref="Existing_Nests" faims_style_class="fixedheightfive" faims_annotation="false" faims_certainty="false">
+              <label>{Last_5_Recorded_Nests}</label>
+              <item>
+                <label>Options not loaded</label>
+                <value>0</value>
+              </item>
+            </select1>
+          </group>
+        </group>
       </group>
     </group>
     <group ref="Box_Status" faims_archent_type="Box Status">
@@ -409,78 +514,126 @@
       <label>{Nest}</label>
       <group ref="Nest">
         <label>{Nest}</label>
-        <input faims_attribute_type="measure" ref="Nest_Box_ID" faims_attribute_name="Nest Box ID" faims_read_only="true" faims_certainty="false" faims_annotation="false">
-          <label>{Box_ID}</label>
-        </input>
-        <input faims_attribute_type="measure" ref="Nest_Location_Name" faims_attribute_name="Nest Location Name" faims_read_only="true" faims_certainty="false" faims_annotation="false">
-          <label>{Location_Name}</label>
-        </input>
-        <input faims_attribute_type="measure" ref="Nest_Nest_ID" faims_attribute_name="Nest Nest ID" faims_certainty="false" faims_annotation="false">
-          <label>{Nest_ID}</label>
-        </input>
-        <input ref="timestamp" faims_attribute_name="Nest timestamp" faims_attribute_type="measure" faims_read_only="true" faims_annotation="false" faims_certainty="false">
-          <label>{Nest_Created_at}</label>
-        </input>
-        <input faims_attribute_type="measure" ref="Day_of_Lay" faims_attribute_name="Day of Lay">
-          <label>{Day_of_Lay}</label>
-        </input>
-        <trigger ref="Compute_Estimated_Day_of_Hatching">
-          <label>{Compute_Estimated_Day_of_Hatching}</label>
-        </trigger>
-        <input faims_attribute_type="measure" ref="Estimated_Day_of_Hatching" faims_attribute_name="Estimated Day of Hatching" faims_read_only="true">
-          <label>{Estimated_Day_of_Hatching}</label>
-        </input>
+        <group ref="Colgroup_0" faims_style="orientation">
+          <label/>
+          <group ref="Col_0" faims_style="even">
+            <label/>
+            <input faims_attribute_type="measure" ref="Nest_Box_ID" faims_attribute_name="Nest Box ID" faims_read_only="true" faims_certainty="false" faims_annotation="false">
+              <label>{Box_ID}</label>
+            </input>
+          </group>
+          <group ref="Col_1" faims_style="even">
+            <label/>
+            <input faims_attribute_type="measure" ref="Nest_Location_Name" faims_attribute_name="Nest Location Name" faims_read_only="true" faims_certainty="false" faims_annotation="false">
+              <label>{Location_Name}</label>
+            </input>
+          </group>
+        </group>
+        <group ref="Colgroup_1" faims_style="orientation">
+          <label/>
+          <group ref="Col_0" faims_style="even">
+            <label/>
+            <input faims_attribute_type="measure" ref="Nest_Nest_ID" faims_attribute_name="Nest Nest ID" faims_certainty="false" faims_annotation="false">
+              <label>{Nest_ID}</label>
+            </input>
+          </group>
+          <group ref="Col_1" faims_style="even">
+            <label/>
+            <input ref="timestamp" faims_attribute_name="Nest timestamp" faims_attribute_type="measure" faims_read_only="true" faims_annotation="false" faims_certainty="false">
+              <label>{Nest_Record_Created_at}</label>
+            </input>
+          </group>
+        </group>
         <trigger ref="Nest_Completed">
           <label>{Nest_Completed}</label>
         </trigger>
         <input faims_attribute_type="measure" ref="Nest_Completed_at" faims_attribute_name="Nest Completed at" faims_read_only="true">
-          <label>{Nest_Completed_at}</label>
+          <label>{Date_Nest_Completed}</label>
+        </input>
+        <input faims_attribute_type="measure" ref="Day_of_Lay" faims_attribute_name="Day of Lay" faims_read_only="true">
+          <label>{Day_of_Lay}</label>
+        </input>
+        <trigger ref="Set_Day_of_Lay">
+          <label>{Set_Day_of_Lay___}</label>
+        </trigger>
+        <trigger ref="Compute_Estimated_Day_of_Hatching">
+          <label>{Compute_Estimated_Day_of_Hatching}</label>
+        </trigger>
+        <input faims_web="true" ref="Click_Button_for_Automated_Date_Insertion_1">
+          <label/>
+        </input>
+        <input faims_attribute_type="measure" ref="Estimated_Day_of_Hatching" faims_attribute_name="Estimated Day of Hatching">
+          <label>{Estimated_Day_of_Hatching}</label>
         </input>
         <trigger ref="Add_Nest_Measurement">
-          <label>{Add_Nest_Measurement}</label>
+          <label>{Add_Nest_Visit}</label>
         </trigger>
-        <select1 ref="Nest_Measurements" faims_annotation="false" faims_certainty="false">
-          <label>{Nest_Measurements}</label>
-          <item>
-            <label>Options not loaded</label>
-            <value>0</value>
-          </item>
-        </select1>
-        <trigger ref="Add_New_Egg">
-          <label>{Add_New_Egg}</label>
-        </trigger>
-        <select1 ref="Existing_Eggs" faims_annotation="false" faims_certainty="false">
-          <label>{Existing_Eggs}</label>
-          <item>
-            <label>Options not loaded</label>
-            <value>0</value>
-          </item>
-        </select1>
-        <trigger ref="Add_New_Chick">
-          <label>{Add_New_Chick}</label>
-        </trigger>
-        <select1 ref="Existing_Chicks" faims_annotation="false" faims_certainty="false">
-          <label>{Existing_Chicks}</label>
+        <select1 appearance="compact" ref="Nest_Measurements" faims_style_class="fixedheightfive" faims_annotation="false" faims_certainty="false">
+          <label>{Last_5_Recorded_Nest_Visits}</label>
           <item>
             <label>Options not loaded</label>
             <value>0</value>
           </item>
         </select1>
       </group>
+      <group ref="Egg_Chick" faims_scrollable="false">
+        <label>{Egg_Chick}</label>
+        <group ref="Colgroup_0" faims_style="orientation">
+          <label/>
+          <group ref="Col_0" faims_style="even">
+            <label/>
+            <trigger ref="Add_New_Egg">
+              <label>{Add_New_Egg}</label>
+            </trigger>
+            <select1 appearance="compact" ref="Existing_Eggs" faims_annotation="false" faims_certainty="false">
+              <label>{Existing_Eggs}</label>
+              <item>
+                <label>Options not loaded</label>
+                <value>0</value>
+              </item>
+            </select1>
+          </group>
+          <group ref="Col_1" faims_style="even">
+            <label/>
+            <trigger ref="Add_New_Chick">
+              <label>{Add_New_Chick}</label>
+            </trigger>
+            <select1 appearance="compact" ref="Existing_Chicks" faims_annotation="false" faims_certainty="false">
+              <label>{Existing_Chicks}</label>
+              <item>
+                <label>Options not loaded</label>
+                <value>0</value>
+              </item>
+            </select1>
+          </group>
+        </group>
+      </group>
+    </group>
+    <group ref="Day_of_Lay">
+      <label>{Day_of_Lay}</label>
+      <group ref="Day_of_Lay">
+        <label>{Day_of_Lay}</label>
+        <input ref="Day_of_Lay">
+          <label>{Day_of_Lay}</label>
+        </input>
+        <trigger ref="Set_Day_of_Lay">
+          <label>{Set_Day_of_Lay}</label>
+        </trigger>
+        <trigger ref="Cancel">
+          <label>{Cancel}</label>
+        </trigger>
+      </group>
     </group>
     <group ref="Nest_Measurement" faims_archent_type="Nest Measurement">
-      <label>{Nest_Measurement}</label>
+      <label>{Nest_Visit}</label>
       <group ref="Nest_Measurement">
-        <label>{Nest_Measurement}</label>
+        <label>{Nest_Visit}</label>
         <input faims_attribute_type="measure" ref="Nest_Measurement_Nest_ID" faims_attribute_name="Nest Measurement Nest ID" faims_certainty="false" faims_annotation="false">
           <label>{Nest_ID}</label>
         </input>
         <input ref="timestamp" faims_attribute_name="Nest_Measurement timestamp" faims_attribute_type="measure" faims_read_only="true" faims_annotation="false" faims_certainty="false">
-          <label>{Nest_Measurement_Recorded_at}</label>
+          <label>{Nest_Visit_Recorded_at}</label>
           <!--WARNING: Flags ignored-->
-        </input>
-        <input faims_attribute_type="measure" ref="Egg_Count" faims_attribute_name="Egg Count">
-          <label>{Egg_Count}</label>
         </input>
         <select1 faims_attribute_type="vocab" ref="Nest_Status" faims_attribute_name="Nest Status">
           <label>{Nest_Status}</label>
@@ -489,12 +642,33 @@
             <value>0</value>
           </item>
         </select1>
-        <input faims_attribute_type="measure" ref="Hatched_Chick_Count_Live" faims_attribute_name="Hatched Chick Count Live">
-          <label>{Hatched_Chick_Count_Live}</label>
+        <input faims_web="true" ref="Spacer">
+          <label/>
         </input>
-        <input faims_attribute_type="measure" ref="Hatched_Chick_Count_Dead" faims_attribute_name="Hatched Chick Count Dead">
-          <label>{Hatched_Chick_Count_Dead}</label>
-        </input>
+        <group ref="Colgroup_0" faims_style="orientation">
+          <label/>
+          <group ref="Col_0" faims_style="even">
+            <label/>
+            <input faims_attribute_type="measure" ref="Egg_Count" faims_attribute_name="Egg Count">
+              <label>{Egg_Count}</label>
+            </input>
+          </group>
+          <group ref="Col_1" faims_style="even">
+            <label/>
+            <input faims_attribute_type="measure" ref="Hatched_Chick_Count_Live" faims_attribute_name="Hatched Chick Count Live">
+              <label>{Hatched_Chick_Count_Live}</label>
+            </input>
+          </group>
+          <group ref="Col_2" faims_style="even">
+            <label/>
+            <input faims_attribute_type="measure" ref="Hatched_Chick_Count_Dead" faims_attribute_name="Hatched Chick Count Dead">
+              <label>{Hatched_Chick_Count_Dead}</label>
+            </input>
+          </group>
+        </group>
+        <trigger ref="Take_Current_Chick_Counts">
+          <label>{Compute_Current_Chick_Counts}</label>
+        </trigger>
       </group>
     </group>
     <group ref="Egg" faims_archent_type="Egg">
@@ -532,18 +706,36 @@
       <label>{Chick}</label>
       <group ref="Chick">
         <label>{Chick}</label>
-        <input faims_attribute_type="measure" ref="Chick_Box_ID" faims_attribute_name="Chick Box ID" faims_read_only="true" faims_certainty="false" faims_annotation="false">
-          <label>{Box_ID}</label>
-        </input>
-        <input faims_attribute_type="measure" ref="Chick_Location_Name" faims_attribute_name="Chick Location Name" faims_read_only="true" faims_certainty="false" faims_annotation="false">
-          <label>{Location_Name}</label>
-        </input>
-        <input faims_attribute_type="measure" ref="Chick_Nest_ID" faims_attribute_name="Chick Nest ID" faims_read_only="true" faims_certainty="false" faims_annotation="false">
-          <label>{Nest_ID}</label>
-        </input>
-        <input faims_attribute_type="measure" ref="Chick_Chick_ID" faims_attribute_name="Chick Chick ID" faims_certainty="false" faims_annotation="false">
-          <label>{Chick_ID}</label>
-        </input>
+        <group ref="Colgroup_0" faims_style="orientation">
+          <label/>
+          <group ref="Col_0" faims_style="even">
+            <label/>
+            <input faims_attribute_type="measure" ref="Chick_Box_ID" faims_attribute_name="Chick Box ID" faims_read_only="true" faims_certainty="false" faims_annotation="false">
+              <label>{Box_ID}</label>
+            </input>
+          </group>
+          <group ref="Col_1" faims_style="even">
+            <label/>
+            <input faims_attribute_type="measure" ref="Chick_Location_Name" faims_attribute_name="Chick Location Name" faims_read_only="true" faims_certainty="false" faims_annotation="false">
+              <label>{Location_Name}</label>
+            </input>
+          </group>
+        </group>
+        <group ref="Colgroup_1" faims_style="orientation">
+          <label/>
+          <group ref="Col_0" faims_style="even">
+            <label/>
+            <input faims_attribute_type="measure" ref="Chick_Nest_ID" faims_attribute_name="Chick Nest ID" faims_read_only="true" faims_certainty="false" faims_annotation="false">
+              <label>{Nest_ID}</label>
+            </input>
+          </group>
+          <group ref="Col_1" faims_style="even">
+            <label/>
+            <input faims_attribute_type="measure" ref="Chick_Chick_ID" faims_attribute_name="Chick Chick ID" faims_certainty="false" faims_annotation="false">
+              <label>{Chick_ID}</label>
+            </input>
+          </group>
+        </group>
         <input ref="timestamp" faims_attribute_name="Chick timestamp" faims_attribute_type="measure" faims_read_only="true" faims_annotation="false" faims_certainty="false">
           <label>{Chick_Recorded_at}</label>
           <!--WARNING: Flags ignored-->
@@ -564,8 +756,8 @@
         <trigger ref="Add_Chick_Measurement">
           <label>{Add_Chick_Measurement}</label>
         </trigger>
-        <select1 ref="Existing_Chick_Measurements" faims_annotation="false" faims_certainty="false">
-          <label>{Existing_Chick_Measurements}</label>
+        <select1 appearance="compact" ref="Existing_Chick_Measurements" faims_style_class="fixedheightfive" faims_annotation="false" faims_certainty="false">
+          <label>{Last_5_Recorded_Chick_Measurements}</label>
           <item>
             <label>Options not loaded</label>
             <value>0</value>

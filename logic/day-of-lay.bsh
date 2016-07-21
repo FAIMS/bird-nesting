@@ -1,0 +1,30 @@
+onClickNestSetDayofLay () {
+  msgHead  = "Proceed To Date Picker?";
+  msgBody  = "Have you established the Day of Lay? If not, press 'Cancel' and ";
+  msgBody += "return. If yes, press 'OK' and select date from date picker. ";
+  msgBody += "Once selected, the 'Day of Lay' can only be edited but not ";
+  msgBody += "blanked.";
+
+  cbOkay   = "goToDayOfLayTabGroup()";
+  cbCancel = "";
+
+  showAlert(msgHead, msgBody, cbOkay, cbCancel);
+}
+
+goToDayOfLayTabGroup() {
+  newTab("Day_of_Lay", true);
+}
+
+
+addOnEvent("Day_of_Lay/Day_of_Lay/Set_Day_of_Lay", "click", "setDayOfLay()");
+addOnEvent("Day_of_Lay/Day_of_Lay/Cancel",         "click", "goBack()");
+
+setDayOfLay() {
+  copyFieldValue(
+    "Day_of_Lay/Day_of_Lay/Day_of_Lay",
+    "Nest/Nest/Day_of_Lay",
+    false
+  );
+
+  goBack();
+}
