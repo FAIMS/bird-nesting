@@ -1,6 +1,6 @@
 /********************************** REVISITS **********************************/
 addOnEvent("Control/Revisit/Compute_Revisits",     "click", "computeRevisits()");
-addOnEvent("Control/Revisit/Perform_Next_Revisit", "click", "performNextRevisit()");
+//addOnEvent("Control/Revisit/Perform_Next_Revisit", "click", "performNextRevisit()");
 addOnEvent("Control/Revisit/Revisit",              "show",  "populateDaysDropdown()");
 
 populateDaysDropdown() {

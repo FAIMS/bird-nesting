@@ -20,7 +20,7 @@
   <search/>
   <Revisit f="noscroll">
     <Days t="dropdown"/>
-    <Perform_Next_Revisit t="button"/>
+    <!--<Perform_Next_Revisit t="button"/>-->
     <Compute_Revisits t="button"/>
     <Revisit f="nolabel">
       <!--This is replaced with a table view using @POSTPROC-->
@@ -66,7 +66,9 @@
     <Comments/>
     <Take_Photo t="camera"/>
     <cols>
-      <Box_Status f="nodata readonly"/>
+      <Box_Status f="nodata readonly">
+        Current Box Status
+      </Box_Status>
       <Box_Status_Spacer t="group"/>
     </cols>
     <cols>
@@ -88,7 +90,7 @@
 
 <Box_Status>
   <Box_Status>
-    <Box_Status_Box_ID f="id noannotation nocertainty">
+    <Box_Status_Box_ID f="id noannotation nocertainty readonly">
       Box ID
       <str>
         <pos>1</pos>
@@ -143,14 +145,16 @@
         Nest Record Created at
       </timestamp>
     </cols>
-    <Nest_Completed t="button"/>
+    <Nest_Completed t="button">
+      Nest Found Completed
+    </Nest_Completed>
     <Nest_Completed_at f="readonly">
       Date Nest Completed
     </Nest_Completed_at>
-    <Day_of_Lay f="readonly"/>
     <Set_Day_of_Lay t="button" l="Day_of_Lay">
       Set Day of Lay...
     </Set_Day_of_Lay>
+    <Day_of_Lay f="readonly"/>
     <Compute_Estimated_Day_of_Hatching t="button"/>
     <Click_Button_for_Automated_Date_Insertion_1 t="webview" f="nolabel"/>
     <Estimated_Day_of_Hatching/>
@@ -187,7 +191,7 @@
   Nest Visit
   <Nest_Measurement>
     Nest Visit
-    <Nest_Measurement_Nest_ID f="id noannotation nocertainty">
+    <Nest_Measurement_Nest_ID f="id noannotation nocertainty readonly">
       Nest ID
       <str>
         <pos>1</pos>

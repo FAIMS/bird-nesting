@@ -46,7 +46,6 @@
             </Search>
             <Revisit>
               <Days/>
-              <Perform_Next_Revisit/>
               <Compute_Revisits/>
               <Revisit/>
             </Revisit>
@@ -127,8 +126,8 @@
               </Colgroup_1>
               <Nest_Completed/>
               <Nest_Completed_at/>
-              <Day_of_Lay/>
               <Set_Day_of_Lay/>
+              <Day_of_Lay/>
               <Compute_Estimated_Day_of_Hatching/>
               <Click_Button_for_Automated_Date_Insertion_1/>
               <Estimated_Day_of_Hatching/>
@@ -361,9 +360,6 @@
             <value>0</value>
           </item>
         </select1>
-        <trigger ref="Perform_Next_Revisit">
-          <label>{Perform_Next_Revisit}</label>
-        </trigger>
         <trigger ref="Compute_Revisits">
           <label>{Compute_Revisits}</label>
         </trigger>
@@ -449,7 +445,7 @@
           <group ref="Col_0" faims_style="even">
             <label/>
             <input ref="Box_Status" faims_read_only="true" faims_certainty="false" faims_annotation="false">
-              <label>{Box_Status}</label>
+              <label>{Current_Box_Status}</label>
             </input>
           </group>
           <group ref="Col_1" faims_style="even">
@@ -494,7 +490,7 @@
       <label>{Box_Status}</label>
       <group ref="Box_Status">
         <label>{Box_Status}</label>
-        <input faims_attribute_type="measure" ref="Box_Status_Box_ID" faims_attribute_name="Box Status Box ID" faims_certainty="false" faims_annotation="false">
+        <input faims_attribute_type="measure" ref="Box_Status_Box_ID" faims_attribute_name="Box Status Box ID" faims_read_only="true" faims_certainty="false" faims_annotation="false">
           <label>{Box_ID}</label>
         </input>
         <input ref="timestamp" faims_attribute_name="Box_Status timestamp" faims_attribute_type="measure" faims_read_only="true" faims_annotation="false" faims_certainty="false">
@@ -545,17 +541,17 @@
           </group>
         </group>
         <trigger ref="Nest_Completed">
-          <label>{Nest_Completed}</label>
+          <label>{Nest_Found_Completed}</label>
         </trigger>
         <input faims_attribute_type="measure" ref="Nest_Completed_at" faims_attribute_name="Nest Completed at" faims_read_only="true">
           <label>{Date_Nest_Completed}</label>
         </input>
-        <input faims_attribute_type="measure" ref="Day_of_Lay" faims_attribute_name="Day of Lay" faims_read_only="true">
-          <label>{Day_of_Lay}</label>
-        </input>
         <trigger ref="Set_Day_of_Lay">
           <label>{Set_Day_of_Lay___}</label>
         </trigger>
+        <input faims_attribute_type="measure" ref="Day_of_Lay" faims_attribute_name="Day of Lay" faims_read_only="true">
+          <label>{Day_of_Lay}</label>
+        </input>
         <trigger ref="Compute_Estimated_Day_of_Hatching">
           <label>{Compute_Estimated_Day_of_Hatching}</label>
         </trigger>
@@ -628,7 +624,7 @@
       <label>{Nest_Visit}</label>
       <group ref="Nest_Measurement">
         <label>{Nest_Visit}</label>
-        <input faims_attribute_type="measure" ref="Nest_Measurement_Nest_ID" faims_attribute_name="Nest Measurement Nest ID" faims_certainty="false" faims_annotation="false">
+        <input faims_attribute_type="measure" ref="Nest_Measurement_Nest_ID" faims_attribute_name="Nest Measurement Nest ID" faims_read_only="true" faims_certainty="false" faims_annotation="false">
           <label>{Nest_ID}</label>
         </input>
         <input ref="timestamp" faims_attribute_name="Nest_Measurement timestamp" faims_attribute_type="measure" faims_read_only="true" faims_annotation="false" faims_certainty="false">
