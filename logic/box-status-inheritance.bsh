@@ -63,6 +63,7 @@ loadBoxFrom(String uuid) {
 
   FetchCallback updateBoxStatus = new FetchCallback() {
     onFetch(result) {
+      populateEntityListsInTabGroup(tabgroup);
       updateBoxStatusWebView();
     }
   };

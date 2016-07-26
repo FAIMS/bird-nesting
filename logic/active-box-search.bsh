@@ -44,13 +44,11 @@ activeBoxSearch() {
   q += "                   FROM latestnondeletedaentvalue";
   q += "                  WHERE vocabid = {boxPrefix}";
   q += "        )";
-  q += "  ORDER BY CAST(response AS numeric);";
+  q += "  ORDER BY CAST(response AS numeric)";
   q += "  LIMIT ? OFFSET ?";
   q  = replaceFirst(q, "{boxId}",     boxId);
   q  = replaceFirst(q, "{boxPrefix}", boxPrefix);
-  showWarning("", q + "");
 
   populateCursorList(refActiveBoxes, q, 25);
-  refreshTabgroupCSS("Box");
 }
 
