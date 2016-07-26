@@ -11,8 +11,8 @@ estimateDayOfHatching() {
   String dayOfHatching = getFieldValue(refDayOfHatching);
 
   // Set input and output formats
-  fmtIn   = "dd/MM/yyyy";
-  fmtOut  = "dd-MM-yyyy";
+  fmtIn   = "yyyy/MM/dd";
+  fmtOut  = "yyyy/MM/dd";
 
   dateFmtIn  = new java.text.SimpleDateFormat(fmtIn );
   dateFmtOut = new java.text.SimpleDateFormat(fmtOut);

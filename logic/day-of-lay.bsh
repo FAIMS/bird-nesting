@@ -1,8 +1,8 @@
 onClickNestSetDayofLay () {
   msgHead  = "Proceed To Date Picker?";
-  msgBody  = "Have you established the Day of Lay? If not, press 'Cancel' and ";
+  msgBody  = "Have you established the Day of Last Egg? If not, press 'Cancel' and ";
   msgBody += "return. If yes, press 'OK' and select date from date picker. ";
-  msgBody += "Once selected, the 'Day of Lay' can only be edited but not ";
+  msgBody += "Once selected, the 'Day of Last Egg' can only be edited but not ";
   msgBody += "blanked.";
 
   cbOkay   = "goToDayOfLayTabGroup()";
@@ -20,11 +20,16 @@ addOnEvent("Day_of_Lay/Day_of_Lay/Set_Day_of_Lay", "click", "setDayOfLay()");
 addOnEvent("Day_of_Lay/Day_of_Lay/Cancel",         "click", "goBack()");
 
 setDayOfLay() {
-  copyFieldValue(
-    "Day_of_Lay/Day_of_Lay/Day_of_Lay",
-    "Nest/Nest/Day_of_Lay",
-    false
-  );
+  src = "Day_of_Lay/Day_of_Lay/Day_of_Lay";
+  dst = "Nest/Nest/Day_of_Lay";
+
+  // Change the date picker's DD/MM/YYYY format to YYYY/MM/DD
+  val = getFieldValue(src);
+  val = val.split("/")[2] + "/" +
+        val.split("/")[1] + "/" +
+        val.split("/")[0];
+
+  setFieldValue(dst, val);
 
   goBack();
 }

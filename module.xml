@@ -4,7 +4,7 @@
 <module suppressWarnings="true">
 
 <Login f="nodata">
-  <Login>
+  <Login f="noscroll">
     <User t="list" f="user nolabel" l="Control"/>
   </Login>
 </Login>
@@ -17,6 +17,16 @@
   <Defaults>
     <autonum/>
   </Defaults>
+  <Active_Boxes f="noscroll">
+    <cols>
+      <Box_Prefix t="dropdown">
+        <!--Populated in logic-->
+      </Box_Prefix>
+      <Box_ID/>
+      <Search t="button"/>
+    </cols>
+    <Active_Boxes t="list"/>
+  </Active_Boxes>
   <search/>
   <Revisit f="noscroll">
     <Days t="dropdown"/>
@@ -30,11 +40,19 @@
 
 <Box>
   <Box>
-    <Box_Box_ID f="id autonum noannotation nocertainty">
-      Box ID
+    <Box_Box_Prefix f="id noannotation nocertainty">
+      Box Prefix
+      <str>
+        <pos>0</pos>
+        <fmt>Box-$1</fmt>
+      </str>
+      <!--@SOURCE: vocabs/alpha.xml-->
+    </Box_Box_Prefix>
+    <Box_Box_ID f="id noannotation nocertainty" b="decimal">
+      Box Number
       <str>
         <pos>1</pos>
-        <fmt>Box-$2-</fmt>
+        <fmt>$2-</fmt>
       </str>
     </Box_Box_ID>
     <Box_Location_Name f="id">
@@ -90,8 +108,16 @@
 
 <Box_Status>
   <Box_Status>
-    <Box_Status_Box_ID f="id noannotation nocertainty readonly">
-      Box ID
+    <Box_Status_Box_Prefix f="id noannotation nocertainty readonly">
+      Box Prefix
+      <str>
+        <pos>0</pos>
+        <fmt>$1</fmt>
+      </str>
+      <!--@SOURCE: vocabs/alpha.xml-->
+    </Box_Status_Box_Prefix>
+    <Box_Status_Box_ID f="id noannotation nocertainty readonly" b="decimal">
+      Box Number
       <str>
         <pos>1</pos>
         <fmt>$2-</fmt>
@@ -118,8 +144,16 @@
 <Nest>
   <Nest>
     <cols>
-      <Nest_Box_ID f="id noannotation nocertainty readonly">
-        Box ID
+      <Nest_Box_Prefix f="id noannotation nocertainty readonly">
+        Box Prefix
+        <str>
+          <pos>0</pos>
+          <fmt>Nest-$1</fmt>
+        </str>
+        <!--@SOURCE: vocabs/alpha.xml-->
+      </Nest_Box_Prefix>
+      <Nest_Box_ID f="id noannotation nocertainty readonly" b="decimal">
+        Box Number
         <str>
           <pos>2</pos>
           <fmt>Box-$2-</fmt>
@@ -138,7 +172,7 @@
         Nest ID
         <str>
           <pos>1</pos>
-          <fmt>Nest-$2-</fmt>
+          <fmt>$2-</fmt>
         </str>
       </Nest_Nest_ID>
       <timestamp>
@@ -152,12 +186,16 @@
       Date Nest Completed
     </Nest_Completed_at>
     <Set_Day_of_Lay t="button" l="Day_of_Lay">
-      Set Day of Lay...
+      Set Day of Last Egg...
     </Set_Day_of_Lay>
     <Day_of_Lay f="readonly"/>
     <Compute_Estimated_Day_of_Hatching t="button"/>
     <Click_Button_for_Automated_Date_Insertion_1 t="webview" f="nolabel"/>
-    <Estimated_Day_of_Hatching/>
+    <Estimated_Day_of_Hatching f="readonly"/>
+    <Set_Actual_Day_of_Hatching t="button" l="Actual_Day_of_Hatching">
+      Set Actual Day of Hatching...
+    </Set_Actual_Day_of_Hatching>
+    <Actual_Day_of_Hatching f="readonly"/>
     <Add_Nest_Measurement t="button" lc="Nest_Measurement">
       Add Nest Visit
     </Add_Nest_Measurement>
@@ -180,12 +218,26 @@
 </Nest>
 
 <Day_of_Lay f="nodata">
+  Day of Last Egg
   <Day_of_Lay>
-    <Day_of_Lay b="date"/>
-    <Set_Day_of_Lay t="button"/>
+    Day of Last Egg
+    <Day_of_Lay b="date">
+      Day of Last Egg
+    </Day_of_Lay>
+    <Set_Day_of_Lay t="button">
+      Set Day of Last Egg
+    </Set_Day_of_Lay>
     <Cancel t="button"/>
   </Day_of_Lay>
 </Day_of_Lay>
+
+<Actual_Day_of_Hatching f="nodata">
+  <Actual_Day_of_Hatching>
+    <Actual_Day_of_Hatching b="date"/>
+    <Set_Actual_Day_of_Hatching t="button"/>
+    <Cancel t="button"/>
+  </Actual_Day_of_Hatching>
+</Actual_Day_of_Hatching>
 
 <Nest_Measurement>
   Nest Visit
@@ -228,8 +280,16 @@
 
 <Egg>
   <Egg>
-    <Egg_Box_ID f="id noannotation nocertainty readonly">
-      Box ID
+    <Egg_Box_Prefix f="id noannotation nocertainty readonly">
+      Box Prefix
+      <str>
+        <pos>1</pos>
+        <fmt>Nest-$1</fmt>
+      </str>
+      <!--@SOURCE: vocabs/alpha.xml-->
+    </Egg_Box_Prefix>
+    <Egg_Box_ID f="id noannotation nocertainty readonly" b="decimal">
+      Box Number
       <str>
         <pos>3</pos>
         <fmt>Box-$2-</fmt>
@@ -246,12 +306,12 @@
       Nest ID
       <str>
         <pos>2</pos>
-        <fmt>Nest-$2-</fmt>
+        <fmt>$2-</fmt>
       </str>
     </Egg_Nest_ID>
     <Egg_ID f="id autonum noannotation nocertainty">
       <str>
-        <pos>1</pos>
+        <pos>0</pos>
         <fmt>Egg-$2-</fmt>
       </str>
     </Egg_ID>
@@ -277,8 +337,16 @@
 <Chick>
   <Chick>
     <cols>
-      <Chick_Box_ID f="id noannotation nocertainty readonly">
-        Box ID
+      <Chick_Box_Prefix f="id noannotation nocertainty readonly">
+        Box Prefix
+        <str>
+          <pos>0</pos>
+          <fmt>Chick-$2</fmt>
+        </str>
+        <!--@SOURCE: vocabs/alpha.xml-->
+      </Chick_Box_Prefix>
+      <Chick_Box_ID f="id noannotation nocertainty readonly" b="decimal">
+        Box Number
         <str>
           <pos>3</pos>
           <fmt>Box-$2-</fmt>
@@ -304,7 +372,7 @@
         Chick ID
         <str>
           <pos>1</pos>
-          <fmt>Chick-$2-</fmt>
+          <fmt>$2-</fmt>
         </str>
       </Chick_Chick_ID>
     </cols>
@@ -381,6 +449,7 @@
   <!--@SOURCE: logic/field-inheritance.bsh-->
   <!--@SOURCE: logic/create-new-nest-button.bsh-->
   <!--@SOURCE: logic/compute-day-of-hatching-estimate-button.bsh-->
+  <!--@SOURCE: logic/actual-day-of-hatching-button.bsh-->
   <!--@SOURCE: logic/nest-completed-button.bsh-->
   <!--@SOURCE: logic/revisits.bsh-->
   <!--@SOURCE: logic/hatched-chick-count-population.bsh-->
@@ -388,5 +457,6 @@
   <!--@SOURCE: logic/day-of-lay.bsh-->
   <!--@SOURCE: logic/init-nest-status.bsh-->
   <!--@SOURCE: logic/box-status-inheritance.bsh-->
+  <!--@SOURCE: logic/active-box-search.bsh-->
 ]]></logic>
 </module>

@@ -27,11 +27,24 @@
               <Existing_Boxes/>
             </Control>
             <Defaults>
-              <Next_Box_Box_ID/>
               <Next_Nest_Nest_ID/>
               <Next_Egg_ID/>
               <Next_Chick_Chick_ID/>
             </Defaults>
+            <Active_Boxes>
+              <Colgroup_0>
+                <Col_0>
+                  <Box_Prefix/>
+                </Col_0>
+                <Col_1>
+                  <Box_ID/>
+                </Col_1>
+                <Col_2>
+                  <Search/>
+                </Col_2>
+              </Colgroup_0>
+              <Active_Boxes/>
+            </Active_Boxes>
             <Search>
               <Colgroup_0>
                 <Col_0>
@@ -52,6 +65,7 @@
           </Control>
           <Box>
             <Box>
+              <Box_Box_Prefix/>
               <Box_Box_ID/>
               <Box_Location_Name/>
               <Colgroup_GPS_0>
@@ -101,6 +115,7 @@
           </Box>
           <Box_Status>
             <Box_Status>
+              <Box_Status_Box_Prefix/>
               <Box_Status_Box_ID/>
               <timestamp/>
               <Box_Status/>
@@ -110,11 +125,14 @@
             <Nest>
               <Colgroup_0>
                 <Col_0>
-                  <Nest_Box_ID/>
+                  <Nest_Box_Prefix/>
                 </Col_0>
                 <Col_1>
-                  <Nest_Location_Name/>
+                  <Nest_Box_ID/>
                 </Col_1>
+                <Col_2>
+                  <Nest_Location_Name/>
+                </Col_2>
               </Colgroup_0>
               <Colgroup_1>
                 <Col_0>
@@ -131,6 +149,8 @@
               <Compute_Estimated_Day_of_Hatching/>
               <Click_Button_for_Automated_Date_Insertion_1/>
               <Estimated_Day_of_Hatching/>
+              <Set_Actual_Day_of_Hatching/>
+              <Actual_Day_of_Hatching/>
               <Add_Nest_Measurement/>
               <Nest_Measurements/>
             </Nest>
@@ -154,6 +174,13 @@
               <Cancel/>
             </Day_of_Lay>
           </Day_of_Lay>
+          <Actual_Day_of_Hatching>
+            <Actual_Day_of_Hatching>
+              <Actual_Day_of_Hatching/>
+              <Set_Actual_Day_of_Hatching/>
+              <Cancel/>
+            </Actual_Day_of_Hatching>
+          </Actual_Day_of_Hatching>
           <Nest_Measurement>
             <Nest_Measurement>
               <Nest_Measurement_Nest_ID/>
@@ -176,6 +203,7 @@
           </Nest_Measurement>
           <Egg>
             <Egg>
+              <Egg_Box_Prefix/>
               <Egg_Box_ID/>
               <Egg_Location_Name/>
               <Egg_Nest_ID/>
@@ -190,11 +218,14 @@
             <Chick>
               <Colgroup_0>
                 <Col_0>
-                  <Chick_Box_ID/>
+                  <Chick_Box_Prefix/>
                 </Col_0>
                 <Col_1>
-                  <Chick_Location_Name/>
+                  <Chick_Box_ID/>
                 </Col_1>
+                <Col_2>
+                  <Chick_Location_Name/>
+                </Col_2>
               </Colgroup_0>
               <Colgroup_1>
                 <Col_0>
@@ -230,22 +261,26 @@
           <logic/>
         </faims>
       </instance>
-      <bind type="decimal" nodeset="/faims/Control/Defaults/Next_Box_Box_ID"/>
       <bind type="decimal" nodeset="/faims/Control/Defaults/Next_Nest_Nest_ID"/>
       <bind type="decimal" nodeset="/faims/Control/Defaults/Next_Egg_ID"/>
       <bind type="decimal" nodeset="/faims/Control/Defaults/Next_Chick_Chick_ID"/>
       <bind type="decimal" nodeset="/faims/Box/Box/Box_Box_ID"/>
       <bind type="decimal" nodeset="/faims/Box/Box/Height_m"/>
       <bind type="decimal" nodeset="/faims/Box/Box/Orientation_degrees"/>
+      <bind type="decimal" nodeset="/faims/Box_Status/Box_Status/Box_Status_Box_ID"/>
+      <bind type="decimal" nodeset="/faims/Nest/Nest/Colgroup_0/Col_1/Nest_Box_ID"/>
       <bind type="decimal" nodeset="/faims/Nest/Nest/Colgroup_1/Col_0/Nest_Nest_ID"/>
       <bind type="date" nodeset="/faims/Day_of_Lay/Day_of_Lay/Day_of_Lay"/>
+      <bind type="date" nodeset="/faims/Actual_Day_of_Hatching/Actual_Day_of_Hatching/Actual_Day_of_Hatching"/>
       <bind type="decimal" nodeset="/faims/Nest_Measurement/Nest_Measurement/Colgroup_0/Col_0/Egg_Count"/>
       <bind type="decimal" nodeset="/faims/Nest_Measurement/Nest_Measurement/Colgroup_0/Col_1/Hatched_Chick_Count_Live"/>
       <bind type="decimal" nodeset="/faims/Nest_Measurement/Nest_Measurement/Colgroup_0/Col_2/Hatched_Chick_Count_Dead"/>
+      <bind type="decimal" nodeset="/faims/Egg/Egg/Egg_Box_ID"/>
       <bind type="decimal" nodeset="/faims/Egg/Egg/Egg_ID"/>
       <bind type="decimal" nodeset="/faims/Egg/Egg/Egg_Length_mm"/>
       <bind type="decimal" nodeset="/faims/Egg/Egg/Egg_Width_mm"/>
       <bind type="decimal" nodeset="/faims/Egg/Egg/Egg_Weight_g"/>
+      <bind type="decimal" nodeset="/faims/Chick/Chick/Colgroup_0/Col_1/Chick_Box_ID"/>
       <bind type="decimal" nodeset="/faims/Chick/Chick/Colgroup_1/Col_1/Chick_Chick_ID"/>
       <bind type="decimal" nodeset="/faims/Chick_Measurement/Chick_Measurement/Chick_Age_days"/>
       <bind type="decimal" nodeset="/faims/Chick_Measurement/Chick_Measurement/Weight_g"/>
@@ -278,7 +313,7 @@
     </group>
     <group ref="Login">
       <label>{Login}</label>
-      <group ref="Login">
+      <group ref="Login" faims_scrollable="false">
         <label>{Login}</label>
         <select1 appearance="compact" ref="User">
           <label/>
@@ -306,9 +341,6 @@
       </group>
       <group ref="Defaults">
         <label>{Defaults}</label>
-        <input ref="Next_Box_Box_ID" faims_style_class="required">
-          <label>{Next_Box_Box_ID}</label>
-        </input>
         <input ref="Next_Nest_Nest_ID" faims_style_class="required">
           <label>{Next_Nest_Nest_ID}</label>
         </input>
@@ -318,6 +350,41 @@
         <input ref="Next_Chick_Chick_ID" faims_style_class="required">
           <label>{Next_Chick_Chick_ID}</label>
         </input>
+      </group>
+      <group ref="Active_Boxes" faims_scrollable="false">
+        <label>{Active_Boxes}</label>
+        <group ref="Colgroup_0" faims_style="orientation">
+          <label/>
+          <group ref="Col_0" faims_style="even">
+            <label/>
+            <select1 ref="Box_Prefix">
+              <label>{Box_Prefix}</label>
+              <item>
+                <label>Options not loaded</label>
+                <value>0</value>
+              </item>
+            </select1>
+          </group>
+          <group ref="Col_1" faims_style="even">
+            <label/>
+            <input ref="Box_ID">
+              <label>{Box_ID}</label>
+            </input>
+          </group>
+          <group ref="Col_2" faims_style="even">
+            <label/>
+            <trigger ref="Search">
+              <label>{Search}</label>
+            </trigger>
+          </group>
+        </group>
+        <select1 appearance="compact" ref="Active_Boxes">
+          <label>{Active_Boxes}</label>
+          <item>
+            <label>Options not loaded</label>
+            <value>0</value>
+          </item>
+        </select1>
       </group>
       <group ref="Search" faims_scrollable="false">
         <label>{search}</label>
@@ -372,8 +439,15 @@
       <label>{Box}</label>
       <group ref="Box">
         <label>{Box}</label>
+        <select1 faims_attribute_type="vocab" ref="Box_Box_Prefix" faims_attribute_name="Box Box Prefix" faims_certainty="false" faims_annotation="false">
+          <label>{Box_Prefix}</label>
+          <item>
+            <label>Options not loaded</label>
+            <value>0</value>
+          </item>
+        </select1>
         <input faims_attribute_type="measure" ref="Box_Box_ID" faims_attribute_name="Box Box ID" faims_certainty="false" faims_annotation="false">
-          <label>{Box_ID}</label>
+          <label>{Box_Number}</label>
         </input>
         <select1 faims_attribute_type="vocab" ref="Box_Location_Name" faims_attribute_name="Box Location Name">
           <label>{Location_Name}</label>
@@ -414,7 +488,7 @@
           <group ref="Col_2" faims_style="even">
             <label/>
             <input ref="Accuracy" faims_attribute_name="Accuracy" faims_attribute_type="measure" faims_read_only="true" faims_annotation="false" faims_certainty="false">
-              <label>{Accuracy}</label>
+              <label>{Accuracy__m_}</label>
             </input>
           </group>
         </group>
@@ -490,8 +564,15 @@
       <label>{Box_Status}</label>
       <group ref="Box_Status">
         <label>{Box_Status}</label>
+        <select1 faims_attribute_type="vocab" ref="Box_Status_Box_Prefix" faims_attribute_name="Box Status Box Prefix" faims_read_only="true" faims_certainty="false" faims_annotation="false">
+          <label>{Box_Prefix}</label>
+          <item>
+            <label>Options not loaded</label>
+            <value>0</value>
+          </item>
+        </select1>
         <input faims_attribute_type="measure" ref="Box_Status_Box_ID" faims_attribute_name="Box Status Box ID" faims_read_only="true" faims_certainty="false" faims_annotation="false">
-          <label>{Box_ID}</label>
+          <label>{Box_Number}</label>
         </input>
         <input ref="timestamp" faims_attribute_name="Box_Status timestamp" faims_attribute_type="measure" faims_read_only="true" faims_annotation="false" faims_certainty="false">
           <label>{Box_Status_Recorded_at}</label>
@@ -514,11 +595,21 @@
           <label/>
           <group ref="Col_0" faims_style="even">
             <label/>
-            <input faims_attribute_type="measure" ref="Nest_Box_ID" faims_attribute_name="Nest Box ID" faims_read_only="true" faims_certainty="false" faims_annotation="false">
-              <label>{Box_ID}</label>
-            </input>
+            <select1 faims_attribute_type="vocab" ref="Nest_Box_Prefix" faims_attribute_name="Nest Box Prefix" faims_read_only="true" faims_certainty="false" faims_annotation="false">
+              <label>{Box_Prefix}</label>
+              <item>
+                <label>Options not loaded</label>
+                <value>0</value>
+              </item>
+            </select1>
           </group>
           <group ref="Col_1" faims_style="even">
+            <label/>
+            <input faims_attribute_type="measure" ref="Nest_Box_ID" faims_attribute_name="Nest Box ID" faims_read_only="true" faims_certainty="false" faims_annotation="false">
+              <label>{Box_Number}</label>
+            </input>
+          </group>
+          <group ref="Col_2" faims_style="even">
             <label/>
             <input faims_attribute_type="measure" ref="Nest_Location_Name" faims_attribute_name="Nest Location Name" faims_read_only="true" faims_certainty="false" faims_annotation="false">
               <label>{Location_Name}</label>
@@ -547,7 +638,7 @@
           <label>{Date_Nest_Completed}</label>
         </input>
         <trigger ref="Set_Day_of_Lay">
-          <label>{Set_Day_of_Lay___}</label>
+          <label>{Set_Day_of_Last_Egg___}</label>
         </trigger>
         <input faims_attribute_type="measure" ref="Day_of_Lay" faims_attribute_name="Day of Lay" faims_read_only="true">
           <label>{Day_of_Lay}</label>
@@ -558,8 +649,14 @@
         <input faims_web="true" ref="Click_Button_for_Automated_Date_Insertion_1">
           <label/>
         </input>
-        <input faims_attribute_type="measure" ref="Estimated_Day_of_Hatching" faims_attribute_name="Estimated Day of Hatching">
+        <input faims_attribute_type="measure" ref="Estimated_Day_of_Hatching" faims_attribute_name="Estimated Day of Hatching" faims_read_only="true">
           <label>{Estimated_Day_of_Hatching}</label>
+        </input>
+        <trigger ref="Set_Actual_Day_of_Hatching">
+          <label>{Set_Actual_Day_of_Hatching___}</label>
+        </trigger>
+        <input faims_attribute_type="measure" ref="Actual_Day_of_Hatching" faims_attribute_name="Actual Day of Hatching" faims_read_only="true">
+          <label>{Actual_Day_of_Hatching}</label>
         </input>
         <trigger ref="Add_Nest_Measurement">
           <label>{Add_Nest_Visit}</label>
@@ -606,14 +703,29 @@
       </group>
     </group>
     <group ref="Day_of_Lay">
-      <label>{Day_of_Lay}</label>
+      <label>{Day_of_Last_Egg}</label>
       <group ref="Day_of_Lay">
-        <label>{Day_of_Lay}</label>
+        <label>{Day_of_Last_Egg}</label>
         <input ref="Day_of_Lay">
-          <label>{Day_of_Lay}</label>
+          <label>{Day_of_Last_Egg}</label>
         </input>
         <trigger ref="Set_Day_of_Lay">
-          <label>{Set_Day_of_Lay}</label>
+          <label>{Set_Day_of_Last_Egg}</label>
+        </trigger>
+        <trigger ref="Cancel">
+          <label>{Cancel}</label>
+        </trigger>
+      </group>
+    </group>
+    <group ref="Actual_Day_of_Hatching">
+      <label>{Actual_Day_of_Hatching}</label>
+      <group ref="Actual_Day_of_Hatching">
+        <label>{Actual_Day_of_Hatching}</label>
+        <input ref="Actual_Day_of_Hatching">
+          <label>{Actual_Day_of_Hatching}</label>
+        </input>
+        <trigger ref="Set_Actual_Day_of_Hatching">
+          <label>{Set_Actual_Day_of_Hatching}</label>
         </trigger>
         <trigger ref="Cancel">
           <label>{Cancel}</label>
@@ -671,8 +783,15 @@
       <label>{Egg}</label>
       <group ref="Egg">
         <label>{Egg}</label>
+        <select1 faims_attribute_type="vocab" ref="Egg_Box_Prefix" faims_attribute_name="Egg Box Prefix" faims_read_only="true" faims_certainty="false" faims_annotation="false">
+          <label>{Box_Prefix}</label>
+          <item>
+            <label>Options not loaded</label>
+            <value>0</value>
+          </item>
+        </select1>
         <input faims_attribute_type="measure" ref="Egg_Box_ID" faims_attribute_name="Egg Box ID" faims_read_only="true" faims_certainty="false" faims_annotation="false">
-          <label>{Box_ID}</label>
+          <label>{Box_Number}</label>
         </input>
         <input faims_attribute_type="measure" ref="Egg_Location_Name" faims_attribute_name="Egg Location Name" faims_read_only="true" faims_certainty="false" faims_annotation="false">
           <label>{Location_Name}</label>
@@ -706,11 +825,21 @@
           <label/>
           <group ref="Col_0" faims_style="even">
             <label/>
-            <input faims_attribute_type="measure" ref="Chick_Box_ID" faims_attribute_name="Chick Box ID" faims_read_only="true" faims_certainty="false" faims_annotation="false">
-              <label>{Box_ID}</label>
-            </input>
+            <select1 faims_attribute_type="vocab" ref="Chick_Box_Prefix" faims_attribute_name="Chick Box Prefix" faims_read_only="true" faims_certainty="false" faims_annotation="false">
+              <label>{Box_Prefix}</label>
+              <item>
+                <label>Options not loaded</label>
+                <value>0</value>
+              </item>
+            </select1>
           </group>
           <group ref="Col_1" faims_style="even">
+            <label/>
+            <input faims_attribute_type="measure" ref="Chick_Box_ID" faims_attribute_name="Chick Box ID" faims_read_only="true" faims_certainty="false" faims_annotation="false">
+              <label>{Box_Number}</label>
+            </input>
+          </group>
+          <group ref="Col_2" faims_style="even">
             <label/>
             <input faims_attribute_type="measure" ref="Chick_Location_Name" faims_attribute_name="Chick Location Name" faims_read_only="true" faims_certainty="false" faims_annotation="false">
               <label>{Location_Name}</label>

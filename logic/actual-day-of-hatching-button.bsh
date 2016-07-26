@@ -1,0 +1,35 @@
+onClickNestSetActualDayofHatching () {
+  msgHead  = "Proceed To Date Picker?";
+  msgBody  = "Have you established the Actual Day of Hatching? If not, press 'Cancel' and ";
+  msgBody += "return. If yes, press 'OK' and select date from date picker. ";
+  msgBody += "Once selected, the 'Actual Day of Hatching' can only be edited but not ";
+  msgBody += "blanked.";
+
+  cbOkay   = "goToSetActualDayofHatching()";
+  cbCancel = "";
+
+  showAlert(msgHead, msgBody, cbOkay, cbCancel);
+}
+
+goToSetActualDayofHatching() {
+  newTab("Actual_Day_of_Hatching", true);
+}
+
+
+addOnEvent("Actual_Day_of_Hatching/Actual_Day_of_Hatching/Set_Actual_Day_of_Hatching", "click", "setActualDayOfHatching()");
+addOnEvent("Actual_Day_of_Hatching/Actual_Day_of_Hatching/Cancel",         "click", "goBack()");
+
+setActualDayOfHatching() {
+  src = "Actual_Day_of_Hatching/Actual_Day_of_Hatching/Actual_Day_of_Hatching";
+  dst = "Nest/Nest/Actual_Day_of_Hatching";
+
+  // Change the date picker's DD/MM/YYYY format to YYYY/MM/DD
+  val = getFieldValue(src);
+  val = val.split("/")[2] + "/" +
+        val.split("/")[1] + "/" +
+        val.split("/")[0];
+
+  setFieldValue(dst, val);
+
+  goBack();
+}

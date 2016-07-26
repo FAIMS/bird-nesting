@@ -219,10 +219,16 @@ getDropdownItemValue() {
   return dropdownItemValue;
 }
 
+addOnEvent("Control/Active_Boxes/Box_Prefix", "click", "dropdownItemValue = getFieldValue(\"Control/Active_Boxes/Box_Prefix\")");
 addOnEvent("Control/Revisit/Days", "click", "dropdownItemValue = getFieldValue(\"Control/Revisit/Days\")");
+addOnEvent("Box/Box/Box_Box_Prefix", "click", "dropdownItemValue = getFieldValue(\"Box/Box/Box_Box_Prefix\")");
 addOnEvent("Box/Box/Box_Location_Name", "click", "dropdownItemValue = getFieldValue(\"Box/Box/Box_Location_Name\")");
+addOnEvent("Box_Status/Box_Status/Box_Status_Box_Prefix", "click", "dropdownItemValue = getFieldValue(\"Box_Status/Box_Status/Box_Status_Box_Prefix\")");
 addOnEvent("Box_Status/Box_Status/Box_Status", "click", "dropdownItemValue = getFieldValue(\"Box_Status/Box_Status/Box_Status\")");
+addOnEvent("Nest/Nest/Nest_Box_Prefix", "click", "dropdownItemValue = getFieldValue(\"Nest/Nest/Nest_Box_Prefix\")");
 addOnEvent("Nest_Measurement/Nest_Measurement/Nest_Status", "click", "dropdownItemValue = getFieldValue(\"Nest_Measurement/Nest_Measurement/Nest_Status\")");
+addOnEvent("Egg/Egg/Egg_Box_Prefix", "click", "dropdownItemValue = getFieldValue(\"Egg/Egg/Egg_Box_Prefix\")");
+addOnEvent("Chick/Chick/Chick_Box_Prefix", "click", "dropdownItemValue = getFieldValue(\"Chick/Chick/Chick_Box_Prefix\")");
 addOnEvent("Chick/Chick/Bird_Species", "click", "dropdownItemValue = getFieldValue(\"Chick/Chick/Bird_Species\")");
 
 /******************************************************************************/
@@ -600,9 +606,14 @@ makeVocab(String type, String path, String attrib, List vocabExclusions, String 
       }
     });
 }
+makeVocab("DropDown", "Box/Box/Box_Box_Prefix", "Box Box Prefix");
 makeVocab("DropDown", "Box/Box/Box_Location_Name", "Box Location Name");
+makeVocab("DropDown", "Box_Status/Box_Status/Box_Status_Box_Prefix", "Box Status Box Prefix");
 makeVocab("DropDown", "Box_Status/Box_Status/Box_Status", "Box Status");
+makeVocab("DropDown", "Nest/Nest/Nest_Box_Prefix", "Nest Box Prefix");
 makeVocab("DropDown", "Nest_Measurement/Nest_Measurement/Nest_Status", "Nest Status");
+makeVocab("DropDown", "Egg/Egg/Egg_Box_Prefix", "Egg Box Prefix");
+makeVocab("DropDown", "Chick/Chick/Chick_Box_Prefix", "Chick Box Prefix");
 makeVocab("DropDown", "Chick/Chick/Bird_Species", "Bird Species");
 makeVocab("RadioGroup", "Chick_Measurement/Chick_Measurement/Chick_Alive", "Chick Alive");
 
@@ -716,8 +727,10 @@ saveTabGroup(String tabgroup, String callback) {
           uuid,
           "Parent Of",
           "Child Of",
-          null
+          callback
         );
+      } else {
+        execute(callback);
       }
 
       // This fixes an interesting bug. Without this, if a user was not set
@@ -731,7 +744,6 @@ saveTabGroup(String tabgroup, String callback) {
         saveTabGroup(tabgroup);
       }
 
-      execute(callback);
     }
     onError(message) {
       showToast(message);
@@ -831,6 +843,10 @@ onClickNestSetDayofLay () {
   // TODO: Add some things which should happen when this element is clicked
   newTab("Day_of_Lay", true);
 }
+onClickNestSetActualDayofHatching () {
+  // TODO: Add some things which should happen when this element is clicked
+  newTab("Actual_Day_of_Hatching", true);
+}
 onClickBoxAddBoxStatus () {
   // TODO: Add some things which should happen when this element is clicked
   String tabgroup = "Box";
@@ -903,6 +919,7 @@ addOnEvent("Control/Control/Add_New_Box", "click", "onClickControlAddNewBox()");
 addOnEvent("Box/Box/Add_Box_Status", "click", "onClickBoxAddBoxStatus()");
 addOnEvent("Box/Box/Add_New_Nest", "click", "onClickBoxAddNewNest()");
 addOnEvent("Nest/Nest/Set_Day_of_Lay", "click", "onClickNestSetDayofLay()");
+addOnEvent("Nest/Nest/Set_Actual_Day_of_Hatching", "click", "onClickNestSetActualDayofHatching()");
 addOnEvent("Nest/Nest/Add_Nest_Measurement", "click", "onClickNestAddNestMeasurement()");
 addOnEvent("Nest/Egg_Chick/Add_New_Egg", "click", "onClickNestAddNewEgg()");
 addOnEvent("Nest/Egg_Chick/Add_New_Chick", "click", "onClickNestAddNewChick()");
@@ -1110,19 +1127,10 @@ loadEntityFrom(String entityID) {
 newBox(){
   String tabgroup = "Box";
 
-  String autoNumSource = "";
-  autoNumSource = getFieldValue("Control/Defaults/Next_Box_Box_ID");
-  if (isNull(autoNumSource)) {
-    showWarning("{Alert}","{A_next_ID_has_not_been_entered_please_provide_one}");
-    return;
-  }
 
   setUuid(tabgroup, null);
   newTabGroup(tabgroup);
   populateAuthorAndTimestamp(tabgroup);
-  String autoNumDest = "";
-  autoNumDest = "Box/Box/Box_Box_ID";
-  incAutoNum(autoNumDest);
   inheritBoxFields();
 }
 
@@ -1132,9 +1140,6 @@ duplicateBox(){
 
   disableAutoSave(tabgroup);
 
-  String autoNumDest = "";
-  autoNumDest = "Box/Box/Box_Box_ID";
-  incAutoNum(autoNumDest);
 
   clearGpsInTabGroup(tabgroup);
 
@@ -1664,6 +1669,7 @@ doNotDelete(){
 addOnEvent("Login", "show", "removeNavigationButtons()");
 addOnEvent("Control", "show", "removeNavigationButtons()");
 addOnEvent("Day_of_Lay", "show", "removeNavigationButtons()");
+addOnEvent("Actual_Day_of_Hatching", "show", "removeNavigationButtons()");
 addOnEvent("Box", "show", "addNavigationButtons(\"Box\")");
 addOnEvent("Box_Status", "show", "addNavigationButtons(\"Box_Status\")");
 addOnEvent("Nest", "show", "addNavigationButtons(\"Nest\")");
@@ -1904,7 +1910,6 @@ addOnEvent("Control", "show", "onShowAutonum()");
 
 getStartingIdPaths() {
   List l = new ArrayList();
-  l.add("Control/Defaults/Next_Box_Box_ID");
   l.add("Control/Defaults/Next_Nest_Nest_ID");
   l.add("Control/Defaults/Next_Egg_ID");
   l.add("Control/Defaults/Next_Chick_Chick_ID");
@@ -1939,7 +1944,6 @@ for (ref : getStartingIdPaths()) {
 
 incAutoNum(String destPath) {
   Map destToSource = new HashMap();
-  destToSource.put("Box/Box/Box_Box_ID", "Control/Defaults/Next_Box_Box_ID");
   destToSource.put("Nest/Nest/Nest_Nest_ID", "Control/Defaults/Next_Nest_Nest_ID");
   destToSource.put("Egg/Egg/Egg_ID", "Control/Defaults/Next_Egg_ID");
   destToSource.put("Chick/Chick/Chick_Chick_ID", "Control/Defaults/Next_Chick_Chick_ID");
@@ -2114,6 +2118,11 @@ inheritBoxFields() {
 inheritNestFields() {
   if (parentTabgroup__.equals("Box"))
   copyFieldValue(
+    "Box/Box/Box_Box_Prefix",
+    "Nest/Nest/Nest_Box_Prefix"
+  );
+  if (parentTabgroup__.equals("Box"))
+  copyFieldValue(
     "Box/Box/Box_Box_ID",
     "Nest/Nest/Nest_Box_ID",
     false
@@ -2126,6 +2135,11 @@ inheritNestFields() {
 }
 
 inheritEggFields() {
+  if (parentTabgroup__.equals("Nest"))
+  copyFieldValue(
+    "Nest/Nest/Nest_Box_Prefix",
+    "Egg/Egg/Egg_Box_Prefix"
+  );
   if (parentTabgroup__.equals("Nest"))
   copyFieldValue(
     "Nest/Nest/Nest_Box_ID",
@@ -2147,6 +2161,11 @@ inheritEggFields() {
 }
 
 inheritChickFields() {
+  if (parentTabgroup__.equals("Nest"))
+  copyFieldValue(
+    "Nest/Nest/Nest_Box_Prefix",
+    "Chick/Chick/Chick_Box_Prefix"
+  );
   if (parentTabgroup__.equals("Nest"))
   copyFieldValue(
     "Nest/Nest/Nest_Box_ID",
@@ -2177,6 +2196,11 @@ inheritMeasurementFields() {
 }
 
 inheritBoxStatusFields() {
+  if (parentTabgroup__.equals("Box"))
+  copyFieldValue(
+    "Box/Box/Box_Box_Prefix",
+    "Box_Status/Box_Status/Box_Status_Box_Prefix"
+  );
   if (parentTabgroup__.equals("Box"))
   copyFieldValue(
     "Box/Box/Box_Box_ID",
@@ -2284,8 +2308,8 @@ estimateDayOfHatching() {
   String dayOfHatching = getFieldValue(refDayOfHatching);
 
   // Set input and output formats
-  fmtIn   = "dd/MM/yyyy";
-  fmtOut  = "dd-MM-yyyy";
+  fmtIn   = "yyyy/MM/dd";
+  fmtOut  = "yyyy/MM/dd";
 
   dateFmtIn  = new java.text.SimpleDateFormat(fmtIn );
   dateFmtOut = new java.text.SimpleDateFormat(fmtOut);
@@ -2303,6 +2327,41 @@ estimateDayOfHatching() {
   // Format and write out date
   dateStr = dateFmtOut.format(dateOfHatching);
   setFieldValue(refDayOfHatching, dateStr);
+}
+onClickNestSetActualDayofHatching () {
+  msgHead  = "Proceed To Date Picker?";
+  msgBody  = "Have you established the Actual Day of Hatching? If not, press 'Cancel' and ";
+  msgBody += "return. If yes, press 'OK' and select date from date picker. ";
+  msgBody += "Once selected, the 'Actual Day of Hatching' can only be edited but not ";
+  msgBody += "blanked.";
+
+  cbOkay   = "goToSetActualDayofHatching()";
+  cbCancel = "";
+
+  showAlert(msgHead, msgBody, cbOkay, cbCancel);
+}
+
+goToSetActualDayofHatching() {
+  newTab("Actual_Day_of_Hatching", true);
+}
+
+
+addOnEvent("Actual_Day_of_Hatching/Actual_Day_of_Hatching/Set_Actual_Day_of_Hatching", "click", "setActualDayOfHatching()");
+addOnEvent("Actual_Day_of_Hatching/Actual_Day_of_Hatching/Cancel",         "click", "goBack()");
+
+setActualDayOfHatching() {
+  src = "Actual_Day_of_Hatching/Actual_Day_of_Hatching/Actual_Day_of_Hatching";
+  dst = "Nest/Nest/Actual_Day_of_Hatching";
+
+  // Change the date picker's DD/MM/YYYY format to YYYY/MM/DD
+  val = getFieldValue(src);
+  val = val.split("/")[2] + "/" +
+        val.split("/")[1] + "/" +
+        val.split("/")[0];
+
+  setFieldValue(dst, val);
+
+  goBack();
 }
 /*************************** NEST COMPLETED BUTTON ****************************/
 addOnEvent("Nest/Nest/Nest_Completed", "click", "nestCompleted()");
@@ -2415,48 +2474,37 @@ loadEntityFromTable() {
 }
 
 makeTableViewViews() {
-  fetchOne("drop view if exists truncFormattedIdentifier;", null);
-  fetchOne("create view truncFormattedIdentifier as " + 
-           "    select uuid, format(trim(formatstring,'-'), null, measure, freetext, certainty) as response " + 
-           "                                from latestnondeletedaentvalue join attributekey using (attributeid)" + 
-           "                                where attributename in ('Nest Nest ID', 'Egg ID', 'Chick Chick ID');", null);
-
-  fetchOne("drop view if exists tasklist;", null);
-  fetchOne("create view tasklist as  " +
-           "select date(measure, 'localtime', '+1 day') as dayDue, response as taskName, parentchild.parentuuid as nestuuid, 2 as aenttypenameorder  " +
-           "                        from latestnondeletedaentvalue " +
-           "                        join truncFormattedIdentifier as task using (uuid) " +
-           "                        join attributekey using (attributeid) " +
-           "                        join parentchild on (parentchild.childuuid = task.uuid) " +
-           "                       where attributename = 'Egg timestamp' " +
-           "                       union " +
-           "                        select date(measure, 'localtime', '+1 day') as dayDue, response as taskName, parentchild.parentuuid as nestuuid, 3 as aenttypenameorder  " +
-           "                        from latestnondeletedaentvalue " +
-           "                        join truncFormattedIdentifier as task using (uuid) " +
-           "                        join attributekey using (attributeid) " +
-           "                        join parentchild on (parentchild.childuuid = task.uuid) " +
-           "                       where attributename = 'Chick timestamp'                       " +
-           "                       union " +
-           "                      select date(measure, 'localtime', '+1 day') as dayDue, response as taskName, uuid as nestuuid, 1 as aenttypenameorder  " +
-           "                        from latestnondeletedaentvalue " +
-           "                        join truncFormattedIdentifier as task using (uuid) " +
-           "                        join attributekey using (attributeid) " +
-           "                       where attributename = 'Nest Completed at' " +
-           "                       union                        " +
-           "                      select date(measure, 'localtime', '+7 day') as dayDue, response as taskName, parentchild.parentuuid as nestuuid, 2 as aenttypenameorder  " +
-           "                        from latestnondeletedaentvalue " +
-           "                        join truncFormattedIdentifier as task using (uuid) " +
-           "                        join attributekey using (attributeid) " +
-           "                        join parentchild on (parentchild.childuuid = task.uuid) " +
-           "                       where attributename = 'Chick timestamp' " +
-           "                       union " +
-           "                      select date(measure, 'localtime', '+12 day') as deayDue, response as taskName, parentchild.parentuuid as nestuuid, 2 as aenttypenameorder  " +
-           "                        from latestnondeletedaentvalue " +
-           "                        join truncFormattedIdentifier as task using (uuid) " +
-           "                        join attributekey using (attributeid) " +
-           "                        join parentchild on (parentchild.childuuid = task.uuid) " +
-           "                       where attributename = 'Chick timestamp' " +
-           "                       order by taskName desc, aenttypenameorder, dayDue; ", null);
+  fetchOne(" drop view if exists truncFormattedIdentifier;", null);
+  fetchOne(" create view truncFormattedIdentifier as" +
+           "     select uuid, format(trim(formatstring,'-'), null, measure, freetext, certainty) as response" +
+           "                                 from latestnondeletedaentvalue join attributekey using (attributeid)" +
+           "                                 where attributename in ('Nest Nest ID');", null);
+  fetchOne(" drop view if exists tasklist;", null);
+  fetchOne(" create view tasklist as" +
+           "    select date(replace(measure,'/','-'), '+3 day') as dayDue, response as taskName, uuid as nestuuid, 3 as aenttypenameorder" +
+           "     from latestnondeletedaentvalue" +
+           "     join truncFormattedIdentifier as task using (uuid)" +
+           "     join attributekey using (attributeid)" +
+           "    where attributename = 'Actual Day of Hatching'" +
+           "    union" +
+           "   select date(replace(measure,'/','-'), '+7 day') as dayDue, response as taskName, uuid as nestuuid, 2 as aenttypenameorder" +
+           "     from latestnondeletedaentvalue" +
+           "     join truncFormattedIdentifier as task using (uuid)" +
+           "     join attributekey using (attributeid)" +
+           "    where attributename = 'Actual Day of Hatching'" +
+           "    union" +
+           "   select date(replace(measure,'/','-'), '+11 day') as dayDue, response as taskName, uuid as nestuuid, 2 as aenttypenameorder" +
+           "     from latestnondeletedaentvalue" +
+           "     join truncFormattedIdentifier as task using (uuid)" +
+           "     join attributekey using (attributeid)" +
+           "    where attributename = 'Actual Day of Hatching'" +
+           "    union" +
+           "   select date(replace(measure,'/','-'), '+18 day') as dayDue, response as taskName, uuid as nestuuid, 2 as aenttypenameorder" +
+           "     from latestnondeletedaentvalue" +
+           "     join truncFormattedIdentifier as task using (uuid)" +
+           "     join attributekey using (attributeid)" +
+           "    where attributename = 'Actual Day of Hatching'" +
+           "    order by taskName desc, aenttypenameorder, dayDue;", null);
 }
 makeTableViewViews();
 /*********************** HATCHED CHICK COUNT POPULATION ***********************/
@@ -2544,9 +2592,9 @@ populateWebViewHtml(
 //);
 onClickNestSetDayofLay () {
   msgHead  = "Proceed To Date Picker?";
-  msgBody  = "Have you established the Day of Lay? If not, press 'Cancel' and ";
+  msgBody  = "Have you established the Day of Last Egg? If not, press 'Cancel' and ";
   msgBody += "return. If yes, press 'OK' and select date from date picker. ";
-  msgBody += "Once selected, the 'Day of Lay' can only be edited but not ";
+  msgBody += "Once selected, the 'Day of Last Egg' can only be edited but not ";
   msgBody += "blanked.";
 
   cbOkay   = "goToDayOfLayTabGroup()";
@@ -2564,11 +2612,16 @@ addOnEvent("Day_of_Lay/Day_of_Lay/Set_Day_of_Lay", "click", "setDayOfLay()");
 addOnEvent("Day_of_Lay/Day_of_Lay/Cancel",         "click", "goBack()");
 
 setDayOfLay() {
-  copyFieldValue(
-    "Day_of_Lay/Day_of_Lay/Day_of_Lay",
-    "Nest/Nest/Day_of_Lay",
-    false
-  );
+  src = "Day_of_Lay/Day_of_Lay/Day_of_Lay";
+  dst = "Nest/Nest/Day_of_Lay";
+
+  // Change the date picker's DD/MM/YYYY format to YYYY/MM/DD
+  val = getFieldValue(src);
+  val = val.split("/")[2] + "/" +
+        val.split("/")[1] + "/" +
+        val.split("/")[0];
+
+  setFieldValue(dst, val);
 
   goBack();
 }
@@ -2690,6 +2743,62 @@ loadBoxFrom(String uuid) {
 onShowBoxStatus () {
   saveTabGroup("Box_Status", "updateBoxStatusWebView()");
 }
+/***************************** ACTIVE BOX SEARCH ******************************/
+makeVocab("DropDown", "Control/Active_Boxes/Box_Prefix", "Box Box Prefix");
+
+addOnEvent("Control/Active_Boxes"              , "show"  , "activeBoxSearch()");
+addOnEvent("Control/Active_Boxes/Active_Boxes" , "click" , "loadEntity()");
+addOnEvent("Control/Active_Boxes/Search"       , "click" , "activeBoxSearch()");
+
+activeBoxSearch() {
+  String refBoxPrefix    = "Control/Active_Boxes/Box_Prefix";
+  String refBoxId        = "Control/Active_Boxes/Box_ID";
+  String refSearchButton = "Control/Active_Boxes/Search";
+  String refActiveBoxes  = "Control/Active_Boxes/Active_Boxes";
+
+  String boxPrefix = getFieldValue(refBoxPrefix);
+  String boxId     = getFieldValue(refBoxId    );
+
+  String q = "";
+  q += " SELECT uuid, response";
+  q += "   FROM latestNonDeletedArchEntFormattedIdentifiers";
+  q += "  WHERE aenttypename = 'Box'";
+  q += "    AND uuid IN (";
+  q += "         SELECT parentuuid";
+  q += "           FROM latestnondeletedaentvalue";
+  q += "           JOIN vocabulary using (vocabid)";
+  q += "           JOIN (";
+  q += "                 SELECT childuuid, parentuuid";
+  q += "                   FROM parentchild";
+  q += "                   JOIN latestnondeletedarchent on (childuuid = uuid)";
+  q += "                  WHERE childaenttypename = 'Box Status'";
+  q += "               GROUP BY parentuuid";
+  q += "                 HAVING aenttimestamp = max(aenttimestamp)";
+  q += "                ) ON (childuuid = uuid)";
+  q += "          WHERE vocabname = '{Active}'";
+  q += "        )";
+  q += "    AND uuid IN (";
+  q += "                 SELECT uuid";
+  q += "                   FROM latestnondeletedaentvalue";
+  q += "                   JOIN attributekey using (attributeid) ";
+  q += "                  WHERE measure LIKE '{boxId}'||'%'";
+  q += "                    AND attributename = 'Box Box ID'";
+  q += "        )";
+  q += "    AND uuid IN (";
+  q += "                 SELECT uuid";
+  q += "                   FROM latestnondeletedaentvalue";
+  q += "                  WHERE vocabid = {boxPrefix}";
+  q += "        )";
+  q += "  ORDER BY CAST(response AS numeric);";
+  q += "  LIMIT ? OFFSET ?";
+  q  = replaceFirst(q, "{boxId}",     boxId);
+  q  = replaceFirst(q, "{boxPrefix}", boxPrefix);
+  showWarning("", q + "");
+
+  populateCursorList(refActiveBoxes, q, 25);
+  refreshTabgroupCSS("Box");
+}
+
 
 /******************************************************************************/
 /*                                    INIT                                    */

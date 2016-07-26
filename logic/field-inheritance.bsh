@@ -13,6 +13,11 @@ inheritBoxFields() {
 inheritNestFields() {
   if (parentTabgroup__.equals("Box"))
   copyFieldValue(
+    "Box/Box/Box_Box_Prefix",
+    "Nest/Nest/Nest_Box_Prefix"
+  );
+  if (parentTabgroup__.equals("Box"))
+  copyFieldValue(
     "Box/Box/Box_Box_ID",
     "Nest/Nest/Nest_Box_ID",
     false
@@ -25,6 +30,11 @@ inheritNestFields() {
 }
 
 inheritEggFields() {
+  if (parentTabgroup__.equals("Nest"))
+  copyFieldValue(
+    "Nest/Nest/Nest_Box_Prefix",
+    "Egg/Egg/Egg_Box_Prefix"
+  );
   if (parentTabgroup__.equals("Nest"))
   copyFieldValue(
     "Nest/Nest/Nest_Box_ID",
@@ -46,6 +56,11 @@ inheritEggFields() {
 }
 
 inheritChickFields() {
+  if (parentTabgroup__.equals("Nest"))
+  copyFieldValue(
+    "Nest/Nest/Nest_Box_Prefix",
+    "Chick/Chick/Chick_Box_Prefix"
+  );
   if (parentTabgroup__.equals("Nest"))
   copyFieldValue(
     "Nest/Nest/Nest_Box_ID",
@@ -76,6 +91,11 @@ inheritMeasurementFields() {
 }
 
 inheritBoxStatusFields() {
+  if (parentTabgroup__.equals("Box"))
+  copyFieldValue(
+    "Box/Box/Box_Box_Prefix",
+    "Box_Status/Box_Status/Box_Status_Box_Prefix"
+  );
   if (parentTabgroup__.equals("Box"))
   copyFieldValue(
     "Box/Box/Box_Box_ID",
