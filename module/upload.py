@@ -53,7 +53,6 @@ else:
 moduleName = moduleLocation.split(os.sep)
 if moduleName[-1] == 'module': moduleName = moduleName[-2]
 else:                          moduleName = moduleName[-1]
-moduleName = 'bird-nesting-christian'
 
 # Check that all the given paths really exist
 if not os.path.exists(moduleLocation):

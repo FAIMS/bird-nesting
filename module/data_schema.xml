@@ -161,9 +161,14 @@
   </ArchaeologicalElement>
   <ArchaeologicalElement name="Nest">
     <description/>
+    <property name="Nest Nest ID" isIdentifier="true" type="measure">
+      <description/>
+      <formatString><![CDATA[Nest-$2-]]></formatString>
+      <appendCharacterString><![CDATA[ - ]]></appendCharacterString>
+    </property>
     <property name="Nest Box Prefix" isIdentifier="true" type="vocab">
       <description/>
-      <formatString><![CDATA[Nest-$1]]></formatString>
+      <formatString><![CDATA[Box-$1]]></formatString>
       <appendCharacterString><![CDATA[ - ]]></appendCharacterString>
       <lookup>
         <term>{A}
@@ -176,14 +181,9 @@
 <description/></term>
       </lookup>
     </property>
-    <property name="Nest Nest ID" isIdentifier="true" type="measure">
-      <description/>
-      <formatString><![CDATA[$2-]]></formatString>
-      <appendCharacterString><![CDATA[ - ]]></appendCharacterString>
-    </property>
     <property name="Nest Box ID" isIdentifier="true" type="measure">
       <description/>
-      <formatString><![CDATA[Box-$2-]]></formatString>
+      <formatString><![CDATA[$2-]]></formatString>
       <appendCharacterString><![CDATA[ - ]]></appendCharacterString>
     </property>
     <property name="Nest Location Name" isIdentifier="true" type="measure">
@@ -267,9 +267,14 @@
       <formatString><![CDATA[Egg-$2-]]></formatString>
       <appendCharacterString><![CDATA[ - ]]></appendCharacterString>
     </property>
+    <property name="Egg Nest ID" isIdentifier="true" type="measure">
+      <description/>
+      <formatString><![CDATA[Nest-$2-]]></formatString>
+      <appendCharacterString><![CDATA[ - ]]></appendCharacterString>
+    </property>
     <property name="Egg Box Prefix" isIdentifier="true" type="vocab">
       <description/>
-      <formatString><![CDATA[Nest-$1]]></formatString>
+      <formatString><![CDATA[Box-$1]]></formatString>
       <appendCharacterString><![CDATA[ - ]]></appendCharacterString>
       <lookup>
         <term>{A}
@@ -282,14 +287,9 @@
 <description/></term>
       </lookup>
     </property>
-    <property name="Egg Nest ID" isIdentifier="true" type="measure">
-      <description/>
-      <formatString><![CDATA[$2-]]></formatString>
-      <appendCharacterString><![CDATA[ - ]]></appendCharacterString>
-    </property>
     <property name="Egg Box ID" isIdentifier="true" type="measure">
       <description/>
-      <formatString><![CDATA[Box-$2-]]></formatString>
+      <formatString><![CDATA[$2-]]></formatString>
       <appendCharacterString><![CDATA[ - ]]></appendCharacterString>
     </property>
     <property name="Egg Location Name" isIdentifier="true" type="measure">
@@ -320,9 +320,19 @@
   </ArchaeologicalElement>
   <ArchaeologicalElement name="Chick">
     <description/>
+    <property name="Chick Chick ID" isIdentifier="true" type="measure">
+      <description/>
+      <formatString><![CDATA[Chick $2-]]></formatString>
+      <appendCharacterString><![CDATA[ - ]]></appendCharacterString>
+    </property>
+    <property name="Chick Nest ID" isIdentifier="true" type="measure">
+      <description/>
+      <formatString><![CDATA[Nest-$2-]]></formatString>
+      <appendCharacterString><![CDATA[ - ]]></appendCharacterString>
+    </property>
     <property name="Chick Box Prefix" isIdentifier="true" type="vocab">
       <description/>
-      <formatString><![CDATA[Chick-$2]]></formatString>
+      <formatString><![CDATA[Box-$2]]></formatString>
       <appendCharacterString><![CDATA[ - ]]></appendCharacterString>
       <lookup>
         <term>{A}
@@ -335,19 +345,9 @@
 <description/></term>
       </lookup>
     </property>
-    <property name="Chick Chick ID" isIdentifier="true" type="measure">
-      <description/>
-      <formatString><![CDATA[$2-]]></formatString>
-      <appendCharacterString><![CDATA[ - ]]></appendCharacterString>
-    </property>
-    <property name="Chick Nest ID" isIdentifier="true" type="measure">
-      <description/>
-      <formatString><![CDATA[Nest-$2-]]></formatString>
-      <appendCharacterString><![CDATA[ - ]]></appendCharacterString>
-    </property>
     <property name="Chick Box ID" isIdentifier="true" type="measure">
       <description/>
-      <formatString><![CDATA[Box-$2-]]></formatString>
+      <formatString><![CDATA[$2-]]></formatString>
       <appendCharacterString><![CDATA[ - ]]></appendCharacterString>
     </property>
     <property name="Chick Location Name" isIdentifier="true" type="measure">

@@ -711,7 +711,14 @@ saveTabGroup(String tabgroup, String callback) {
   String  parentTabgroup_ = parentTabgroup;
   Boolean userWasSet      = !username.equals("");
 
+  String repopulateEntityList;
+  repopulateEntityList = "populateEntityListsInTabGroup(\"{tabGroup}\")";
+  repopulateEntityList = replaceFirst(repopulateEntityList, "{tabGroup}", parentTabgroup__);
+
+  callback = repopulateEntityList + ";" + callback;
+
   parentTabgroup = null;
+
   SaveCallback saveCallback  = new SaveCallback() {
     onSave(uuid, newRecord) {
       setUuid(tabgroup, uuid);
@@ -741,7 +748,7 @@ saveTabGroup(String tabgroup, String callback) {
       // Adding this allows subsequent saves to succeed. Presumably it plays
       // some role in helping FAIMS associate the correct user with a record.
       if (!userWasSet) {
-        saveTabGroup(tabgroup);
+        saveTabGroup(tabgroup, callback);
       }
 
     }
@@ -1131,6 +1138,7 @@ newBox(){
   setUuid(tabgroup, null);
   newTabGroup(tabgroup);
   populateAuthorAndTimestamp(tabgroup);
+  populateEntityListsInTabGroup(tabgroup);
   inheritBoxFields();
 }
 
@@ -1204,6 +1212,7 @@ newBoxStatus(){
   setUuid(tabgroup, null);
   newTabGroup(tabgroup);
   populateAuthorAndTimestamp(tabgroup);
+  populateEntityListsInTabGroup(tabgroup);
   inheritBoxStatusFields();
 }
 
@@ -1281,6 +1290,7 @@ newNest(){
   setUuid(tabgroup, null);
   newTabGroup(tabgroup);
   populateAuthorAndTimestamp(tabgroup);
+  populateEntityListsInTabGroup(tabgroup);
   String autoNumDest = "";
   autoNumDest = "Nest/Nest/Nest_Nest_ID";
   incAutoNum(autoNumDest);
@@ -1358,6 +1368,7 @@ newNestMeasurement(){
   setUuid(tabgroup, null);
   newTabGroup(tabgroup);
   populateAuthorAndTimestamp(tabgroup);
+  populateEntityListsInTabGroup(tabgroup);
   inheritNestMeasurementFields();
   initNestStatus();
 }
@@ -1436,6 +1447,7 @@ newEgg(){
   setUuid(tabgroup, null);
   newTabGroup(tabgroup);
   populateAuthorAndTimestamp(tabgroup);
+  populateEntityListsInTabGroup(tabgroup);
   String autoNumDest = "";
   autoNumDest = "Egg/Egg/Egg_ID";
   incAutoNum(autoNumDest);
@@ -1519,6 +1531,7 @@ newChick(){
   setUuid(tabgroup, null);
   newTabGroup(tabgroup);
   populateAuthorAndTimestamp(tabgroup);
+  populateEntityListsInTabGroup(tabgroup);
   String autoNumDest = "";
   autoNumDest = "Chick/Chick/Chick_Chick_ID";
   incAutoNum(autoNumDest);
@@ -1596,6 +1609,7 @@ newChickMeasurement(){
   setUuid(tabgroup, null);
   newTabGroup(tabgroup);
   populateAuthorAndTimestamp(tabgroup);
+  populateEntityListsInTabGroup(tabgroup);
   inheritChickMeasurementFields();
 }
 
@@ -1732,7 +1746,13 @@ loadBoxFrom(String uuid) {
   setUuid(tabgroup, uuid);
   if (isNull(uuid)) return;
 
-  showTabGroup(tabgroup, uuid);
+  FetchCallback cb = new FetchCallback() {
+    onFetch(result) {
+      populateEntityListsInTabGroup(tabgroup);
+    }
+  };
+
+  showTabGroup(tabgroup, uuid, cb);
 }
 
 loadBoxStatusFrom(String uuid) {
@@ -1740,7 +1760,13 @@ loadBoxStatusFrom(String uuid) {
   setUuid(tabgroup, uuid);
   if (isNull(uuid)) return;
 
-  showTabGroup(tabgroup, uuid);
+  FetchCallback cb = new FetchCallback() {
+    onFetch(result) {
+      populateEntityListsInTabGroup(tabgroup);
+    }
+  };
+
+  showTabGroup(tabgroup, uuid, cb);
 }
 
 loadNestFrom(String uuid) {
@@ -1748,7 +1774,13 @@ loadNestFrom(String uuid) {
   setUuid(tabgroup, uuid);
   if (isNull(uuid)) return;
 
-  showTabGroup(tabgroup, uuid);
+  FetchCallback cb = new FetchCallback() {
+    onFetch(result) {
+      populateEntityListsInTabGroup(tabgroup);
+    }
+  };
+
+  showTabGroup(tabgroup, uuid, cb);
 }
 
 loadNestMeasurementFrom(String uuid) {
@@ -1756,7 +1788,13 @@ loadNestMeasurementFrom(String uuid) {
   setUuid(tabgroup, uuid);
   if (isNull(uuid)) return;
 
-  showTabGroup(tabgroup, uuid);
+  FetchCallback cb = new FetchCallback() {
+    onFetch(result) {
+      populateEntityListsInTabGroup(tabgroup);
+    }
+  };
+
+  showTabGroup(tabgroup, uuid, cb);
 }
 
 loadEggFrom(String uuid) {
@@ -1764,7 +1802,13 @@ loadEggFrom(String uuid) {
   setUuid(tabgroup, uuid);
   if (isNull(uuid)) return;
 
-  showTabGroup(tabgroup, uuid);
+  FetchCallback cb = new FetchCallback() {
+    onFetch(result) {
+      populateEntityListsInTabGroup(tabgroup);
+    }
+  };
+
+  showTabGroup(tabgroup, uuid, cb);
 }
 
 loadChickFrom(String uuid) {
@@ -1772,7 +1816,13 @@ loadChickFrom(String uuid) {
   setUuid(tabgroup, uuid);
   if (isNull(uuid)) return;
 
-  showTabGroup(tabgroup, uuid);
+  FetchCallback cb = new FetchCallback() {
+    onFetch(result) {
+      populateEntityListsInTabGroup(tabgroup);
+    }
+  };
+
+  showTabGroup(tabgroup, uuid, cb);
 }
 
 loadChickMeasurementFrom(String uuid) {
@@ -1780,7 +1830,13 @@ loadChickMeasurementFrom(String uuid) {
   setUuid(tabgroup, uuid);
   if (isNull(uuid)) return;
 
-  showTabGroup(tabgroup, uuid);
+  FetchCallback cb = new FetchCallback() {
+    onFetch(result) {
+      populateEntityListsInTabGroup(tabgroup);
+    }
+  };
+
+  showTabGroup(tabgroup, uuid, cb);
 }
 
 
@@ -2019,62 +2075,38 @@ populateMenuWithEntities (
   }
 }
 
-menus = new ArrayList();
-menus.add(new String[] {
-  "List",
-  "Control/Control/Existing_Boxes",
-  "getUuid(\"Control\")",
-  "Box",
-  ""
-});
-menus.add(new String[] {
-  "List",
-  "Box/Box/Box_Statuses",
-  "getUuid(\"Box\")",
-  "Box Status",
-  "Box - Box Status",
-});
-menus.add(new String[] {
-  "List",
-  "Box/Box/Existing_Nests",
-  "getUuid(\"Box\")",
-  "Nest",
-  "Box - Nest",
-});
-menus.add(new String[] {
-  "List",
-  "Nest/Nest/Nest_Measurements",
-  "getUuid(\"Nest\")",
-  "Nest Measurement",
-  "Nest - Nest Measurement",
-});
-menus.add(new String[] {
-  "List",
-  "Nest/Egg_Chick/Existing_Eggs",
-  "getUuid(\"Nest\")",
-  "Egg",
-  "Nest - Egg",
-});
-menus.add(new String[] {
-  "List",
-  "Nest/Egg_Chick/Existing_Chicks",
-  "getUuid(\"Nest\")",
-  "Chick",
-  "Nest - Chick",
-});
-menus.add(new String[] {
-  "List",
-  "Chick/Chick/Existing_Chick_Measurements",
-  "getUuid(\"Chick\")",
-  "Chick Measurement",
-  "Chick - Chick Measurement",
-});
-for (m : menus) {
-  String viewType       = m[0];
-  String path           = m[1];
-  String parentUuidCall = m[2];
-  String entType        = m[3];
-  String relType        = m[4];
+getTabGroup(String ref) {
+  if (isNull(ref)) {
+    return null;
+  }
+
+  String[] parts = ref.split("/");
+
+  if (parts.length >= 1) return parts[0];
+  else                   return null;
+}
+
+populateEntityListsInTabGroup(String tabGroup) {
+  if (isNull(tabGroup)) {
+    return;
+  }
+
+  for (m : ENTITY_MENUS) {
+    String path         = m[1];
+    String menuTabGroup = getTabGroup(path);
+    String functionCall = getEntityMenuPopulationFunction(m);
+
+    if (menuTabGroup.equals(tabGroup))
+      execute(functionCall);
+  }
+}
+
+getEntityMenuPopulationFunction(String[] menuDescriptor) {
+  String viewType       = menuDescriptor[0];
+  String path           = menuDescriptor[1];
+  String parentUuidCall = menuDescriptor[2];
+  String entType        = menuDescriptor[3];
+  String relType        = menuDescriptor[4];
 
   String functionCall = "";
   functionCall += "populateMenuWithEntities(";
@@ -2089,7 +2121,64 @@ for (m : menus) {
   functionCall += "\"" + relType        + "\"";
   functionCall += ")";
 
-  addOnEvent(path, "show", functionCall);
+  return functionCall;
+}
+
+ENTITY_MENUS = new ArrayList();
+ENTITY_MENUS.add(new String[] {
+  "List",
+  "Control/Control/Existing_Boxes",
+  "getUuid(\"Control\")",
+  "Box",
+  ""
+});
+ENTITY_MENUS.add(new String[] {
+  "List",
+  "Box/Box/Box_Statuses",
+  "getUuid(\"Box\")",
+  "Box Status",
+  "Box - Box Status",
+});
+ENTITY_MENUS.add(new String[] {
+  "List",
+  "Box/Box/Existing_Nests",
+  "getUuid(\"Box\")",
+  "Nest",
+  "Box - Nest",
+});
+ENTITY_MENUS.add(new String[] {
+  "List",
+  "Nest/Nest/Nest_Measurements",
+  "getUuid(\"Nest\")",
+  "Nest Measurement",
+  "Nest - Nest Measurement",
+});
+ENTITY_MENUS.add(new String[] {
+  "List",
+  "Nest/Egg_Chick/Existing_Eggs",
+  "getUuid(\"Nest\")",
+  "Egg",
+  "Nest - Egg",
+});
+ENTITY_MENUS.add(new String[] {
+  "List",
+  "Nest/Egg_Chick/Existing_Chicks",
+  "getUuid(\"Nest\")",
+  "Chick",
+  "Nest - Chick",
+});
+ENTITY_MENUS.add(new String[] {
+  "List",
+  "Chick/Chick/Existing_Chick_Measurements",
+  "getUuid(\"Chick\")",
+  "Chick Measurement",
+  "Chick - Chick Measurement",
+});
+for (m : ENTITY_MENUS) {
+  String path         = m[1];
+  String functionCall = getEntityMenuPopulationFunction(m);
+
+  execute(functionCall);
 }
 addOnEvent("Control/Control/Existing_Boxes", "click", "loadEntity()");
 addOnEvent("Box/Box/Box_Statuses", "click", "loadEntity()");
@@ -2732,6 +2821,7 @@ loadBoxFrom(String uuid) {
 
   FetchCallback updateBoxStatus = new FetchCallback() {
     onFetch(result) {
+      populateEntityListsInTabGroup(tabgroup);
       updateBoxStatusWebView();
     }
   };
@@ -2789,14 +2879,12 @@ activeBoxSearch() {
   q += "                   FROM latestnondeletedaentvalue";
   q += "                  WHERE vocabid = {boxPrefix}";
   q += "        )";
-  q += "  ORDER BY CAST(response AS numeric);";
+  q += "  ORDER BY CAST(response AS numeric)";
   q += "  LIMIT ? OFFSET ?";
   q  = replaceFirst(q, "{boxId}",     boxId);
   q  = replaceFirst(q, "{boxPrefix}", boxPrefix);
-  showWarning("", q + "");
 
   populateCursorList(refActiveBoxes, q, 25);
-  refreshTabgroupCSS("Box");
 }
 
 
