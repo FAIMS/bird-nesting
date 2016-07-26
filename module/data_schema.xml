@@ -332,7 +332,7 @@
     </property>
     <property name="Chick Box Prefix" isIdentifier="true" type="vocab">
       <description/>
-      <formatString><![CDATA[Box-$2]]></formatString>
+      <formatString><![CDATA[Box-$1]]></formatString>
       <appendCharacterString><![CDATA[ - ]]></appendCharacterString>
       <lookup>
         <term>{A}

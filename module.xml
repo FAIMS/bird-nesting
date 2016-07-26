@@ -342,7 +342,7 @@
         Box Prefix
         <str>
           <pos>3</pos>
-          <fmt>Box-$2</fmt>
+          <fmt>Box-$1</fmt>
         </str>
         <!--@SOURCE: vocabs/alpha.xml-->
       </Chick_Box_Prefix>
