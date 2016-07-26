@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--TODO: fix loadBoxFrom callbacks and loadXFrom callbacks-->
 <!--@PREPROC:  ./proc/pre.sh-->
 <!--@POSTPROC: ./proc/post.sh-->
 <module suppressWarnings="true">
@@ -147,8 +148,8 @@
       <Nest_Box_Prefix f="id noannotation nocertainty readonly">
         Box Prefix
         <str>
-          <pos>0</pos>
-          <fmt>Nest-$1</fmt>
+          <pos>1</pos>
+          <fmt>Box-$1</fmt>
         </str>
         <!--@SOURCE: vocabs/alpha.xml-->
       </Nest_Box_Prefix>
@@ -156,7 +157,7 @@
         Box Number
         <str>
           <pos>2</pos>
-          <fmt>Box-$2-</fmt>
+          <fmt>$2-</fmt>
         </str>
       </Nest_Box_ID>
       <Nest_Location_Name f="id readonly noannotation nocertainty">
@@ -171,8 +172,8 @@
       <Nest_Nest_ID f="id autonum noannotation nocertainty">
         Nest ID
         <str>
-          <pos>1</pos>
-          <fmt>$2-</fmt>
+          <pos>0</pos>
+          <fmt>Nest-$2-</fmt>
         </str>
       </Nest_Nest_ID>
       <timestamp>
@@ -283,8 +284,8 @@
     <Egg_Box_Prefix f="id noannotation nocertainty readonly">
       Box Prefix
       <str>
-        <pos>1</pos>
-        <fmt>Nest-$1</fmt>
+        <pos>2</pos>
+        <fmt>Box-$1</fmt>
       </str>
       <!--@SOURCE: vocabs/alpha.xml-->
     </Egg_Box_Prefix>
@@ -292,7 +293,7 @@
       Box Number
       <str>
         <pos>3</pos>
-        <fmt>Box-$2-</fmt>
+        <fmt>$2-</fmt>
       </str>
     </Egg_Box_ID>
     <Egg_Location_Name f="id readonly noannotation nocertainty">
@@ -305,8 +306,8 @@
     <Egg_Nest_ID f="id noannotation nocertainty readonly">
       Nest ID
       <str>
-        <pos>2</pos>
-        <fmt>$2-</fmt>
+        <pos>1</pos>
+        <fmt>Nest-$2-</fmt>
       </str>
     </Egg_Nest_ID>
     <Egg_ID f="id autonum noannotation nocertainty">
@@ -340,22 +341,22 @@
       <Chick_Box_Prefix f="id noannotation nocertainty readonly">
         Box Prefix
         <str>
-          <pos>0</pos>
-          <fmt>Chick-$2</fmt>
+          <pos>3</pos>
+          <fmt>Box-$2</fmt>
         </str>
         <!--@SOURCE: vocabs/alpha.xml-->
       </Chick_Box_Prefix>
       <Chick_Box_ID f="id noannotation nocertainty readonly" b="decimal">
         Box Number
         <str>
-          <pos>3</pos>
-          <fmt>Box-$2-</fmt>
+          <pos>4</pos>
+          <fmt>$2-</fmt>
         </str>
       </Chick_Box_ID>
       <Chick_Location_Name f="id readonly noannotation nocertainty">
         Location Name
         <str>
-          <pos>4</pos>
+          <pos>5</pos>
           <fmt>$2-</fmt>
         </str>
       </Chick_Location_Name>
@@ -372,14 +373,14 @@
         Chick ID
         <str>
           <pos>1</pos>
-          <fmt>$2-</fmt>
+          <fmt>Chick $2-</fmt>
         </str>
       </Chick_Chick_ID>
     </cols>
     <timestamp f="id">
       Chick Recorded at
       <str>
-        <pos>5</pos>
+        <pos>6</pos>
         <fmt>$2</fmt>
       </str>
     </timestamp>
