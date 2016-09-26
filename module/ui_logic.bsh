@@ -349,6 +349,15 @@ String getArchEntType(String ref) {
   return archEntType;
 }
 
+String getArchEntTypePascalCased(String ref) {
+  String archEntType = getArchEntType(ref);
+  if (archEntType == null) {
+    return archEntType;
+  }
+
+  return archEntType.replaceAll(" ", "");
+}
+
 /******************************************************************************/
 /*                            BINDING ACCUMULATOR                             */
 /*                                                                            */
@@ -362,6 +371,7 @@ String getArchEntType(String ref) {
 /*   - "copy" --- Triggered as a record is duplicated, immediately before it  */
 /*         is first saved.                                                    */
 /*   - "create" --- Triggered after a record is first created.                */
+/*   - "delete" --- Triggered after a record is deleted.                      */
 /*   - "fetch" --- Triggered after a record is fetched and displayed in a     */
 /*         given tab group.                                                   */
 /*   - "focus" --- This is merely an interface to make code for adding        */
@@ -383,6 +393,7 @@ Set    CUSTOM_EVENTS = new HashSet(); // Events not handled by `onEvent`
 CUSTOM_EVENTS.add("blur");
 CUSTOM_EVENTS.add("copy");
 CUSTOM_EVENTS.add("create");
+CUSTOM_EVENTS.add("delete");
 CUSTOM_EVENTS.add("fetch");
 CUSTOM_EVENTS.add("focus");
 CUSTOM_EVENTS.add("leave");
@@ -998,11 +1009,7 @@ void saveTabGroup(String tabgroup, String callback) {
   String  parentTabgroupUuid_ = getUuid(parentTabgroup_);
   Boolean userWasSet          = !username.equals("");
 
-  String repopulateEntityList;
-  repopulateEntityList = "populateEntityListsInTabGroup(\"{tabGroup}\")";
-  repopulateEntityList = replaceFirst(repopulateEntityList, "{tabGroup}", parentTabgroup__);
-
-  callback = repopulateEntityList + ";" + callback;
+  callback += "; onSave" + getArchEntTypePascalCased(tabgroup) + "__()";
 
   parentTabgroup = null;
 
@@ -1098,31 +1105,31 @@ void populateAuthorAndTimestamp(String tabgroup) {
 
 void onShowBox () {
   // TODO: Add some things which should happen when this tabgroup is shown
-  saveTabGroup("Box", "onSaveBox__()");
+  saveTabGroup("Box");
 }
 void onShowBoxStatus () {
   // TODO: Add some things which should happen when this tabgroup is shown
-  saveTabGroup("Box_Status", "onSaveBoxStatus__()");
+  saveTabGroup("Box_Status");
 }
 void onShowNest () {
   // TODO: Add some things which should happen when this tabgroup is shown
-  saveTabGroup("Nest", "onSaveNest__()");
+  saveTabGroup("Nest");
 }
 void onShowNestMeasurement () {
   // TODO: Add some things which should happen when this tabgroup is shown
-  saveTabGroup("Nest_Measurement", "onSaveNestMeasurement__()");
+  saveTabGroup("Nest_Measurement");
 }
 void onShowEgg () {
   // TODO: Add some things which should happen when this tabgroup is shown
-  saveTabGroup("Egg", "onSaveEgg__()");
+  saveTabGroup("Egg");
 }
 void onShowChick () {
   // TODO: Add some things which should happen when this tabgroup is shown
-  saveTabGroup("Chick", "onSaveChick__()");
+  saveTabGroup("Chick");
 }
 void onShowChickMeasurement () {
   // TODO: Add some things which should happen when this tabgroup is shown
-  saveTabGroup("Chick_Measurement", "onSaveChickMeasurement__()");
+  saveTabGroup("Chick_Measurement");
 }
 
 addOnEvent("Box", "show", "onShowBox()");
@@ -1398,7 +1405,18 @@ void makeDuplicateRelationships(fetchedAttributes, String newUuid){
     String parentparticipatesverb = savedAttribute.get(1);
     String childparticipatesverb  = savedAttribute.get(2);
     String parentUuid             = savedAttribute.get(3);
-    saveEntitiesToHierRel(relntypename, parentUuid, newUuid, parentparticipatesverb, childparticipatesverb, null);
+    String childArchEntType       = savedAttribute.get(5);
+
+    String onSaveRel              = "onSave" + childArchEntType + "__()";
+
+    saveEntitiesToHierRel(
+        relntypename,
+        parentUuid,
+        newUuid,
+        parentparticipatesverb,
+        childparticipatesverb,
+        onSaveRel
+    );
   }
 }
 
@@ -1474,7 +1492,6 @@ void onCreateBox__(){
 }
 
 
-
 // Triggered after an existing record is loaded.
 void onFetchBox__(){
   String ref      = "Box";
@@ -1482,7 +1499,6 @@ void onFetchBox__(){
   String stmtsStr = getStatementsString(ref, event);
   execute(stmtsStr);
 }
-
 
 
 // Triggered after an existing record is saved.
@@ -1493,12 +1509,20 @@ void onSaveBox__(){
   execute(stmtsStr);
 }
 
-
+addOnEvent("Box", "save", "populateEntityListsOfArchEnt(\"Box\")");
 
 // Triggered as a record is duplicated but before it's saved.
 void onCopyBox__(){
   String ref      = "Box";
   String event    = "copy";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+void onDeleteBox__(){
+  String ref      = "Box";
+  String event    = "delete";
   String stmtsStr = getStatementsString(ref, event);
   execute(stmtsStr);
 }
@@ -1510,7 +1534,7 @@ void duplicateBox(){
   disableAutoSave(tabgroup);
 
   clearGpsInTabGroup(tabgroup);
-
+  populateAuthorAndTimestamp(tabgroup);
   populateCameraPictureGallery("Box/Box/Take_Photo", new ArrayList());
 
   onCopyBox__();
@@ -1518,9 +1542,6 @@ void duplicateBox(){
   saveCallback = new SaveCallback() {
     onSave(uuid, newRecord) {
       setUuid(tabgroup, uuid);
-      populateAuthorAndTimestamp(tabgroup);
-
-      Boolean enable_autosave = true;
 
       fetchAll(getDuplicateRelnQuery(uuidOld), new FetchCallback(){
         onFetch(result) {
@@ -1567,6 +1588,8 @@ void reallyDeleteBox(){
   String tabgroup = "Box";
   deleteArchEnt(getUuid(tabgroup));
   cancelTabGroup(tabgroup, false);
+  populateEntityListsOfArchEnt(tabgroup);
+  onDeleteBox__();
 }
 
 void newBoxStatus(){
@@ -1592,7 +1615,6 @@ void onCreateBoxStatus__(){
 }
 
 
-
 // Triggered after an existing record is loaded.
 void onFetchBoxStatus__(){
   String ref      = "Box_Status";
@@ -1600,7 +1622,6 @@ void onFetchBoxStatus__(){
   String stmtsStr = getStatementsString(ref, event);
   execute(stmtsStr);
 }
-
 
 
 // Triggered after an existing record is saved.
@@ -1611,12 +1632,20 @@ void onSaveBoxStatus__(){
   execute(stmtsStr);
 }
 
-
+addOnEvent("Box_Status", "save", "populateEntityListsOfArchEnt(\"Box_Status\")");
 
 // Triggered as a record is duplicated but before it's saved.
 void onCopyBoxStatus__(){
   String ref      = "Box_Status";
   String event    = "copy";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+void onDeleteBoxStatus__(){
+  String ref      = "Box_Status";
+  String event    = "delete";
   String stmtsStr = getStatementsString(ref, event);
   execute(stmtsStr);
 }
@@ -1628,16 +1657,13 @@ void duplicateBoxStatus(){
   disableAutoSave(tabgroup);
 
   clearGpsInTabGroup(tabgroup);
-
+  populateAuthorAndTimestamp(tabgroup);
 
   onCopyBoxStatus__();
 
   saveCallback = new SaveCallback() {
     onSave(uuid, newRecord) {
       setUuid(tabgroup, uuid);
-      populateAuthorAndTimestamp(tabgroup);
-
-      Boolean enable_autosave = true;
 
       fetchAll(getDuplicateRelnQuery(uuidOld), new FetchCallback(){
         onFetch(result) {
@@ -1683,6 +1709,8 @@ void reallyDeleteBoxStatus(){
   String tabgroup = "Box_Status";
   deleteArchEnt(getUuid(tabgroup));
   cancelTabGroup(tabgroup, false);
+  populateEntityListsOfArchEnt(tabgroup);
+  onDeleteBoxStatus__();
 }
 
 void newNest(){
@@ -1708,7 +1736,6 @@ void onCreateNest__(){
 }
 
 
-
 // Triggered after an existing record is loaded.
 void onFetchNest__(){
   String ref      = "Nest";
@@ -1716,7 +1743,6 @@ void onFetchNest__(){
   String stmtsStr = getStatementsString(ref, event);
   execute(stmtsStr);
 }
-
 
 
 // Triggered after an existing record is saved.
@@ -1727,12 +1753,20 @@ void onSaveNest__(){
   execute(stmtsStr);
 }
 
-
+addOnEvent("Nest", "save", "populateEntityListsOfArchEnt(\"Nest\")");
 
 // Triggered as a record is duplicated but before it's saved.
 void onCopyNest__(){
   String ref      = "Nest";
   String event    = "copy";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+void onDeleteNest__(){
+  String ref      = "Nest";
+  String event    = "delete";
   String stmtsStr = getStatementsString(ref, event);
   execute(stmtsStr);
 }
@@ -1744,16 +1778,13 @@ void duplicateNest(){
   disableAutoSave(tabgroup);
 
   clearGpsInTabGroup(tabgroup);
-
+  populateAuthorAndTimestamp(tabgroup);
 
   onCopyNest__();
 
   saveCallback = new SaveCallback() {
     onSave(uuid, newRecord) {
       setUuid(tabgroup, uuid);
-      populateAuthorAndTimestamp(tabgroup);
-
-      Boolean enable_autosave = true;
 
       fetchAll(getDuplicateRelnQuery(uuidOld), new FetchCallback(){
         onFetch(result) {
@@ -1799,6 +1830,8 @@ void reallyDeleteNest(){
   String tabgroup = "Nest";
   deleteArchEnt(getUuid(tabgroup));
   cancelTabGroup(tabgroup, false);
+  populateEntityListsOfArchEnt(tabgroup);
+  onDeleteNest__();
 }
 
 void newNestMeasurement(){
@@ -1825,7 +1858,6 @@ void onCreateNestMeasurement__(){
 }
 
 
-
 // Triggered after an existing record is loaded.
 void onFetchNestMeasurement__(){
   String ref      = "Nest_Measurement";
@@ -1833,7 +1865,6 @@ void onFetchNestMeasurement__(){
   String stmtsStr = getStatementsString(ref, event);
   execute(stmtsStr);
 }
-
 
 
 // Triggered after an existing record is saved.
@@ -1844,12 +1875,20 @@ void onSaveNestMeasurement__(){
   execute(stmtsStr);
 }
 
-
+addOnEvent("Nest_Measurement", "save", "populateEntityListsOfArchEnt(\"Nest_Measurement\")");
 
 // Triggered as a record is duplicated but before it's saved.
 void onCopyNestMeasurement__(){
   String ref      = "Nest_Measurement";
   String event    = "copy";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+void onDeleteNestMeasurement__(){
+  String ref      = "Nest_Measurement";
+  String event    = "delete";
   String stmtsStr = getStatementsString(ref, event);
   execute(stmtsStr);
 }
@@ -1861,16 +1900,13 @@ void duplicateNestMeasurement(){
   disableAutoSave(tabgroup);
 
   clearGpsInTabGroup(tabgroup);
-
+  populateAuthorAndTimestamp(tabgroup);
 
   onCopyNestMeasurement__();
 
   saveCallback = new SaveCallback() {
     onSave(uuid, newRecord) {
       setUuid(tabgroup, uuid);
-      populateAuthorAndTimestamp(tabgroup);
-
-      Boolean enable_autosave = true;
 
       fetchAll(getDuplicateRelnQuery(uuidOld), new FetchCallback(){
         onFetch(result) {
@@ -1916,6 +1952,8 @@ void reallyDeleteNestMeasurement(){
   String tabgroup = "Nest_Measurement";
   deleteArchEnt(getUuid(tabgroup));
   cancelTabGroup(tabgroup, false);
+  populateEntityListsOfArchEnt(tabgroup);
+  onDeleteNestMeasurement__();
 }
 
 void newEgg(){
@@ -1950,7 +1988,6 @@ void onCreateEgg__(){
 }
 
 
-
 // Triggered after an existing record is loaded.
 void onFetchEgg__(){
   String ref      = "Egg";
@@ -1958,7 +1995,6 @@ void onFetchEgg__(){
   String stmtsStr = getStatementsString(ref, event);
   execute(stmtsStr);
 }
-
 
 
 // Triggered after an existing record is saved.
@@ -1969,12 +2005,20 @@ void onSaveEgg__(){
   execute(stmtsStr);
 }
 
-
+addOnEvent("Egg", "save", "populateEntityListsOfArchEnt(\"Egg\")");
 
 // Triggered as a record is duplicated but before it's saved.
 void onCopyEgg__(){
   String ref      = "Egg";
   String event    = "copy";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+void onDeleteEgg__(){
+  String ref      = "Egg";
+  String event    = "delete";
   String stmtsStr = getStatementsString(ref, event);
   execute(stmtsStr);
 }
@@ -1989,16 +2033,13 @@ void duplicateEgg(){
   incAutoNum(autoNumDest);
 
   clearGpsInTabGroup(tabgroup);
-
+  populateAuthorAndTimestamp(tabgroup);
 
   onCopyEgg__();
 
   saveCallback = new SaveCallback() {
     onSave(uuid, newRecord) {
       setUuid(tabgroup, uuid);
-      populateAuthorAndTimestamp(tabgroup);
-
-      Boolean enable_autosave = true;
 
       fetchAll(getDuplicateRelnQuery(uuidOld), new FetchCallback(){
         onFetch(result) {
@@ -2044,6 +2085,8 @@ void reallyDeleteEgg(){
   String tabgroup = "Egg";
   deleteArchEnt(getUuid(tabgroup));
   cancelTabGroup(tabgroup, false);
+  populateEntityListsOfArchEnt(tabgroup);
+  onDeleteEgg__();
 }
 
 void newChick(){
@@ -2078,7 +2121,6 @@ void onCreateChick__(){
 }
 
 
-
 // Triggered after an existing record is loaded.
 void onFetchChick__(){
   String ref      = "Chick";
@@ -2086,7 +2128,6 @@ void onFetchChick__(){
   String stmtsStr = getStatementsString(ref, event);
   execute(stmtsStr);
 }
-
 
 
 // Triggered after an existing record is saved.
@@ -2097,12 +2138,20 @@ void onSaveChick__(){
   execute(stmtsStr);
 }
 
-
+addOnEvent("Chick", "save", "populateEntityListsOfArchEnt(\"Chick\")");
 
 // Triggered as a record is duplicated but before it's saved.
 void onCopyChick__(){
   String ref      = "Chick";
   String event    = "copy";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+void onDeleteChick__(){
+  String ref      = "Chick";
+  String event    = "delete";
   String stmtsStr = getStatementsString(ref, event);
   execute(stmtsStr);
 }
@@ -2117,16 +2166,13 @@ void duplicateChick(){
   incAutoNum(autoNumDest);
 
   clearGpsInTabGroup(tabgroup);
-
+  populateAuthorAndTimestamp(tabgroup);
 
   onCopyChick__();
 
   saveCallback = new SaveCallback() {
     onSave(uuid, newRecord) {
       setUuid(tabgroup, uuid);
-      populateAuthorAndTimestamp(tabgroup);
-
-      Boolean enable_autosave = true;
 
       fetchAll(getDuplicateRelnQuery(uuidOld), new FetchCallback(){
         onFetch(result) {
@@ -2172,6 +2218,8 @@ void reallyDeleteChick(){
   String tabgroup = "Chick";
   deleteArchEnt(getUuid(tabgroup));
   cancelTabGroup(tabgroup, false);
+  populateEntityListsOfArchEnt(tabgroup);
+  onDeleteChick__();
 }
 
 void newChickMeasurement(){
@@ -2197,7 +2245,6 @@ void onCreateChickMeasurement__(){
 }
 
 
-
 // Triggered after an existing record is loaded.
 void onFetchChickMeasurement__(){
   String ref      = "Chick_Measurement";
@@ -2205,7 +2252,6 @@ void onFetchChickMeasurement__(){
   String stmtsStr = getStatementsString(ref, event);
   execute(stmtsStr);
 }
-
 
 
 // Triggered after an existing record is saved.
@@ -2216,12 +2262,20 @@ void onSaveChickMeasurement__(){
   execute(stmtsStr);
 }
 
-
+addOnEvent("Chick_Measurement", "save", "populateEntityListsOfArchEnt(\"Chick_Measurement\")");
 
 // Triggered as a record is duplicated but before it's saved.
 void onCopyChickMeasurement__(){
   String ref      = "Chick_Measurement";
   String event    = "copy";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+void onDeleteChickMeasurement__(){
+  String ref      = "Chick_Measurement";
+  String event    = "delete";
   String stmtsStr = getStatementsString(ref, event);
   execute(stmtsStr);
 }
@@ -2233,7 +2287,7 @@ void duplicateChickMeasurement(){
   disableAutoSave(tabgroup);
 
   clearGpsInTabGroup(tabgroup);
-
+  populateAuthorAndTimestamp(tabgroup);
   populateCameraPictureGallery("Chick_Measurement/Chick_Measurement/Picture", new ArrayList());
 
   onCopyChickMeasurement__();
@@ -2241,9 +2295,6 @@ void duplicateChickMeasurement(){
   saveCallback = new SaveCallback() {
     onSave(uuid, newRecord) {
       setUuid(tabgroup, uuid);
-      populateAuthorAndTimestamp(tabgroup);
-
-      Boolean enable_autosave = true;
 
       fetchAll(getDuplicateRelnQuery(uuidOld), new FetchCallback(){
         onFetch(result) {
@@ -2290,6 +2341,8 @@ void reallyDeleteChickMeasurement(){
   String tabgroup = "Chick_Measurement";
   deleteArchEnt(getUuid(tabgroup));
   cancelTabGroup(tabgroup, false);
+  populateEntityListsOfArchEnt(tabgroup);
+  onDeleteChickMeasurement__();
 }
 
 
@@ -2722,6 +2775,22 @@ void populateEntityListsInTabGroup(String tabGroup) {
     String functionCall = getEntityMenuPopulationFunction(m);
 
     if (menuTabGroup.equals(tabGroup))
+      execute(functionCall);
+  }
+}
+
+void populateEntityListsOfArchEnt(String tabGroup) {
+  if (isNull(tabGroup)) {
+    return;
+  }
+
+  String archEntTypeToPopulate = getArchEntType(tabGroup);
+
+  for (m : ENTITY_MENUS) {
+    String archEntType  = m[3];
+    String functionCall = getEntityMenuPopulationFunction(m);
+
+    if (archEntType.equals(archEntTypeToPopulate))
       execute(functionCall);
   }
 }
