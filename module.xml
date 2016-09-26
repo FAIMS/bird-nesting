@@ -169,7 +169,7 @@
       </Nest_Location_Name>
     </cols>
     <cols>
-      <Nest_Nest_ID f="id autonum noannotation nocertainty">
+      <Nest_Nest_ID f="id noannotation nocertainty">
         Nest ID
         <str>
           <pos>0</pos>

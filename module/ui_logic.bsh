@@ -13,7 +13,22 @@ setSyncEnabled(true);
 setSyncMaxInterval(600.0f);
 setSyncMinInterval(5.0f);
 
-makeLocalID(){
+/*********************** REGEX-FREE STRING REPLACEMENT ************************/
+String replaceFirst(String haystack, String needle, String replacement) {
+  i = haystack.indexOf(needle);
+  if (i == -1)           return haystack;
+  if (needle.equals("")) return haystack;
+  pre  = haystack.substring(0, i                                   );
+  post = haystack.substring(   i+needle.length(), haystack.length());
+  return pre + replacement + post;
+}
+
+String replaceFirst(String haystack, String replacement) {
+  return replaceFirst(haystack, "%s", replacement);
+}
+
+/******************************* LOCALSETTINGS ********************************/
+void makeLocalID(){
   fetchOne("CREATE TABLE IF NOT EXISTS localSettings (key text primary key, value text);", null);
   fetchOne("DROP VIEW IF EXISTS parentchild;", null);
   fetchOne("CREATE VIEW parentchild AS "+
@@ -32,15 +47,36 @@ makeLocalID(){
 }
 makeLocalID();
 
-insertIntoLocalSettings(String key, String val) {
+void insertIntoLocalSettings(String ref) {
+  String val = getFieldValue(ref);
+  insertIntoLocalSettings(ref, val);
+}
+
+void insertIntoLocalSettings(String key, String val) {
   fetchOne("REPLACE INTO localSettings(key, value) VALUES('" + key + "', '" + val + "');");
 }
 
-insertIntoLocalSettings(String key, Integer val) {
+void insertIntoLocalSettings(String key, Integer val) {
   insertIntoLocalSettings(key, Integer.toString(val));
 }
 
-setFieldValueFromLocalSettings(String key, String ref) {
+void insertIntoLocalSettingsOnChange(String ref) {
+  String val = getFieldValue(ref);
+
+  String insertCallback  = "";
+  insertCallback += "insertIntoLocalSettings(\"{key}\")";
+  insertCallback  = replaceFirst(insertCallback, "{key}", ref);
+
+  addOnEvent(ref, "blur",  insertCallback);
+  addOnEvent(ref, "click", insertCallback);
+}
+
+void setFieldValueFromLocalSettings(String key, String ref, boolean doOverwrite) {
+  String val = getFieldValue(ref);
+  if (!isNull(val) && !doOverwrite) {
+    return;
+  }
+
   String q = "SELECT value FROM localSettings WHERE key = '" + key + "';";
   fetchOne(q, new FetchCallback() {
     onFetch(result) {
@@ -51,24 +87,44 @@ setFieldValueFromLocalSettings(String key, String ref) {
   });
 }
 
-/*********************** REGEX-FREE STRING REPLACEMENT ************************/
-replaceFirst(haystack, needle, replacement) {
-  i = haystack.indexOf(needle);
-  if (i == -1)           return haystack;
-  if (needle.equals("")) return haystack;
-  pre  = haystack.substring(0, i                                   );
-  post = haystack.substring(   i+needle.length(), haystack.length());
-  return pre + replacement + post;
+void setFieldValueFromLocalSettings(String ref, boolean doOverwrite) {
+  setFieldValueFromLocalSettings(ref, ref, doOverwrite);
 }
 
-replaceFirst(haystack, replacement) {
-  return replaceFirst(haystack, "%s", replacement);
+void setFieldValueFromLocalSettings(String ref) {
+  setFieldValueFromLocalSettings(ref, false);
+}
+
+void setFieldValueFromLocalSettingsOnShow(String ref, boolean doOverwrite) {
+  String cb = "setFieldValueFromLocalSettings(\"%s\", %s)";
+  cb = replaceFirst(cb, ref);
+  cb = replaceFirst(cb, doOverwrite + "");
+
+  addOnEvent(ref, "show", cb);
+}
+
+void setFieldValueFromLocalSettingsOnShow(String ref) {
+  boolean doOverwrite = false;
+  setFieldValueFromLocalSettingsOnShow(ref, doOverwrite);
+}
+
+/* Causes the value of the field given by `ref` to be saved each time it is
+ * modified (on blur). The value of the field is restored when the tab group
+ * containing the field is displayed.
+ *
+ * This function depends on `addOnEvent`. Therefore this function must be called
+ * after `addOnEvent` is defined, but before `bindOnEvents` is called. This will
+ * be so if the call is made in the autogenerator's `logic` tags.
+ */
+void persistOverSessions(String ref) {
+  setFieldValueFromLocalSettingsOnShow(ref);
+  insertIntoLocalSettingsOnChange     (ref);
 }
 
 /**************************** FIELD COPYING HELPER ****************************/
 /* Provides an easy way to copy field values, even between vocabs.            */
 /******************************************************************************/
-copyFieldValue(src, dst) {
+void copyFieldValue(String src, String dst) {
   Boolean doFindVocabId = true;
   copyFieldValue(src, dst, doFindVocabId);
 }
@@ -85,15 +141,12 @@ copyFieldValue(src, dst) {
  *                 If `doFindVocabId` is false, the value returned by
  *                 `getFieldValue` is copied, without any database accesses.
  */
-copyFieldValue(src, dst, doFindVocabId) {
+void copyFieldValue(String src, String dst, Boolean doFindVocabId) {
   String vocabIdSrc   = getFieldValue(src);
-  String vocabNameSrc = getMenuValue (src);
+  String vocabNameSrc = getFieldValue(src, true);
 
-  String attrNameSrc = src.split("\\/")[2];
-  String attrNameDst = dst.split("\\/")[2];
-
-  attrNameSrc = attrNameSrc.replaceAll("_", " ");
-  attrNameDst = attrNameDst.replaceAll("_", " ");
+  String attrNameSrc = getAttributeName(src);
+  String attrNameDst = getAttributeName(dst);
 
   if (attrNameSrc.equals(attrNameDst) || !doFindVocabId) {
     setFieldValue(dst, vocabIdSrc);
@@ -157,55 +210,288 @@ newTab(String tab, Boolean resolveTabGroups) {
 }
 
 /******************************************************************************/
+/*                           DOCUMENT OBJECT MODEL                            */
+/******************************************************************************/
+String PREVIOUSLY_DISPLAYED_TAB_GROUP = "";
+String CURRENTLY_DISPLAYED_TAB_GROUP  = "";
+
+List getTabGroups() {
+  List tabGroups = new ArrayList();
+  tabGroups.add("Login");
+  tabGroups.add("Control");
+  tabGroups.add("Box");
+  tabGroups.add("Box_Status");
+  tabGroups.add("Nest");
+  tabGroups.add("Day_of_Lay");
+  tabGroups.add("Actual_Day_of_Hatching");
+  tabGroups.add("Nest_Measurement");
+  tabGroups.add("Egg");
+  tabGroups.add("Chick");
+  tabGroups.add("Chick_Measurement");
+
+  return tabGroups;
+}
+
+void updateDisplayedTabGroup(String tabGroup) {
+  PREVIOUSLY_DISPLAYED_TAB_GROUP = CURRENTLY_DISPLAYED_TAB_GROUP;
+  CURRENTLY_DISPLAYED_TAB_GROUP  = tabGroup;
+}
+
+String getPreviousTabGroup() {
+  return getPreviouslyDisplayedTabGroup();
+}
+
+String getPreviouslyDisplayedTabGroup() {
+  return PREVIOUSLY_DISPLAYED_TAB_GROUP;
+}
+
+String getDisplayedTabGroup() {
+  return CURRENTLY_DISPLAYED_TAB_GROUP;
+}
+
+boolean isDisplayed(String ref) {
+  return getDisplayedTabGroup().equals(ref);
+}
+
+String getTabGroupRef(String fullRef) {
+  Boolean lastPartOnly = false;
+  return getTabGroupRef(fullRef, lastPartOnly);
+}
+
+String getTabGroupRef(String fullRef, Boolean lastPartOnly) {
+  if (isNull(fullRef)) {
+    return null;
+  }
+
+  String[] parts = fullRef.split("/");
+
+  if (parts.length < 1) return null;
+  return parts[0];
+}
+
+String getTabRef(String fullRef) {
+  Boolean lastPartOnly = false;
+  return getTabRef(fullRef, lastPartOnly);
+}
+
+String getTabRef(String fullRef, Boolean lastPartOnly) {
+  if (isNull(fullRef)) {
+    return null;
+  }
+
+  String[] parts = fullRef.split("/");
+
+  if (parts.length < 2) return null;
+  if (lastPartOnly) return                  parts[1];
+  else              return parts[0] + "/" + parts[1];
+}
+
+String getLastRefPart(String fullRef) {
+  if (isNull(fullRef)) {
+    return null;
+  }
+
+  String[] parts = fullRef.split("/");
+  return parts[parts.length-1];
+}
+
+String getGuiElementRef(String fullRef) {
+  Boolean lastPartOnly = true;
+  return getGuiElementRef(fullRef, lastPartOnly);
+}
+
+String getGuiElementRef(String fullRef, Boolean lastPartOnly) {
+  if (isNull(fullRef)) {
+    return null;
+  }
+
+  String[] parts = fullRef.split("/");
+
+  if (parts.length < 3) return null;
+  if (lastPartOnly) return parts[2];
+  else              return fullRef;
+}
+
+String getArch16nKey(String ref) {
+  String lastRefPart = getLastRefPart(ref);
+
+  if (isNull(lastRefPart)) return null;
+  else                     return "{" + lastRefPart + "}";
+}
+
+String guessArch16nVal(String ref) {
+  String arch16nKey = getArch16nKey(ref);
+
+  if (isNull(arch16nKey)) return "";
+  arch16nKey = arch16nKey.replaceAll("_", " ");
+  arch16nKey = arch16nKey.replaceAll("^\\{", "");
+  arch16nKey = arch16nKey.replaceAll("\\}$", "");
+  return arch16nKey;
+}
+
+String getAttributeName(String ref) {
+  String guiElementRef = getGuiElementRef(ref);
+  if (isNull(guiElementRef)) {
+    return null;
+  }
+
+  String attributeName = guiElementRef.replaceAll("_", " ");
+  return attributeName;
+}
+
+String getArchEntType(String ref) {
+  String tabGroupRef = getTabGroupRef(ref);
+  if (isNull(tabGroupRef)) {
+    return null;
+  }
+
+  String archEntType = tabGroupRef.replaceAll("_", " ");
+  return archEntType;
+}
+
+/******************************************************************************/
 /*                            BINDING ACCUMULATOR                             */
 /*                                                                            */
-/* Allows onEvent bindings for the same element to accumulate over multiple   */
-/* onEvent calls instead of having later calls override earlier ones.         */
+/* The binding accumulator allows onEvent bindings for the same element to    */
+/* accumulate over multiple onEvent calls instead of having later calls       */
+/* override earlier ones.                                                     */
+/*                                                                            */
+/* It also adds support for a several additional events:                      */
+/*   - "blur" --- This is merely an interface to make code for adding "blur"  */
+/*         events more consistent.                                            */
+/*   - "copy" --- Triggered as a record is duplicated, immediately before it  */
+/*         is first saved.                                                    */
+/*   - "create" --- Triggered after a record is first created.                */
+/*   - "fetch" --- Triggered after a record is fetched and displayed in a     */
+/*         given tab group.                                                   */
+/*   - "focus" --- This is merely an interface to make code for adding        */
+/*         "focus" events more consistent.                                    */
+/*   - "leave" --- Triggered after a given tab group is navigated away        */
+/*         from. Note that this event cannot be triggered when the FAIMS app  */
+/*         is exited.                                                         */
+/*   - "save" --- Triggered each time a tab group is saved. This includes the */
+/*         first time the tab group is saved as well as subsequent            */
+/*         onSave(String, Boolean) calls.                                     */
+/*                                                                            */
+/* A single call to `bindOnEvents` must occur after all the `addOnEvent` and  */
+/* `delOnEvents` calls. Calling `bindOnEvents` is what actually establishes   */
+/* the bindings once they have been added to the accumulator.                 */
 /******************************************************************************/
-Map events = new HashMap();
-String SEP = Character.toString ((char) 0); // Beanshell is stupid and won't let me write "\0"
+String SEP = Character.toString ((char) 0); // Beanshell won't let me write "\0"
+Map    EVENTS        = new HashMap(); // (ref, event type) -> callback statement
+Set    CUSTOM_EVENTS = new HashSet(); // Events not handled by `onEvent`
+CUSTOM_EVENTS.add("blur");
+CUSTOM_EVENTS.add("copy");
+CUSTOM_EVENTS.add("create");
+CUSTOM_EVENTS.add("fetch");
+CUSTOM_EVENTS.add("focus");
+CUSTOM_EVENTS.add("leave");
+CUSTOM_EVENTS.add("save");
+
+String getKey(String ref, String event) {
+  return ref + SEP + event;
+}
 
 /* Returns the set of statements bound to an element at `ref` and occuring on
  * `event`.
  */
-getStatements(String ref, String event) {
-  String    key = ref + SEP + event;
-  ArrayList val = (ArrayList) events.get(key);
-  if (val == null) {
-    val = new ArrayList();
-    events.put(key, val);
-  }
-  return val;
+ArrayList getStatements(String ref, String event) {
+  String    key = getKey(ref, event);
+  ArrayList val = (ArrayList) EVENTS.get(key);
+
+  if (val == null) return new ArrayList();
+  else             return val;
 }
 
-addOnEvent(String ref, String event, String statement) {
-  // Calling `remove()` first ensures statement occurs once in the list, at the end.
-  while(getStatements(ref, event).remove(statement));
-  getStatements(ref, event).add(statement);
+void addStatement(String ref, String event, String statement) {
+  // In the case that a statement already exists for a given (`ref`, `event`)
+  // pair, writing `val.add(statement);` will be enough to add the extra
+  // statement. This is because `getStatements` returns a reference to a list.
+  // In the case just described, the list is stored in the `EVENTS` map.
+  // However, sometimes `getStatements` returns empty lists which are not stored
+  // in that map. In this case, calling `EVENTS.put` is required.
+
+  String    key = getKey(ref, event);
+  ArrayList val = getStatements(ref, event);
+  val.add(statement);
+  EVENTS.put(key, val);
 }
 
-delOnEvent(String ref, String event, String statement) {
-  while(getStatements(ref, event).remove(statement));
-}
-
-bindOnEvent(String ref, String event) {
+String getStatementsString(String ref, String event) {
   ArrayList stmts = getStatements(ref, event);
-  String stmtsExpr = "";
+  String stmtsStr = "";
   for (String s : stmts) {
-    stmtsExpr += s;
-    stmtsExpr += "; ";
+    stmtsStr += s;
+    stmtsStr += "; ";
   }
-
-  onEvent(ref, event, stmtsExpr);
+  return stmtsStr;
 }
 
-bindOnEvents() {
-  for (String key : events.keySet()) {
+void delOnEvent(String ref, String event, String statement) {
+  while(getStatements(ref, event).remove(statement));
+}
+
+void addOnEvent(String ref, String event, String statement) {
+  // Calling `delOnEvent()` first ensures statement occurs once in the list, at
+  // the end.
+  delOnEvent  (ref, event, statement);
+  addStatement(ref, event, statement);
+}
+
+void bindOnEvent(String ref, String event) {
+  String stmtsStr     = getStatementsString(ref, event);
+  String focusStmtStr = getStatementsString(ref, "focus");
+  String blurStmtStr  = getStatementsString(ref, "blur" );
+
+  if (!CUSTOM_EVENTS.contains(event)) {
+    onEvent(ref, event, stmtsStr);
+  } else if (event.equals("focus")) {
+    onFocus(ref, focusStmtStr, blurStmtStr);
+  } else if (event.equals("blur" )) {
+    onFocus(ref, focusStmtStr, blurStmtStr);
+  } else {
+    ; // Other events are implemented using auto-generated callback functions
+  }
+}
+
+void bindOnEvents() {
+  for (String key : EVENTS.keySet()) {
     refevent = key.split(SEP);
     ref   = refevent[0];
     event = refevent[1];
     bindOnEvent(ref, event);
   }
+}
+
+void onLeaveTabGroup() {
+  onLeaveTabGroup(getPreviouslyDisplayedTabGroup());
+}
+
+/* Execute the "leave" event for the tab group at `ref` if a callback for it
+ * exists.
+ */
+void onLeaveTabGroup(String ref) {
+  String event    = "leave";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+/* Establishes `onEvent` bindings necessary to make the "leave" event work. The
+ * "leave" event is really triggered upon "show" of another tab.
+ */
+for (tg : getTabGroups()) {
+  String ref      = tg;
+  String event    = "show";
+  String callback;
+
+  // Update (previously) displayed tab group
+  callback = "updateDisplayedTabGroup(\"%s\")";
+  callback = replaceFirst(callback, tg);
+  addOnEvent(tg, event, callback);
+
+  // Trigger on leave tab group event
+  callback = "onLeaveTabGroup()";
+  addOnEvent(tg, event, callback);
 }
 
 /******************************************************************************/
@@ -281,8 +567,8 @@ getFieldValue(String ref, Boolean doConvertVocabIds) {
   return vocabName;
 }
 
-/*
- * Shorthand for writing getFieldValue(ref, true).
+/* Shorthand for writing getFieldValue(ref, true). This function's use is
+ * discouraged in favour of writing `getFieldValue(ref, true)`.
  */
 getMenuValue(String ref) {
   return getFieldValue(ref, true);
@@ -455,7 +741,7 @@ updateGPSDiagnostics() {
 
 String userMenuPath = "Login/Login/User";
 
-populateListForUsers(){
+void populateListForUsers(){
   String getNonDeletedUsersQuery = "SELECT userid, fname || ' ' || lname "+
                                    "  FROM user "+
                                    " WHERE userdeleted is null;";
@@ -467,7 +753,7 @@ populateListForUsers(){
   });
 }
 
-selectUser () {
+void selectUser() {
   String userVocabId  = getListItemValue();
   String userQ        = "SELECT userid,fname,lname,email FROM user " +
                         "WHERE  userid='" + userVocabId + "';";
@@ -496,10 +782,10 @@ addOnEvent(userMenuPath, "click", "selectUser()");
 /*                              MENU POPULATION                               */
 /******************************************************************************/
 /** Fetches the contents of a specifed vocabulary and stores it in the given list. **/
-fetchVocab(String vocabName, List storageList) {
+void fetchVocab(String vocabName, List storageList) {
   fetchVocab(vocabName, storageList, null);
 }
-fetchVocab(String vocabName, List storageList, String callbackFunction) {
+void fetchVocab(String vocabName, List storageList, String callbackFunction) {
   fetchAll("select vocabid, vocabname from vocabulary left join attributekey using (attributeid) where attributename = '" + vocabName + "';", new FetchCallback() {
     onFetch(result) {
       storageList.addAll(result);
@@ -512,20 +798,20 @@ fetchVocab(String vocabName, List storageList, String callbackFunction) {
 }
 
 /** Wrapper for to make a vocab without an exlusion list **/
-makeVocab(String type, String path, String attrib) {
+void makeVocab(String type, String path, String attrib) {
   makeVocab(type, path, attrib, null);
 }
 
 /** Vocab Population **/
 /* Populates the path specified vocabulary from the database based on the given attribute name, where type 
 is the type of the vocab to populate (PictureGallery, HierarchicalPictureGallery, CheckBoxGroup, DropDown, HierarchicalDropDown, RadioGroup or List). */
-makeVocab(String type, String path, String attrib, List vocabExclusions) {
+void makeVocab(String type, String path, String attrib, List vocabExclusions) {
     makeVocab(type, path, attrib, vocabExclusions, null);
 }
 
 /* Populates the path specified vocabulary from the database based on the given attribute name, where type 
 is the type of the vocab to populate (PictureGallery, HierarchicalPictureGallery, CheckBoxGroup, DropDown, HierarchicalDropDown, RadioGroup or List). */
-makeVocab(String type, String path, String attrib, List vocabExclusions, String callbackFunction){
+void makeVocab(String type, String path, String attrib, List vocabExclusions, String callbackFunction){
   if (isNull(type) || isNull(path) || isNull(attrib)) {
     Log.e("makeVocab()", "Can't make populate a vocab when the given type, path or attribute is Null");
     return;
@@ -691,25 +977,26 @@ validateFields(List fields, String format) {
 /******************************************************************************/
 Map tabgroupToUuid = Collections.synchronizedMap(new HashMap());
 
-getUuid(String tabgroup) {
-  tabgroupToUuid.get(tabgroup);
+String getUuid(String tabgroup) {
+  return tabgroupToUuid.get(tabgroup);
 }
 
-setUuid(String tabgroup, String uuid) {
+void setUuid(String tabgroup, String uuid) {
   tabgroupToUuid.put(tabgroup, uuid);
 }
 
-saveTabGroup(String tabgroup) {
+void saveTabGroup(String tabgroup) {
   saveTabGroup(tabgroup, "");
 }
 
-saveTabGroup(String tabgroup, String callback) {
-  Boolean enableAutosave  = true;
-  String  id              = getUuid(tabgroup);
-  List    geometry        = null;
-  List    attributes      = null;
-  String  parentTabgroup_ = parentTabgroup;
-  Boolean userWasSet      = !username.equals("");
+void saveTabGroup(String tabgroup, String callback) {
+  Boolean enableAutosave      = true;
+  String  id                  = getUuid(tabgroup);
+  List    geometry            = null;
+  List    attributes          = null;
+  String  parentTabgroup_     = parentTabgroup;
+  String  parentTabgroupUuid_ = getUuid(parentTabgroup_);
+  Boolean userWasSet          = !username.equals("");
 
   String repopulateEntityList;
   repopulateEntityList = "populateEntityListsInTabGroup(\"{tabGroup}\")";
@@ -723,14 +1010,18 @@ saveTabGroup(String tabgroup, String callback) {
     onSave(uuid, newRecord) {
       setUuid(tabgroup, uuid);
       // Make a child-parent relationship if need be.
-      if (newRecord && !isNull(parentTabgroup_)) {
+      if (
+          newRecord &&
+          !isNull(parentTabgroup_) &&
+          !isNull(parentTabgroupUuid_)
+      ) {
         String rel = "";
         rel += parentTabgroup_.replaceAll("_", " ");
         rel += " - ";
         rel += tabgroup.replaceAll("_", " ");
         saveEntitiesToHierRel(
           rel,
-          getUuid(parentTabgroup_),
+          parentTabgroupUuid_,
           uuid,
           "Parent Of",
           "Child Of",
@@ -760,12 +1051,17 @@ saveTabGroup(String tabgroup, String callback) {
   saveTabGroup(tabgroup, id, geometry, attributes, saveCallback, enableAutosave);
 }
 
-getTimestampNow() {
-  fmt = "yyyy-MM-dd HH:mm:ssZ";
+void setToTimestampNow(String ref) {
+  String now = getTimestampNow();
+  setFieldValue(ref, now);
+}
+
+String getTimestampNow() {
+  String fmt = "yyyy-MM-dd HH:mm:ssZ";
   return getTimestampNow(fmt);
 }
 
-getTimestampNow(String fmt) {
+String getTimestampNow(String fmt) {
   date    = new Date();
   dateFmt = new java.text.SimpleDateFormat(fmt);
   dateStr = dateFmt.format(date);
@@ -780,7 +1076,7 @@ getTimestampNow(String fmt) {
   return dateStr;
 }
 
-populateAuthorAndTimestamp(String tabgroup) {
+void populateAuthorAndTimestamp(String tabgroup) {
   Map tabgroupToAuthor    = new HashMap();
   Map tabgroupToTimestamp = new HashMap();
   tabgroupToTimestamp.put("Box_Status", "Box_Status/Box_Status/timestamp");
@@ -800,33 +1096,33 @@ populateAuthorAndTimestamp(String tabgroup) {
   if (!isNull(timestampPath)) setFieldValue(timestampPath, timestampVal);
 }
 
-onShowBox () {
+void onShowBox () {
   // TODO: Add some things which should happen when this tabgroup is shown
-  saveTabGroup("Box");
+  saveTabGroup("Box", "onSaveBox__()");
 }
-onShowBoxStatus () {
+void onShowBoxStatus () {
   // TODO: Add some things which should happen when this tabgroup is shown
-  saveTabGroup("Box_Status");
+  saveTabGroup("Box_Status", "onSaveBoxStatus__()");
 }
-onShowNest () {
+void onShowNest () {
   // TODO: Add some things which should happen when this tabgroup is shown
-  saveTabGroup("Nest");
+  saveTabGroup("Nest", "onSaveNest__()");
 }
-onShowNestMeasurement () {
+void onShowNestMeasurement () {
   // TODO: Add some things which should happen when this tabgroup is shown
-  saveTabGroup("Nest_Measurement");
+  saveTabGroup("Nest_Measurement", "onSaveNestMeasurement__()");
 }
-onShowEgg () {
+void onShowEgg () {
   // TODO: Add some things which should happen when this tabgroup is shown
-  saveTabGroup("Egg");
+  saveTabGroup("Egg", "onSaveEgg__()");
 }
-onShowChick () {
+void onShowChick () {
   // TODO: Add some things which should happen when this tabgroup is shown
-  saveTabGroup("Chick");
+  saveTabGroup("Chick", "onSaveChick__()");
 }
-onShowChickMeasurement () {
+void onShowChickMeasurement () {
   // TODO: Add some things which should happen when this tabgroup is shown
-  saveTabGroup("Chick_Measurement");
+  saveTabGroup("Chick_Measurement", "onSaveChickMeasurement__()");
 }
 
 addOnEvent("Box", "show", "onShowBox()");
@@ -837,24 +1133,24 @@ addOnEvent("Egg", "show", "onShowEgg()");
 addOnEvent("Chick", "show", "onShowChick()");
 addOnEvent("Chick_Measurement", "show", "onShowChickMeasurement()");
 
-onClickLoginUser () {
+void onClickLoginUser () {
   // TODO: Add some things which should happen when this element is clicked
   newTab("Control", true);
 }
-onClickControlAddNewBox () {
+void onClickControlAddNewBox () {
   // TODO: Add some things which should happen when this element is clicked
   parentTabgroup__ = "Control";
   newBox();
 }
-onClickNestSetDayofLay () {
+void onClickNestSetDayofLay () {
   // TODO: Add some things which should happen when this element is clicked
   newTab("Day_of_Lay", true);
 }
-onClickNestSetActualDayofHatching () {
+void onClickNestSetActualDayofHatching () {
   // TODO: Add some things which should happen when this element is clicked
   newTab("Actual_Day_of_Hatching", true);
 }
-onClickBoxAddBoxStatus () {
+void onClickBoxAddBoxStatus () {
   // TODO: Add some things which should happen when this element is clicked
   String tabgroup = "Box";
   if (isNull(getUuid(tabgroup))){
@@ -865,7 +1161,7 @@ onClickBoxAddBoxStatus () {
   parentTabgroup__ = tabgroup;
   newBoxStatus();
 }
-onClickBoxAddNewNest () {
+void onClickBoxAddNewNest () {
   // TODO: Add some things which should happen when this element is clicked
   String tabgroup = "Box";
   if (isNull(getUuid(tabgroup))){
@@ -876,7 +1172,7 @@ onClickBoxAddNewNest () {
   parentTabgroup__ = tabgroup;
   newNest();
 }
-onClickNestAddNestMeasurement () {
+void onClickNestAddNestMeasurement () {
   // TODO: Add some things which should happen when this element is clicked
   String tabgroup = "Nest";
   if (isNull(getUuid(tabgroup))){
@@ -887,7 +1183,7 @@ onClickNestAddNestMeasurement () {
   parentTabgroup__ = tabgroup;
   newNestMeasurement();
 }
-onClickNestAddNewEgg () {
+void onClickNestAddNewEgg () {
   // TODO: Add some things which should happen when this element is clicked
   String tabgroup = "Nest";
   if (isNull(getUuid(tabgroup))){
@@ -898,7 +1194,7 @@ onClickNestAddNewEgg () {
   parentTabgroup__ = tabgroup;
   newEgg();
 }
-onClickNestAddNewChick () {
+void onClickNestAddNewChick () {
   // TODO: Add some things which should happen when this element is clicked
   String tabgroup = "Nest";
   if (isNull(getUuid(tabgroup))){
@@ -909,7 +1205,7 @@ onClickNestAddNewChick () {
   parentTabgroup__ = tabgroup;
   newChick();
 }
-onClickChickAddChickMeasurement () {
+void onClickChickAddChickMeasurement () {
   // TODO: Add some things which should happen when this element is clicked
   String tabgroup = "Chick";
   if (isNull(getUuid(tabgroup))){
@@ -959,10 +1255,10 @@ addNavigationButtons(String tabgroup) {
     }
     actionOn() {
       if(isNull(getUuid(tabgroup))) {
-          newRecord(tabgroup);
+          newRecord(tabgroup, true);
           showToast("{New_record_created}");
       } else {
-          showAlert("{Warning}", "{Any_unsaved_changes_will_be_lost}", "newRecord(\""+tabgroup+"\")", "");
+          showAlert("{Warning}", "{Any_unsaved_changes_will_be_lost}", "newRecord(\""+tabgroup+"\", true)", "");
       }
     }
   }, "success");  addNavigationButton("delete", new ActionButtonCallback() {
@@ -990,20 +1286,20 @@ addNavigationButtons(String tabgroup) {
 /*        ENTITY AND RELATIONSHIP SAVING AND LOADING HELPER FUNCTIONS         */
 /******************************************************************************/
 /** Saves two entity id's as a relation. **/
-saveEntitiesToRel(String type, String entity1, String entity2) {
+void saveEntitiesToRel(String type, String entity1, String entity2) {
   String callback = null;
   saveEntitiesToRel(type, entity1, entity2, callback);
 }
 
 /** Saves two entity id's as a relation with some callback executed. **/
-saveEntitiesToRel(String type, String entity1, String entity2, String callback) {
+void saveEntitiesToRel(String type, String entity1, String entity2, String callback) {
   String e1verb = null;
   String e2verb = null;
   saveEntitiesToHierRel(type, entity1, entity2, e1verb, e2verb, callback);
 }
 
 /** Saves two entity id's as a hierachical relation with some callback executed. **/
-saveEntitiesToHierRel(String type, String entity1, String entity2, String e1verb, String e2verb, String callback) {
+void saveEntitiesToHierRel(String type, String entity1, String entity2, String e1verb, String e2verb, String callback) {
   if (isNull(entity1) || isNull(entity2)) return;
   saveRel(null, type, null, null, new SaveCallback() {
     onSave(rel_id, newRecord) {
@@ -1021,8 +1317,34 @@ saveEntitiesToHierRel(String type, String entity1, String entity2, String e1verb
 }
 
 // Makes a new record of the given tabgroup
-newRecord(String tabgroup) {
-  cancelTabGroup(tabgroup, false);
+void newRecord(String tabgroup) {
+  boolean doUpdateRelVars = false;
+  newRecord(tabgroup, doUpdateRelVars);
+}
+
+void newRecord(String tabgroup, boolean doUpdateRelVars) {
+  if (doUpdateRelVars) {
+    String uuidOld = getUuid(getDisplayedTabGroup());
+    String q       = getDuplicateRelnQuery(uuidOld); // We're not duplicating
+                                                     // anything, just getting
+                                                     // the parent's UUID.
+
+    cancelTabGroup(tabgroup, false);
+
+    FetchCallback updateRelVars = new FetchCallback() {
+      onFetch(result) {
+        if (result != null && result.size() >= 1) {
+          parentTabgroup   = result.get(0).get(4);
+          parentTabgroup   = parentTabgroup.replaceAll(" ", "_");
+          parentTabgroup__ = parentTabgroup;
+        }
+
+        newRecord(tabgroup, false);
+      }
+    };
+    fetchAll(q, updateRelVars);
+    return;
+  }
 
   String newTabGroupFunction = "new" + tabgroup.replaceAll("_", "") + "()"; // Typical value: "newTabgroup()"
   eval(newTabGroupFunction);
@@ -1031,7 +1353,7 @@ newRecord(String tabgroup) {
 }
 
 // Deletes the current record of the given tabgroup
-deleteRecord(String tabgroup) {
+void deleteRecord(String tabgroup) {
   String deleteTabGroupFunction = "delete" + tabgroup.replaceAll("_", "") + "()"; // Typical value: "deleteTabgroup()"
   eval(deleteTabGroupFunction);
 
@@ -1039,7 +1361,7 @@ deleteRecord(String tabgroup) {
 }
 
 // Duplicates the current record of the given tabgroup
-duplicateRecord(String tabgroup) {
+void duplicateRecord(String tabgroup) {
   dialog = showBusy("Duplicating", "Please wait...");
 
   String duplicateTabGroupFunction = "duplicate" + tabgroup.replaceAll("_", "") + "()"; // Typical value: "duplicateTabgroup()"
@@ -1049,7 +1371,7 @@ duplicateRecord(String tabgroup) {
 }
 
 // generic fetch saved attributes query
-getDuplicateAttributeQuery(String originalRecordID, String attributesToDupe) {
+String getDuplicateAttributeQuery(String originalRecordID, String attributesToDupe) {
   if (attributesToDupe.equals("")) {
     attributesToDupe = "''";
   }
@@ -1060,8 +1382,8 @@ getDuplicateAttributeQuery(String originalRecordID, String attributesToDupe) {
   return duplicateQuery;
 }
 
-getDuplicateRelnQuery(String originalRecordID) {
-  String dupeRelnQuery = "SELECT relntypename, parentparticipatesverb, childparticipatesverb, parentuuid "+
+String getDuplicateRelnQuery(String originalRecordID) {
+  String dupeRelnQuery = "SELECT relntypename, parentparticipatesverb, childparticipatesverb, parentuuid, parentaenttypename, childaenttypename"+
                          "  FROM parentchild join relationship using (relationshipid) "+
                          "  JOIN relntype using (relntypeid) "+
                          " WHERE childuuid = '"+originalRecordID+"' " +
@@ -1069,21 +1391,19 @@ getDuplicateRelnQuery(String originalRecordID) {
   return dupeRelnQuery;
 }
 
-makeDuplicateRelationships(fetchedAttributes, String newuuid){
+void makeDuplicateRelationships(fetchedAttributes, String newUuid){
   Log.e("Module", "makeDuplicateRelationships");
   for (savedAttribute : fetchedAttributes){
-    //  saveEntitiesToHierRel(relnname, parent, child, parentverb, childverb, relSaveCallback);
-    //relntypename, parentparticipatesverb, childparticipatesverb, childuuid
     String relntypename           = savedAttribute.get(0);
     String parentparticipatesverb = savedAttribute.get(1);
     String childparticipatesverb  = savedAttribute.get(2);
-    String childuuid              = savedAttribute.get(3);
-    saveEntitiesToHierRel(relntypename, newuuid, childuuid, parentparticipatesverb, childparticipatesverb, null);
+    String parentUuid             = savedAttribute.get(3);
+    saveEntitiesToHierRel(relntypename, parentUuid, newUuid, parentparticipatesverb, childparticipatesverb, null);
   }
 }
 
 // generic get extra attributes
-getExtraAttributes(fetchedAttributes) {
+List getExtraAttributes(fetchedAttributes) {
   List extraAttributes = createAttributeList();
   Log.d("Module", "Duplicating fetched attributes: " + fetchedAttributes.toString());
   for (savedAttribute : fetchedAttributes) {
@@ -1100,10 +1420,10 @@ getExtraAttributes(fetchedAttributes) {
   return extraAttributes;
 }
 
-loadEntity() {
+void loadEntity() {
   loadEntity(false);
 }
-loadEntity(Boolean isDropdown) {
+void loadEntity(Boolean isDropdown) {
   if (isDropdown) {
     loadEntityFrom(getDropdownItemValue());
   } else {
@@ -1111,7 +1431,7 @@ loadEntity(Boolean isDropdown) {
   }
 }
 
-loadEntityFrom(String entityID) {
+void loadEntityFrom(String entityID) {
   if (isNull(entityID)) {
     Log.e("Module", "Cannot load an entity with a null ID.");
     return;
@@ -1131,7 +1451,7 @@ loadEntityFrom(String entityID) {
   });
 }
 
-newBox(){
+void newBox(){
   String tabgroup = "Box";
 
 
@@ -1139,20 +1459,61 @@ newBox(){
   newTabGroup(tabgroup);
   populateAuthorAndTimestamp(tabgroup);
   populateEntityListsInTabGroup(tabgroup);
+  onCreateBox__();
+
+  // WARNING: The default behaviour of calling `onCreateBox()` upon entity creation is deprecated in this version of FAIMS Tools. If you never implemented this function, this warning can safely be ignored.
   inheritBoxFields();
 }
 
-duplicateBox(){
+
+void onCreateBox__(){
+  String ref      = "Box";
+  String event    = "create";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+
+// Triggered after an existing record is loaded.
+void onFetchBox__(){
+  String ref      = "Box";
+  String event    = "fetch";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+
+// Triggered after an existing record is saved.
+void onSaveBox__(){
+  String ref      = "Box";
+  String event    = "save";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+
+// Triggered as a record is duplicated but before it's saved.
+void onCopyBox__(){
+  String ref      = "Box";
+  String event    = "copy";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+void duplicateBox(){
   String tabgroup = "Box";
   String uuidOld = getUuid(tabgroup);
 
   disableAutoSave(tabgroup);
 
-
   clearGpsInTabGroup(tabgroup);
 
   populateCameraPictureGallery("Box/Box/Take_Photo", new ArrayList());
 
+  onCopyBox__();
 
   saveCallback = new SaveCallback() {
     onSave(uuid, newRecord) {
@@ -1164,17 +1525,20 @@ duplicateBox(){
       fetchAll(getDuplicateRelnQuery(uuidOld), new FetchCallback(){
         onFetch(result) {
           Log.e("Module", result.toString());
+
+          if (result != null && result.size() >= 1) {
+            parentTabgroup__ = result.get(0).get(4);
+            parentTabgroup__ = parentTabgroup__.replaceAll(" ", "_");
+          }
+
           makeDuplicateRelationships(result, getUuid(tabgroup));
+
           showToast("{Duplicated_record}");
           dialog.dismiss();
         }
       });
 
-      saveTabGroup(tabgroup, getUuid(tabgroup), null, null, new SaveCallback(){
-        onSave(autosaveUuid, autosaveNewRecord) {
-          setUuid(tabgroup, autosaveUuid);
-        }
-      }, enable_autosave);
+      saveTabGroup(tabgroup);
     }
   };
 
@@ -1189,7 +1553,7 @@ duplicateBox(){
   });
 }
 
-deleteBox(){
+void deleteBox(){
   String tabgroup = "Box";
 
   if (isNull(getUuid(tabgroup))) {
@@ -1199,13 +1563,13 @@ deleteBox(){
   }
 }
 
-reallyDeleteBox(){
+void reallyDeleteBox(){
   String tabgroup = "Box";
   deleteArchEnt(getUuid(tabgroup));
   cancelTabGroup(tabgroup, false);
 }
 
-newBoxStatus(){
+void newBoxStatus(){
   String tabgroup = "Box_Status";
 
 
@@ -1213,19 +1577,60 @@ newBoxStatus(){
   newTabGroup(tabgroup);
   populateAuthorAndTimestamp(tabgroup);
   populateEntityListsInTabGroup(tabgroup);
+  onCreateBoxStatus__();
+
+  // WARNING: The default behaviour of calling `onCreateBoxStatus()` upon entity creation is deprecated in this version of FAIMS Tools. If you never implemented this function, this warning can safely be ignored.
   inheritBoxStatusFields();
 }
 
-duplicateBoxStatus(){
+
+void onCreateBoxStatus__(){
+  String ref      = "Box_Status";
+  String event    = "create";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+
+// Triggered after an existing record is loaded.
+void onFetchBoxStatus__(){
+  String ref      = "Box_Status";
+  String event    = "fetch";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+
+// Triggered after an existing record is saved.
+void onSaveBoxStatus__(){
+  String ref      = "Box_Status";
+  String event    = "save";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+
+// Triggered as a record is duplicated but before it's saved.
+void onCopyBoxStatus__(){
+  String ref      = "Box_Status";
+  String event    = "copy";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+void duplicateBoxStatus(){
   String tabgroup = "Box_Status";
   String uuidOld = getUuid(tabgroup);
 
   disableAutoSave(tabgroup);
 
-
   clearGpsInTabGroup(tabgroup);
 
 
+  onCopyBoxStatus__();
 
   saveCallback = new SaveCallback() {
     onSave(uuid, newRecord) {
@@ -1237,17 +1642,20 @@ duplicateBoxStatus(){
       fetchAll(getDuplicateRelnQuery(uuidOld), new FetchCallback(){
         onFetch(result) {
           Log.e("Module", result.toString());
+
+          if (result != null && result.size() >= 1) {
+            parentTabgroup__ = result.get(0).get(4);
+            parentTabgroup__ = parentTabgroup__.replaceAll(" ", "_");
+          }
+
           makeDuplicateRelationships(result, getUuid(tabgroup));
+
           showToast("{Duplicated_record}");
           dialog.dismiss();
         }
       });
 
-      saveTabGroup(tabgroup, getUuid(tabgroup), null, null, new SaveCallback(){
-        onSave(autosaveUuid, autosaveNewRecord) {
-          setUuid(tabgroup, autosaveUuid);
-        }
-      }, enable_autosave);
+      saveTabGroup(tabgroup);
     }
   };
 
@@ -1261,7 +1669,7 @@ duplicateBoxStatus(){
   });
 }
 
-deleteBoxStatus(){
+void deleteBoxStatus(){
   String tabgroup = "Box_Status";
 
   if (isNull(getUuid(tabgroup))) {
@@ -1271,45 +1679,74 @@ deleteBoxStatus(){
   }
 }
 
-reallyDeleteBoxStatus(){
+void reallyDeleteBoxStatus(){
   String tabgroup = "Box_Status";
   deleteArchEnt(getUuid(tabgroup));
   cancelTabGroup(tabgroup, false);
 }
 
-newNest(){
+void newNest(){
   String tabgroup = "Nest";
 
-  String autoNumSource = "";
-  autoNumSource = getFieldValue("Control/Defaults/Next_Nest_Nest_ID");
-  if (isNull(autoNumSource)) {
-    showWarning("{Alert}","{A_next_ID_has_not_been_entered_please_provide_one}");
-    return;
-  }
 
   setUuid(tabgroup, null);
   newTabGroup(tabgroup);
   populateAuthorAndTimestamp(tabgroup);
   populateEntityListsInTabGroup(tabgroup);
-  String autoNumDest = "";
-  autoNumDest = "Nest/Nest/Nest_Nest_ID";
-  incAutoNum(autoNumDest);
+  onCreateNest__();
+
+  // WARNING: The default behaviour of calling `onCreateNest()` upon entity creation is deprecated in this version of FAIMS Tools. If you never implemented this function, this warning can safely be ignored.
   inheritNestFields();
 }
 
-duplicateNest(){
+
+void onCreateNest__(){
+  String ref      = "Nest";
+  String event    = "create";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+
+// Triggered after an existing record is loaded.
+void onFetchNest__(){
+  String ref      = "Nest";
+  String event    = "fetch";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+
+// Triggered after an existing record is saved.
+void onSaveNest__(){
+  String ref      = "Nest";
+  String event    = "save";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+
+// Triggered as a record is duplicated but before it's saved.
+void onCopyNest__(){
+  String ref      = "Nest";
+  String event    = "copy";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+void duplicateNest(){
   String tabgroup = "Nest";
   String uuidOld = getUuid(tabgroup);
 
   disableAutoSave(tabgroup);
 
-  String autoNumDest = "";
-  autoNumDest = "Nest/Nest/Nest_Nest_ID";
-  incAutoNum(autoNumDest);
-
   clearGpsInTabGroup(tabgroup);
 
 
+  onCopyNest__();
 
   saveCallback = new SaveCallback() {
     onSave(uuid, newRecord) {
@@ -1321,17 +1758,20 @@ duplicateNest(){
       fetchAll(getDuplicateRelnQuery(uuidOld), new FetchCallback(){
         onFetch(result) {
           Log.e("Module", result.toString());
+
+          if (result != null && result.size() >= 1) {
+            parentTabgroup__ = result.get(0).get(4);
+            parentTabgroup__ = parentTabgroup__.replaceAll(" ", "_");
+          }
+
           makeDuplicateRelationships(result, getUuid(tabgroup));
+
           showToast("{Duplicated_record}");
           dialog.dismiss();
         }
       });
 
-      saveTabGroup(tabgroup, getUuid(tabgroup), null, null, new SaveCallback(){
-        onSave(autosaveUuid, autosaveNewRecord) {
-          setUuid(tabgroup, autosaveUuid);
-        }
-      }, enable_autosave);
+      saveTabGroup(tabgroup);
     }
   };
 
@@ -1345,7 +1785,7 @@ duplicateNest(){
   });
 }
 
-deleteNest(){
+void deleteNest(){
   String tabgroup = "Nest";
 
   if (isNull(getUuid(tabgroup))) {
@@ -1355,13 +1795,13 @@ deleteNest(){
   }
 }
 
-reallyDeleteNest(){
+void reallyDeleteNest(){
   String tabgroup = "Nest";
   deleteArchEnt(getUuid(tabgroup));
   cancelTabGroup(tabgroup, false);
 }
 
-newNestMeasurement(){
+void newNestMeasurement(){
   String tabgroup = "Nest_Measurement";
 
 
@@ -1369,20 +1809,61 @@ newNestMeasurement(){
   newTabGroup(tabgroup);
   populateAuthorAndTimestamp(tabgroup);
   populateEntityListsInTabGroup(tabgroup);
+  onCreateNestMeasurement__();
+
+  // WARNING: The default behaviour of calling `onCreateNestMeasurement()` upon entity creation is deprecated in this version of FAIMS Tools. If you never implemented this function, this warning can safely be ignored.
   inheritNestMeasurementFields();
   initNestStatus();
 }
 
-duplicateNestMeasurement(){
+
+void onCreateNestMeasurement__(){
+  String ref      = "Nest_Measurement";
+  String event    = "create";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+
+// Triggered after an existing record is loaded.
+void onFetchNestMeasurement__(){
+  String ref      = "Nest_Measurement";
+  String event    = "fetch";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+
+// Triggered after an existing record is saved.
+void onSaveNestMeasurement__(){
+  String ref      = "Nest_Measurement";
+  String event    = "save";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+
+// Triggered as a record is duplicated but before it's saved.
+void onCopyNestMeasurement__(){
+  String ref      = "Nest_Measurement";
+  String event    = "copy";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+void duplicateNestMeasurement(){
   String tabgroup = "Nest_Measurement";
   String uuidOld = getUuid(tabgroup);
 
   disableAutoSave(tabgroup);
 
-
   clearGpsInTabGroup(tabgroup);
 
 
+  onCopyNestMeasurement__();
 
   saveCallback = new SaveCallback() {
     onSave(uuid, newRecord) {
@@ -1394,17 +1875,20 @@ duplicateNestMeasurement(){
       fetchAll(getDuplicateRelnQuery(uuidOld), new FetchCallback(){
         onFetch(result) {
           Log.e("Module", result.toString());
+
+          if (result != null && result.size() >= 1) {
+            parentTabgroup__ = result.get(0).get(4);
+            parentTabgroup__ = parentTabgroup__.replaceAll(" ", "_");
+          }
+
           makeDuplicateRelationships(result, getUuid(tabgroup));
+
           showToast("{Duplicated_record}");
           dialog.dismiss();
         }
       });
 
-      saveTabGroup(tabgroup, getUuid(tabgroup), null, null, new SaveCallback(){
-        onSave(autosaveUuid, autosaveNewRecord) {
-          setUuid(tabgroup, autosaveUuid);
-        }
-      }, enable_autosave);
+      saveTabGroup(tabgroup);
     }
   };
 
@@ -1418,7 +1902,7 @@ duplicateNestMeasurement(){
   });
 }
 
-deleteNestMeasurement(){
+void deleteNestMeasurement(){
   String tabgroup = "Nest_Measurement";
 
   if (isNull(getUuid(tabgroup))) {
@@ -1428,13 +1912,13 @@ deleteNestMeasurement(){
   }
 }
 
-reallyDeleteNestMeasurement(){
+void reallyDeleteNestMeasurement(){
   String tabgroup = "Nest_Measurement";
   deleteArchEnt(getUuid(tabgroup));
   cancelTabGroup(tabgroup, false);
 }
 
-newEgg(){
+void newEgg(){
   String tabgroup = "Egg";
 
   String autoNumSource = "";
@@ -1451,15 +1935,55 @@ newEgg(){
   String autoNumDest = "";
   autoNumDest = "Egg/Egg/Egg_ID";
   incAutoNum(autoNumDest);
+  onCreateEgg__();
+
+  // WARNING: The default behaviour of calling `onCreateEgg()` upon entity creation is deprecated in this version of FAIMS Tools. If you never implemented this function, this warning can safely be ignored.
   inheritEggFields();
 }
 
-duplicateEgg(){
+
+void onCreateEgg__(){
+  String ref      = "Egg";
+  String event    = "create";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+
+// Triggered after an existing record is loaded.
+void onFetchEgg__(){
+  String ref      = "Egg";
+  String event    = "fetch";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+
+// Triggered after an existing record is saved.
+void onSaveEgg__(){
+  String ref      = "Egg";
+  String event    = "save";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+
+// Triggered as a record is duplicated but before it's saved.
+void onCopyEgg__(){
+  String ref      = "Egg";
+  String event    = "copy";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+void duplicateEgg(){
   String tabgroup = "Egg";
   String uuidOld = getUuid(tabgroup);
 
   disableAutoSave(tabgroup);
-
   String autoNumDest = "";
   autoNumDest = "Egg/Egg/Egg_ID";
   incAutoNum(autoNumDest);
@@ -1467,6 +1991,7 @@ duplicateEgg(){
   clearGpsInTabGroup(tabgroup);
 
 
+  onCopyEgg__();
 
   saveCallback = new SaveCallback() {
     onSave(uuid, newRecord) {
@@ -1478,17 +2003,20 @@ duplicateEgg(){
       fetchAll(getDuplicateRelnQuery(uuidOld), new FetchCallback(){
         onFetch(result) {
           Log.e("Module", result.toString());
+
+          if (result != null && result.size() >= 1) {
+            parentTabgroup__ = result.get(0).get(4);
+            parentTabgroup__ = parentTabgroup__.replaceAll(" ", "_");
+          }
+
           makeDuplicateRelationships(result, getUuid(tabgroup));
+
           showToast("{Duplicated_record}");
           dialog.dismiss();
         }
       });
 
-      saveTabGroup(tabgroup, getUuid(tabgroup), null, null, new SaveCallback(){
-        onSave(autosaveUuid, autosaveNewRecord) {
-          setUuid(tabgroup, autosaveUuid);
-        }
-      }, enable_autosave);
+      saveTabGroup(tabgroup);
     }
   };
 
@@ -1502,7 +2030,7 @@ duplicateEgg(){
   });
 }
 
-deleteEgg(){
+void deleteEgg(){
   String tabgroup = "Egg";
 
   if (isNull(getUuid(tabgroup))) {
@@ -1512,13 +2040,13 @@ deleteEgg(){
   }
 }
 
-reallyDeleteEgg(){
+void reallyDeleteEgg(){
   String tabgroup = "Egg";
   deleteArchEnt(getUuid(tabgroup));
   cancelTabGroup(tabgroup, false);
 }
 
-newChick(){
+void newChick(){
   String tabgroup = "Chick";
 
   String autoNumSource = "";
@@ -1535,15 +2063,55 @@ newChick(){
   String autoNumDest = "";
   autoNumDest = "Chick/Chick/Chick_Chick_ID";
   incAutoNum(autoNumDest);
+  onCreateChick__();
+
+  // WARNING: The default behaviour of calling `onCreateChick()` upon entity creation is deprecated in this version of FAIMS Tools. If you never implemented this function, this warning can safely be ignored.
   inheritChickFields();
 }
 
-duplicateChick(){
+
+void onCreateChick__(){
+  String ref      = "Chick";
+  String event    = "create";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+
+// Triggered after an existing record is loaded.
+void onFetchChick__(){
+  String ref      = "Chick";
+  String event    = "fetch";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+
+// Triggered after an existing record is saved.
+void onSaveChick__(){
+  String ref      = "Chick";
+  String event    = "save";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+
+// Triggered as a record is duplicated but before it's saved.
+void onCopyChick__(){
+  String ref      = "Chick";
+  String event    = "copy";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+void duplicateChick(){
   String tabgroup = "Chick";
   String uuidOld = getUuid(tabgroup);
 
   disableAutoSave(tabgroup);
-
   String autoNumDest = "";
   autoNumDest = "Chick/Chick/Chick_Chick_ID";
   incAutoNum(autoNumDest);
@@ -1551,6 +2119,7 @@ duplicateChick(){
   clearGpsInTabGroup(tabgroup);
 
 
+  onCopyChick__();
 
   saveCallback = new SaveCallback() {
     onSave(uuid, newRecord) {
@@ -1562,17 +2131,20 @@ duplicateChick(){
       fetchAll(getDuplicateRelnQuery(uuidOld), new FetchCallback(){
         onFetch(result) {
           Log.e("Module", result.toString());
+
+          if (result != null && result.size() >= 1) {
+            parentTabgroup__ = result.get(0).get(4);
+            parentTabgroup__ = parentTabgroup__.replaceAll(" ", "_");
+          }
+
           makeDuplicateRelationships(result, getUuid(tabgroup));
+
           showToast("{Duplicated_record}");
           dialog.dismiss();
         }
       });
 
-      saveTabGroup(tabgroup, getUuid(tabgroup), null, null, new SaveCallback(){
-        onSave(autosaveUuid, autosaveNewRecord) {
-          setUuid(tabgroup, autosaveUuid);
-        }
-      }, enable_autosave);
+      saveTabGroup(tabgroup);
     }
   };
 
@@ -1586,7 +2158,7 @@ duplicateChick(){
   });
 }
 
-deleteChick(){
+void deleteChick(){
   String tabgroup = "Chick";
 
   if (isNull(getUuid(tabgroup))) {
@@ -1596,13 +2168,13 @@ deleteChick(){
   }
 }
 
-reallyDeleteChick(){
+void reallyDeleteChick(){
   String tabgroup = "Chick";
   deleteArchEnt(getUuid(tabgroup));
   cancelTabGroup(tabgroup, false);
 }
 
-newChickMeasurement(){
+void newChickMeasurement(){
   String tabgroup = "Chick_Measurement";
 
 
@@ -1610,20 +2182,61 @@ newChickMeasurement(){
   newTabGroup(tabgroup);
   populateAuthorAndTimestamp(tabgroup);
   populateEntityListsInTabGroup(tabgroup);
+  onCreateChickMeasurement__();
+
+  // WARNING: The default behaviour of calling `onCreateChickMeasurement()` upon entity creation is deprecated in this version of FAIMS Tools. If you never implemented this function, this warning can safely be ignored.
   inheritChickMeasurementFields();
 }
 
-duplicateChickMeasurement(){
+
+void onCreateChickMeasurement__(){
+  String ref      = "Chick_Measurement";
+  String event    = "create";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+
+// Triggered after an existing record is loaded.
+void onFetchChickMeasurement__(){
+  String ref      = "Chick_Measurement";
+  String event    = "fetch";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+
+// Triggered after an existing record is saved.
+void onSaveChickMeasurement__(){
+  String ref      = "Chick_Measurement";
+  String event    = "save";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+
+
+// Triggered as a record is duplicated but before it's saved.
+void onCopyChickMeasurement__(){
+  String ref      = "Chick_Measurement";
+  String event    = "copy";
+  String stmtsStr = getStatementsString(ref, event);
+  execute(stmtsStr);
+}
+
+void duplicateChickMeasurement(){
   String tabgroup = "Chick_Measurement";
   String uuidOld = getUuid(tabgroup);
 
   disableAutoSave(tabgroup);
 
-
   clearGpsInTabGroup(tabgroup);
 
   populateCameraPictureGallery("Chick_Measurement/Chick_Measurement/Picture", new ArrayList());
 
+  onCopyChickMeasurement__();
 
   saveCallback = new SaveCallback() {
     onSave(uuid, newRecord) {
@@ -1635,17 +2248,20 @@ duplicateChickMeasurement(){
       fetchAll(getDuplicateRelnQuery(uuidOld), new FetchCallback(){
         onFetch(result) {
           Log.e("Module", result.toString());
+
+          if (result != null && result.size() >= 1) {
+            parentTabgroup__ = result.get(0).get(4);
+            parentTabgroup__ = parentTabgroup__.replaceAll(" ", "_");
+          }
+
           makeDuplicateRelationships(result, getUuid(tabgroup));
+
           showToast("{Duplicated_record}");
           dialog.dismiss();
         }
       });
 
-      saveTabGroup(tabgroup, getUuid(tabgroup), null, null, new SaveCallback(){
-        onSave(autosaveUuid, autosaveNewRecord) {
-          setUuid(tabgroup, autosaveUuid);
-        }
-      }, enable_autosave);
+      saveTabGroup(tabgroup);
     }
   };
 
@@ -1660,7 +2276,7 @@ duplicateChickMeasurement(){
   });
 }
 
-deleteChickMeasurement(){
+void deleteChickMeasurement(){
   String tabgroup = "Chick_Measurement";
 
   if (isNull(getUuid(tabgroup))) {
@@ -1670,14 +2286,14 @@ deleteChickMeasurement(){
   }
 }
 
-reallyDeleteChickMeasurement(){
+void reallyDeleteChickMeasurement(){
   String tabgroup = "Chick_Measurement";
   deleteArchEnt(getUuid(tabgroup));
   cancelTabGroup(tabgroup, false);
 }
 
 
-doNotDelete(){
+void doNotDelete(){
   showToast("{Delete_Cancelled}");
 }
 addOnEvent("Login", "show", "removeNavigationButtons()");
@@ -1712,11 +2328,11 @@ entityTypes.add(new NameValuePair("{Chick}", "Chick"));
 entityTypes.add(new NameValuePair("{Chick_Measurement}", "Chick Measurement"));
 populateDropDown("Control/Search/Entity_Types", entityTypes);
 
-clearSearch(){
+void clearSearch(){
   setFieldValue("Control/Search/Search_Term","");
 }
 
-search(){
+void search(){
   String tabgroup = "Control";
   String refEntityList  = tabgroup + "/Search/Entity_List";
   String refSearchTerm  = tabgroup + "/Search/Search_Term";
@@ -1741,7 +2357,7 @@ search(){
   Log.d("Module", "Search query: " + searchQuery);
 }
 
-loadBoxFrom(String uuid) {
+void loadBoxFrom(String uuid) {
   String tabgroup = "Box";
   setUuid(tabgroup, uuid);
   if (isNull(uuid)) return;
@@ -1749,13 +2365,15 @@ loadBoxFrom(String uuid) {
   FetchCallback cb = new FetchCallback() {
     onFetch(result) {
       populateEntityListsInTabGroup(tabgroup);
+      // WARNING: The default behaviour of calling `onFetchBox()` upon fetching an entity is deprecated in this version of FAIMS Tools. If you never implemented this function, this warning can safely be ignored.
+      onFetchBox__();
     }
   };
 
   showTabGroup(tabgroup, uuid, cb);
 }
 
-loadBoxStatusFrom(String uuid) {
+void loadBoxStatusFrom(String uuid) {
   String tabgroup = "Box_Status";
   setUuid(tabgroup, uuid);
   if (isNull(uuid)) return;
@@ -1763,13 +2381,15 @@ loadBoxStatusFrom(String uuid) {
   FetchCallback cb = new FetchCallback() {
     onFetch(result) {
       populateEntityListsInTabGroup(tabgroup);
+      // WARNING: The default behaviour of calling `onFetchBoxStatus()` upon fetching an entity is deprecated in this version of FAIMS Tools. If you never implemented this function, this warning can safely be ignored.
+      onFetchBoxStatus__();
     }
   };
 
   showTabGroup(tabgroup, uuid, cb);
 }
 
-loadNestFrom(String uuid) {
+void loadNestFrom(String uuid) {
   String tabgroup = "Nest";
   setUuid(tabgroup, uuid);
   if (isNull(uuid)) return;
@@ -1777,13 +2397,15 @@ loadNestFrom(String uuid) {
   FetchCallback cb = new FetchCallback() {
     onFetch(result) {
       populateEntityListsInTabGroup(tabgroup);
+      // WARNING: The default behaviour of calling `onFetchNest()` upon fetching an entity is deprecated in this version of FAIMS Tools. If you never implemented this function, this warning can safely be ignored.
+      onFetchNest__();
     }
   };
 
   showTabGroup(tabgroup, uuid, cb);
 }
 
-loadNestMeasurementFrom(String uuid) {
+void loadNestMeasurementFrom(String uuid) {
   String tabgroup = "Nest_Measurement";
   setUuid(tabgroup, uuid);
   if (isNull(uuid)) return;
@@ -1791,13 +2413,15 @@ loadNestMeasurementFrom(String uuid) {
   FetchCallback cb = new FetchCallback() {
     onFetch(result) {
       populateEntityListsInTabGroup(tabgroup);
+      // WARNING: The default behaviour of calling `onFetchNestMeasurement()` upon fetching an entity is deprecated in this version of FAIMS Tools. If you never implemented this function, this warning can safely be ignored.
+      onFetchNestMeasurement__();
     }
   };
 
   showTabGroup(tabgroup, uuid, cb);
 }
 
-loadEggFrom(String uuid) {
+void loadEggFrom(String uuid) {
   String tabgroup = "Egg";
   setUuid(tabgroup, uuid);
   if (isNull(uuid)) return;
@@ -1805,13 +2429,15 @@ loadEggFrom(String uuid) {
   FetchCallback cb = new FetchCallback() {
     onFetch(result) {
       populateEntityListsInTabGroup(tabgroup);
+      // WARNING: The default behaviour of calling `onFetchEgg()` upon fetching an entity is deprecated in this version of FAIMS Tools. If you never implemented this function, this warning can safely be ignored.
+      onFetchEgg__();
     }
   };
 
   showTabGroup(tabgroup, uuid, cb);
 }
 
-loadChickFrom(String uuid) {
+void loadChickFrom(String uuid) {
   String tabgroup = "Chick";
   setUuid(tabgroup, uuid);
   if (isNull(uuid)) return;
@@ -1819,13 +2445,15 @@ loadChickFrom(String uuid) {
   FetchCallback cb = new FetchCallback() {
     onFetch(result) {
       populateEntityListsInTabGroup(tabgroup);
+      // WARNING: The default behaviour of calling `onFetchChick()` upon fetching an entity is deprecated in this version of FAIMS Tools. If you never implemented this function, this warning can safely be ignored.
+      onFetchChick__();
     }
   };
 
   showTabGroup(tabgroup, uuid, cb);
 }
 
-loadChickMeasurementFrom(String uuid) {
+void loadChickMeasurementFrom(String uuid) {
   String tabgroup = "Chick_Measurement";
   setUuid(tabgroup, uuid);
   if (isNull(uuid)) return;
@@ -1833,6 +2461,8 @@ loadChickMeasurementFrom(String uuid) {
   FetchCallback cb = new FetchCallback() {
     onFetch(result) {
       populateEntityListsInTabGroup(tabgroup);
+      // WARNING: The default behaviour of calling `onFetchChickMeasurement()` upon fetching an entity is deprecated in this version of FAIMS Tools. If you never implemented this function, this warning can safely be ignored.
+      onFetchChickMeasurement__();
     }
   };
 
@@ -1962,26 +2592,23 @@ incField(String ref) {
   return incField(ref, 1);
 }
 
-addOnEvent("Control", "show", "onShowAutonum()");
-
 getStartingIdPaths() {
   List l = new ArrayList();
-  l.add("Control/Defaults/Next_Nest_Nest_ID");
   l.add("Control/Defaults/Next_Egg_ID");
   l.add("Control/Defaults/Next_Chick_Chick_ID");
 
   return l;
 }
 
-onShowAutonum() {
-  List l = getStartingIdPaths();
-
-  for (ref : l) {
-    loadStartingId(ref);
-  }
-}
-
 loadStartingId(String ref) {
+  // If there's already a value in the field, we don't need to load one.
+  String val = getFieldValue(ref);
+  if (!isNull(val)) {
+    return;
+  }
+
+  // Load a value into the field. Set it to 1 if no value has been previously
+  // saved.
   String idQ = "SELECT value FROM localSettings WHERE key = '" + ref + "';";
   fetchOne(idQ, new FetchCallback() {
     onFetch(result) {
@@ -1990,6 +2617,16 @@ loadStartingId(String ref) {
     }
   });
 }
+
+loadStartingIds() {
+  List l = getStartingIdPaths();
+
+  for (ref : l) {
+    loadStartingId(ref);
+  }
+}
+
+addOnEvent("Control", "show", "loadStartingIds()");
 
 /*
  * Sets bindings to save autonum'd fields whenever they're blurred.
@@ -2000,7 +2637,6 @@ for (ref : getStartingIdPaths()) {
 
 incAutoNum(String destPath) {
   Map destToSource = new HashMap();
-  destToSource.put("Nest/Nest/Nest_Nest_ID", "Control/Defaults/Next_Nest_Nest_ID");
   destToSource.put("Egg/Egg/Egg_ID", "Control/Defaults/Next_Egg_ID");
   destToSource.put("Chick/Chick/Chick_Chick_ID", "Control/Defaults/Next_Chick_Chick_ID");
 
@@ -2022,7 +2658,7 @@ incAutoNum(String destPath) {
  * `relType`    the name of the relationship the children are to be in with the
  *              entity denoted by `parentUuid`.
  */
-populateMenuWithEntities (
+void populateMenuWithEntities (
   String viewType,
   String path,
   String parentUuid,
@@ -2075,25 +2711,14 @@ populateMenuWithEntities (
   }
 }
 
-getTabGroup(String ref) {
-  if (isNull(ref)) {
-    return null;
-  }
-
-  String[] parts = ref.split("/");
-
-  if (parts.length >= 1) return parts[0];
-  else                   return null;
-}
-
-populateEntityListsInTabGroup(String tabGroup) {
+void populateEntityListsInTabGroup(String tabGroup) {
   if (isNull(tabGroup)) {
     return;
   }
 
   for (m : ENTITY_MENUS) {
     String path         = m[1];
-    String menuTabGroup = getTabGroup(path);
+    String menuTabGroup = getTabGroupRef(path);
     String functionCall = getEntityMenuPopulationFunction(m);
 
     if (menuTabGroup.equals(tabGroup))
@@ -2101,7 +2726,7 @@ populateEntityListsInTabGroup(String tabGroup) {
   }
 }
 
-getEntityMenuPopulationFunction(String[] menuDescriptor) {
+String getEntityMenuPopulationFunction(String[] menuDescriptor) {
   String viewType       = menuDescriptor[0];
   String path           = menuDescriptor[1];
   String parentUuidCall = menuDescriptor[2];

@@ -27,7 +27,6 @@
               <Existing_Boxes/>
             </Control>
             <Defaults>
-              <Next_Nest_Nest_ID/>
               <Next_Egg_ID/>
               <Next_Chick_Chick_ID/>
             </Defaults>
@@ -261,7 +260,6 @@
           <logic/>
         </faims>
       </instance>
-      <bind type="decimal" nodeset="/faims/Control/Defaults/Next_Nest_Nest_ID"/>
       <bind type="decimal" nodeset="/faims/Control/Defaults/Next_Egg_ID"/>
       <bind type="decimal" nodeset="/faims/Control/Defaults/Next_Chick_Chick_ID"/>
       <bind type="decimal" nodeset="/faims/Box/Box/Box_Box_ID"/>
@@ -269,7 +267,6 @@
       <bind type="decimal" nodeset="/faims/Box/Box/Orientation_degrees"/>
       <bind type="decimal" nodeset="/faims/Box_Status/Box_Status/Box_Status_Box_ID"/>
       <bind type="decimal" nodeset="/faims/Nest/Nest/Colgroup_0/Col_1/Nest_Box_ID"/>
-      <bind type="decimal" nodeset="/faims/Nest/Nest/Colgroup_1/Col_0/Nest_Nest_ID"/>
       <bind type="date" nodeset="/faims/Day_of_Lay/Day_of_Lay/Day_of_Lay"/>
       <bind type="date" nodeset="/faims/Actual_Day_of_Hatching/Actual_Day_of_Hatching/Actual_Day_of_Hatching"/>
       <bind type="decimal" nodeset="/faims/Nest_Measurement/Nest_Measurement/Colgroup_0/Col_0/Egg_Count"/>
@@ -341,9 +338,6 @@
       </group>
       <group ref="Defaults">
         <label>{Defaults}</label>
-        <input ref="Next_Nest_Nest_ID" faims_style_class="required">
-          <label>{Next_Nest_Nest_ID}</label>
-        </input>
         <input ref="Next_Egg_ID" faims_style_class="required">
           <label>{Next_Egg_ID}</label>
         </input>
