@@ -55,23 +55,5 @@ updateBoxStatusWebView() {
   fetchOne(q, populate);
 }
 
-// Overrides autogen's definition
-loadBoxFrom(String uuid) {
-  String tabgroup = "Box";
-  setUuid(tabgroup, uuid);
-  if (isNull(uuid)) return;
-
-  FetchCallback updateBoxStatus = new FetchCallback() {
-    onFetch(result) {
-      populateEntityListsInTabGroup(tabgroup);
-      updateBoxStatusWebView();
-    }
-  };
-
-  showTabGroup(tabgroup, uuid, updateBoxStatus);
-}
-
-// Overrides autogen's definition
-onShowBoxStatus () {
-  saveTabGroup("Box_Status", "updateBoxStatusWebView()");
-}
+addOnEvent("Box", "fetch", "updateBoxStatusWebView()");
+addOnEvent("Box_Status", "show", "updateBoxStatusWebView()");
