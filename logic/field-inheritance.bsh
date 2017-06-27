@@ -121,3 +121,12 @@ inheritChickMeasurementFields() {
     false
   );
 }
+
+addOnEvent("Box", "create", "inheritBoxFields()");
+addOnEvent("Nest", "create", "inheritNestFields()");
+addOnEvent("Egg", "create", "inheritEggFields()");
+addOnEvent("Chick", "create", "inheritChickFields()");
+addOnEvent("Measurement", "create", "inheritMeasurementFields()");
+addOnEvent("Box_Status", "create", "inheritBoxStatusFields()");
+addOnEvent("Nest_Measurement", "create", "inheritNestMeasurementFields()");
+addOnEvent("Chick_Measurement", "create", "inheritChickMeasurementFields()");

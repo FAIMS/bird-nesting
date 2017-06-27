@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--TODO: fix loadBoxFrom callbacks and loadXFrom callbacks-->
 <!--@POSTPROC: ./proc/post.sh-->
-<module suppressWarnings="true">
+<module suppressWarnings="true" test_mode="true">
 
 <Login f="nodata">
   <Login f="noscroll">
@@ -19,9 +19,7 @@
   </Defaults>
   <Active_Boxes f="noscroll">
     <cols>
-      <Box_Prefix t="dropdown">
-        <!--Populated in logic-->
-      </Box_Prefix>
+      <Box_Prefix t="dropdown" vp="Box/Box/Box_Box_Prefix"/>
       <Box_ID/>
       <Search t="button"/>
     </cols>

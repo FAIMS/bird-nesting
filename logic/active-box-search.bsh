@@ -1,6 +1,4 @@
 /***************************** ACTIVE BOX SEARCH ******************************/
-makeVocab("DropDown", "Control/Active_Boxes/Box_Prefix", "Box Box Prefix");
-
 addOnEvent("Control/Active_Boxes"              , "show"  , "activeBoxSearch()");
 addOnEvent("Control/Active_Boxes/Active_Boxes" , "click" , "loadEntity()");
 addOnEvent("Control/Active_Boxes/Search"       , "click" , "activeBoxSearch()");
