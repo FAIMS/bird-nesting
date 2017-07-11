@@ -1,10 +1,2 @@
-<?xml version="1.0"?>
-<ValidationSchema>
-  <ArchaeologicalElement name="Box"/>
-  <ArchaeologicalElement name="Box_Status"/>
-  <ArchaeologicalElement name="Nest"/>
-  <ArchaeologicalElement name="Nest_Measurement"/>
-  <ArchaeologicalElement name="Egg"/>
-  <ArchaeologicalElement name="Chick"/>
-  <ArchaeologicalElement name="Chick_Measurement"/>
-</ValidationSchema>
+<?xml version='1.0' encoding='utf-8'?>
+<ValidationSchema/>

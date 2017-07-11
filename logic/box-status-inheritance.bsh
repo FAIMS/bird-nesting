@@ -36,7 +36,7 @@ updateBoxStatusWebView() {
   q += "      WHERE    parentuuid         = '{boxUuid}'";
   q += "        AND    parentaenttypename = 'Box'";
   q += "        AND    childaenttypename  = 'Box Status'";
-  q += "      ORDER BY createdat DESC";
+  q += "      ORDER BY parentchild.createdat DESC";
   q += "      LIMIT    1";
   q += " ";
   q += " )";
@@ -56,4 +56,4 @@ updateBoxStatusWebView() {
 }
 
 addOnEvent("Box", "fetch", "updateBoxStatusWebView()");
-addOnEvent("Box_Status", "show", "updateBoxStatusWebView()");
+addOnEvent("Box_Status", "save", "updateBoxStatusWebView()");
