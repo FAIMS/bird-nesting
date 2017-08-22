@@ -1,0 +1,9 @@
+/***************************** DUPLICATE BUTTONS ******************************/
+for (tabGroup : getTabGroups())
+  addOnEvent(
+      tabGroup,
+      "show",
+      "removeNavigationButton",
+      new Object[] {"duplicate"},
+      PRECEDENCE_MID - 1 // Let `addNavigationButtons` run first
+  );

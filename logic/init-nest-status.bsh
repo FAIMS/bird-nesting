@@ -40,3 +40,5 @@ initNestStatus() {
 
   fetchOne(q, cb);
 }
+
+addOnEvent("Nest_Measurement", "create", "initNestStatus()");

@@ -1,16 +1,4 @@
-populateWebViewHtml("Nest_Measurement/Nest_Measurement/Spacer", "<br><br>");
-
-//populateWebViewHtml(
-  //"Nest/Nest/Click_Button_for_Automated_Date_Insertion_0",
-  //"<span style=\"color:6cf\">Click Button for Automated Date Insertion</span>"
-//);
-
 populateWebViewHtml(
   "Nest/Nest/Click_Button_for_Automated_Date_Insertion_1",
   "<span style=\"color:6cf\">Click Button for Automated Date Insertion</span>"
 );
-
-//populateWebViewHtml(
-  //"Nest/Nest/Do_Not_Touch_Until_Relevant",
-  //"<span style=\"color:6cf\">Do Not Touch Until Relevant</span>"
-//);

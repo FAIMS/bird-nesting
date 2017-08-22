@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--TODO: fix loadBoxFrom callbacks and loadXFrom callbacks-->
 <!--@POSTPROC: ./proc/post.sh-->
-<module suppressWarnings="true" test_mode="true">
+<module>
 
 <Login f="nodata">
   <Login f="noscroll">
@@ -11,169 +10,33 @@
 
 <Control f="nodata">
   <Control f="noscroll">
-    <Add_New_Box t="button" l="Box"/>
-    <Existing_Boxes t="list" e="Box"/>
+    <Add_New_Nest t="button" l="Nest"/>
+    <Existing_Nests t="list" e="Nest"/>
   </Control>
-  <Defaults>
-    <autonum/>
-  </Defaults>
-  <Active_Boxes f="noscroll">
-    <cols>
-      <Box_Prefix t="dropdown" vp="Box/Box/Box_Box_Prefix"/>
-      <Box_ID/>
-      <Search t="button"/>
-    </cols>
-    <Active_Boxes t="list"/>
-  </Active_Boxes>
   <search/>
-  <Revisit f="noscroll">
-    <Days t="dropdown"/>
-    <!--<Perform_Next_Revisit t="button"/>-->
-    <Compute_Revisits t="button"/>
-    <Revisit f="nolabel">
-      <!--This is replaced with a table view using @POSTPROC-->
-    </Revisit>
-  </Revisit>
 </Control>
 
-<Box>
-  <Box>
-    <Box_Box_Prefix f="id noannotation nocertainty">
-      Box Prefix
-      <str>
-        <pos>0</pos>
-        <fmt>Box-$1</fmt>
-      </str>
-      <!--@SOURCE: vocabs/alpha.xml-->
-    </Box_Box_Prefix>
-    <Box_Box_ID f="id noannotation nocertainty" b="decimal">
-      Box Number
-      <str>
-        <pos>1</pos>
-        <fmt>$2-</fmt>
-      </str>
-    </Box_Box_ID>
-    <Box_Location_Name f="id">
-      Location Name
-      <str>
-        <pos>2</pos>
-        <fmt>$1</fmt>
-      </str>
-      <opts>
-        <opt>Gap Hills</opt>
-        <opt>Saloon</opt>
-        <opt>Sandsone</opt>
-        <opt>White Tank</opt>
-        <opt>Old Aviary</opt>
-        <opt>New Aviary</opt>
-        <opt>W19G</opt>
-        <opt>W19F</opt>
-      </opts>
-    </Box_Location_Name>
-    <gps/>
-    <Height_m b="decimal">
-      Height (m)
-      <desc>Measure height above ground in metres.</desc>
-    </Height_m>
-    <Orientation_degrees b="decimal">
-      Orientation (degrees)
-      <desc>Enter degrees of azimuth.</desc>
-    </Orientation_degrees>
-    <Comments/>
-    <Take_Photo t="camera"/>
-    <cols>
-      <Box_Status f="nodata readonly">
-        Current Box Status
-      </Box_Status>
-      <Box_Status_Spacer t="group"/>
-    </cols>
-    <cols>
-      <col>
-        <Add_Box_Status t="button" lc="Box_Status"/>
-        <Box_Statuses t="list" ec="Box_Status" c="fixedheightfive">
-          Last 5 Recorded Box Statuses
-        </Box_Statuses>
-      </col>
-      <col>
-        <Add_New_Nest t="button" lc="Nest"/>
-        <Existing_Nests t="list" ec="Nest" c="fixedheightfive">
-          Last 5 Recorded Nests
-        </Existing_Nests>
-      </col>
-    </cols>
-  </Box>
-</Box>
-
-<Box_Status>
-  <Box_Status>
-    <Box_Status_Box_Prefix f="id noannotation nocertainty readonly">
-      Box Prefix
-      <str>
-        <pos>0</pos>
-        <fmt>$1</fmt>
-      </str>
-      <!--@SOURCE: vocabs/alpha.xml-->
-    </Box_Status_Box_Prefix>
-    <Box_Status_Box_ID f="id noannotation nocertainty readonly" b="decimal">
-      Box Number
-      <str>
-        <pos>1</pos>
-        <fmt>$2-</fmt>
-      </str>
-    </Box_Status_Box_ID>
-    <timestamp f="id">
-      Box Status Recorded at
-      <str>
-        <pos>2</pos>
-        <fmt>$2</fmt>
-      </str>
-    </timestamp>
-    <Box_Status>
-      <opts>
-        <opt>Empty</opt>
-        <opt>Active</opt>
-        <opt>Terminated</opt>
-        <opt>No Observation</opt>
-      </opts>
-    </Box_Status>
-  </Box_Status>
-</Box_Status>
-
 <Nest>
+  <fmt>{{Box_ID}} {{Nest_ID}} {{Location_Name}}</fmt>
   <Nest>
     <cols>
-      <Nest_Box_Prefix f="id noannotation nocertainty readonly">
-        Box Prefix
-        <str>
-          <pos>1</pos>
-          <fmt>Box-$1</fmt>
-        </str>
-        <!--@SOURCE: vocabs/alpha.xml-->
-      </Nest_Box_Prefix>
-      <Nest_Box_ID f="id noannotation nocertainty readonly" b="decimal">
-        Box Number
-        <str>
-          <pos>2</pos>
-          <fmt>$2-</fmt>
-        </str>
-      </Nest_Box_ID>
-      <Nest_Location_Name f="id readonly noannotation nocertainty">
-        Location Name
-        <str>
-          <pos>3</pos>
-          <fmt>$2</fmt>
-        </str>
-      </Nest_Location_Name>
+      <Box_ID/>
+      <Nest_ID b="decimal" f="nocertainty"/>
     </cols>
     <cols>
-      <Nest_Nest_ID f="id noannotation nocertainty">
-        Nest ID
-        <str>
-          <pos>0</pos>
-          <fmt>Nest-$2-</fmt>
-        </str>
-      </Nest_Nest_ID>
-      <timestamp>
+      <Location_Name>
+        <opts>
+          <opt>Gap Hills</opt>
+          <opt>Saloon</opt>
+          <opt>Sandsone</opt>
+          <opt>White Tank</opt>
+          <opt>Old Aviary</opt>
+          <opt>New Aviary</opt>
+          <opt>W19G</opt>
+          <opt>W19F</opt>
+        </opts>
+      </Location_Name>
+      <timestamp f="noannotation nocertainty">
         Nest Record Created at
       </timestamp>
     </cols>
@@ -193,27 +56,52 @@
     <Set_Actual_Day_of_Hatching t="button" l="Actual_Day_of_Hatching">
       Set Actual Day of Hatching...
     </Set_Actual_Day_of_Hatching>
-    <Actual_Day_of_Hatching f="readonly"/>
-    <Add_Nest_Measurement t="button" lc="Nest_Measurement">
-      Add Nest Visit
-    </Add_Nest_Measurement>
-    <Nest_Measurements  t="list" ec="Nest_Measurement" c="fixedheightfive">
-      Last 5 Recorded Nest Visits
-    </Nest_Measurements>
+    <Actual_Day_of_Hatching f="readonly noannotation nocertainty"/>
+    <Box_Status>
+      <opts>
+        <opt>Empty</opt>
+        <opt>Active</opt>
+        <opt>Terminated</opt>
+        <opt>No Observation</opt>
+      </opts>
+    </Box_Status>
+    <Add_Nest_Visit t="button" l="Nest_Measurement"/>
   </Nest>
-  <Egg_Chick f="noscroll">
-    <cols>
-      <col>
-        <Add_New_Egg t="button" lc="Egg"/>
-        <Existing_Eggs t="list" ec="Egg"/>
-      </col>
-      <col>
-        <Add_New_Chick t="button" lc="Chick"/>
-        <Existing_Chicks t="list" ec="Chick"/>
-      </col>
-    </cols>
-  </Egg_Chick>
 </Nest>
+
+<Nest_Measurement>
+  Nest Visit
+  <fmt>Nest-{{Nest_Measurement_Nest_ID}}</fmt>
+  <Nest_Measurement>
+    Nest Visit
+    <Nest_Measurement_Nest_ID
+          f="id noannotation nocertainty readonly"
+          i="Nest/Nest/Nest_ID">
+      Nest ID
+    <desc>
+      This should be a unique number for this box, please search for the most
+      recent record in this box if unsure.
+    </desc>
+    </Nest_Measurement_Nest_ID>
+    <Nest_Status>
+      <desc>If near 100%, go visit the next day.</desc>
+      <opts>
+        <opt>&lt;25%</opt>
+        <opt>25-50%</opt>
+        <opt>50-75%</opt>
+        <opt>75-100%</opt>
+      </opts>
+    </Nest_Status>
+    <cols>
+      <Egg_Count b="decimal"/>
+      <Hatched_Chick_Count_Live b="decimal"/>
+      <Hatched_Chick_Count_Dead b="decimal"/>
+    </cols>
+    <Measurements/>
+    <Notes/>
+    <Picture t="camera"/>
+  </Nest_Measurement>
+</Nest_Measurement>
 
 <Day_of_Lay f="nodata">
   Day of Last Egg
@@ -237,224 +125,14 @@
   </Actual_Day_of_Hatching>
 </Actual_Day_of_Hatching>
 
-<Nest_Measurement>
-  Nest Visit
-  <Nest_Measurement>
-    Nest Visit
-    <Nest_Measurement_Nest_ID f="id noannotation nocertainty readonly">
-      Nest ID
-      <str>
-        <pos>1</pos>
-        <fmt>Nest-$2-</fmt>
-      </str>
-    </Nest_Measurement_Nest_ID>
-    <timestamp f="id">
-      Nest Visit Recorded at
-      <str>
-        <pos>2</pos>
-        <fmt>$2</fmt>
-      </str>
-    </timestamp>
-    <Nest_Status>
-      <desc>If near 100%, go visit the next day.</desc>
-      <opts>
-        <opt>&lt;25%</opt>
-        <opt>25-50%</opt>
-        <opt>50-75%</opt>
-        <opt>75-100%</opt>
-      </opts>
-    </Nest_Status>
-    <Spacer t="webview" f="nolabel"/>
-    <cols>
-      <Egg_Count b="decimal"/>
-      <Hatched_Chick_Count_Live b="decimal"/>
-      <Hatched_Chick_Count_Dead b="decimal"/>
-    </cols>
-    <Take_Current_Chick_Counts t="button">
-      Compute Current Chick Counts
-    </Take_Current_Chick_Counts>
-  </Nest_Measurement>
-</Nest_Measurement>
-
-<Egg>
-  <Egg>
-    <Egg_Box_Prefix f="id noannotation nocertainty readonly">
-      Box Prefix
-      <str>
-        <pos>2</pos>
-        <fmt>Box-$1</fmt>
-      </str>
-      <!--@SOURCE: vocabs/alpha.xml-->
-    </Egg_Box_Prefix>
-    <Egg_Box_ID f="id noannotation nocertainty readonly" b="decimal">
-      Box Number
-      <str>
-        <pos>3</pos>
-        <fmt>$2-</fmt>
-      </str>
-    </Egg_Box_ID>
-    <Egg_Location_Name f="id readonly noannotation nocertainty">
-      Location Name
-      <str>
-        <pos>4</pos>
-        <fmt>$2-</fmt>
-      </str>
-    </Egg_Location_Name>
-    <Egg_Nest_ID f="id noannotation nocertainty readonly">
-      Nest ID
-      <str>
-        <pos>1</pos>
-        <fmt>Nest-$2-</fmt>
-      </str>
-    </Egg_Nest_ID>
-    <Egg_ID f="id autonum noannotation nocertainty">
-      <str>
-        <pos>0</pos>
-        <fmt>Egg-$2-</fmt>
-      </str>
-    </Egg_ID>
-    <timestamp f="id">
-      Egg Recorded at
-      <str>
-        <pos>5</pos>
-        <fmt>$2</fmt>
-      </str>
-    </timestamp>
-    <Egg_Length_mm b="decimal">
-      Egg Length (mm)
-    </Egg_Length_mm>
-    <Egg_Width_mm b="decimal">
-      Egg Width (mm)
-    </Egg_Width_mm>
-    <Egg_Weight_g b="decimal">
-      Egg Weight (g)
-    </Egg_Weight_g>
-  </Egg>
-</Egg>
-
-<Chick>
-  <Chick>
-    <cols>
-      <Chick_Box_Prefix f="id noannotation nocertainty readonly">
-        Box Prefix
-        <str>
-          <pos>3</pos>
-          <fmt>Box-$1</fmt>
-        </str>
-        <!--@SOURCE: vocabs/alpha.xml-->
-      </Chick_Box_Prefix>
-      <Chick_Box_ID f="id noannotation nocertainty readonly" b="decimal">
-        Box Number
-        <str>
-          <pos>4</pos>
-          <fmt>$2-</fmt>
-        </str>
-      </Chick_Box_ID>
-      <Chick_Location_Name f="id readonly noannotation nocertainty">
-        Location Name
-        <str>
-          <pos>5</pos>
-          <fmt>$2-</fmt>
-        </str>
-      </Chick_Location_Name>
-    </cols>
-    <cols>
-      <Chick_Nest_ID f="id noannotation nocertainty readonly">
-        Nest ID
-        <str>
-          <pos>2</pos>
-          <fmt>Nest-$2-</fmt>
-        </str>
-      </Chick_Nest_ID>
-      <Chick_Chick_ID f="id autonum noannotation nocertainty">
-        Chick ID
-        <str>
-          <pos>1</pos>
-          <fmt>Chick $2-</fmt>
-        </str>
-      </Chick_Chick_ID>
-    </cols>
-    <timestamp f="id">
-      Chick Recorded at
-      <str>
-        <pos>6</pos>
-        <fmt>$2</fmt>
-      </str>
-    </timestamp>
-    <Bird_Species>
-      <opts>
-        <opt>Zebra Finch</opt>
-        <opt>Long Tailed Finch</opt>
-        <opt>House Sparrow</opt>
-        <opt>Other</opt>
-        <opt>No Observation</opt>
-      </opts>
-    </Bird_Species>
-    <Band_Number/>
-    <Notes/>
-    <Add_Chick_Measurement t="button" lc="Chick_Measurement"/>
-    <Existing_Chick_Measurements t="list" ec="Chick_Measurement" c="fixedheightfive">
-      Last 5 Recorded Chick Measurements
-    </Existing_Chick_Measurements>
-  </Chick>
-</Chick>
-
-<Chick_Measurement>
-  <Chick_Measurement>
-    <Chick_Measurement_Chick_ID f="id readonly noannotation nocertainty">
-      Chick ID
-      <str>
-        <pos>1</pos>
-        <fmt>Chick-$2-</fmt>
-      </str>
-    </Chick_Measurement_Chick_ID>
-    <timestamp f="id">
-      Chick Measurement Recorded at
-      <str>
-        <pos>2</pos>
-        <fmt>$2</fmt>
-      </str>
-    </timestamp>
-    <Chick_Alive t="radio">
-      Chick Alive?
-      <opts>
-        <opt>Yes</opt>
-        <opt>No</opt>
-        <opt>No Observation</opt>
-      </opts>
-    </Chick_Alive>
-    <Chick_Age_days b="decimal">
-      Chick Age (days)
-    </Chick_Age_days>
-    <Weight_g b="decimal">
-      Weight (g)
-    </Weight_g>
-    <Head_Length_mm b="decimal">
-      Head Length (mm)
-    </Head_Length_mm>
-    <Wing_Length_mm b="decimal">
-      Wing Length (mm)
-    </Wing_Length_mm>
-    <Tarsus_Length_mm b="decimal">
-      Tarsus Length (mm)
-    </Tarsus_Length_mm>
-    <Notes/>
-    <Picture t="camera"/>
-  </Chick_Measurement>
-</Chick_Measurement>
-
 <logic><![CDATA[
-  <!--@SOURCE: logic/field-inheritance.bsh-->
-  <!--@SOURCE: logic/create-new-nest-button.bsh-->
   <!--@SOURCE: logic/compute-day-of-hatching-estimate-button.bsh-->
   <!--@SOURCE: logic/actual-day-of-hatching-button.bsh-->
   <!--@SOURCE: logic/nest-completed-button.bsh-->
-  <!--@SOURCE: logic/revisits.bsh-->
   <!--@SOURCE: logic/hatched-chick-count-population.bsh-->
   <!--@SOURCE: logic/web-view.bsh-->
   <!--@SOURCE: logic/day-of-lay.bsh-->
   <!--@SOURCE: logic/init-nest-status.bsh-->
-  <!--@SOURCE: logic/box-status-inheritance.bsh-->
-  <!--@SOURCE: logic/active-box-search.bsh-->
+  <!--@SOURCE: logic/duplicate-button.bsh-->
 ]]></logic>
 </module>
