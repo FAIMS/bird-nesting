@@ -75,8 +75,16 @@
           <Nest_Measurement>
             <Nest_Measurement>
               <Nest_Measurement_Nest_ID/>
-              <Nest_Status/>
               <Colgroup_1>
+                <Col_1>
+                  <Nest_Measurement_author/>
+                </Col_1>
+                <Col_2>
+                  <Nest_Measurement_timestamp/>
+                </Col_2>
+              </Colgroup_1>
+              <Nest_Status/>
+              <Colgroup_2>
                 <Col_1>
                   <Egg_Count/>
                 </Col_1>
@@ -86,12 +94,17 @@
                 <Col_3>
                   <Hatched_Chick_Count_Dead/>
                 </Col_3>
-              </Colgroup_1>
+              </Colgroup_2>
               <Measurements/>
               <Notes/>
               <Picture/>
               <Picture_Button_1/>
             </Nest_Measurement>
+            <Vars>
+              <Box_ID/>
+              <Location_Name/>
+              <Nest_ID/>
+            </Vars>
           </Nest_Measurement>
           <Day_of_Lay>
             <Day_of_Lay>
@@ -110,9 +123,9 @@
         </faims>
       </instance>
       <bind nodeset="/faims/Nest/Nest/Colgroup_1/Col_2/Nest_ID" type="decimal"/>
-      <bind nodeset="/faims/Nest_Measurement/Nest_Measurement/Colgroup_1/Col_1/Egg_Count" type="decimal"/>
-      <bind nodeset="/faims/Nest_Measurement/Nest_Measurement/Colgroup_1/Col_2/Hatched_Chick_Count_Live" type="decimal"/>
-      <bind nodeset="/faims/Nest_Measurement/Nest_Measurement/Colgroup_1/Col_3/Hatched_Chick_Count_Dead" type="decimal"/>
+      <bind nodeset="/faims/Nest_Measurement/Nest_Measurement/Colgroup_2/Col_1/Egg_Count" type="decimal"/>
+      <bind nodeset="/faims/Nest_Measurement/Nest_Measurement/Colgroup_2/Col_2/Hatched_Chick_Count_Live" type="decimal"/>
+      <bind nodeset="/faims/Nest_Measurement/Nest_Measurement/Colgroup_2/Col_3/Hatched_Chick_Count_Dead" type="decimal"/>
       <bind nodeset="/faims/Day_of_Lay/Day_of_Lay/Day_of_Lay" type="date"/>
       <bind nodeset="/faims/Actual_Day_of_Hatching/Actual_Day_of_Hatching/Actual_Day_of_Hatching" type="date"/>
     </model>
@@ -216,7 +229,7 @@
           </group>
           <group ref="Col_2" faims_style="even">
             <label/>
-            <input faims_attribute_name="Nest ID" faims_attribute_type="measure" ref="Nest_ID" faims_certainty="false">
+            <input faims_attribute_name="Nest ID" faims_attribute_type="measure" ref="Nest_ID">
               <label>{Nest_ID}</label>
             </input>
           </group>
@@ -235,7 +248,7 @@
           </group>
           <group ref="Col_2" faims_style="even">
             <label/>
-            <input faims_attribute_name="Nest timestamp" faims_attribute_type="measure" ref="Nest_timestamp" faims_read_only="true" faims_annotation="false" faims_certainty="false">
+            <input faims_attribute_name="Nest timestamp" faims_attribute_type="measure" ref="Nest_timestamp" faims_read_only="true">
               <label>{Nest_Record_Created_at}</label>
             </input>
           </group>
@@ -264,7 +277,7 @@
         <trigger ref="Set_Actual_Day_of_Hatching">
           <label>{Set_Actual_Day_of_Hatching___}</label>
         </trigger>
-        <input faims_attribute_name="Actual Day of Hatching" faims_attribute_type="measure" ref="Actual_Day_of_Hatching" faims_read_only="true" faims_annotation="false" faims_certainty="false">
+        <input faims_attribute_name="Actual Day of Hatching" faims_attribute_type="measure" ref="Actual_Day_of_Hatching" faims_read_only="true">
           <label>{Actual_Day_of_Hatching}</label>
         </input>
         <select1 faims_attribute_name="Box Status" faims_attribute_type="vocab" ref="Box_Status">
@@ -283,9 +296,24 @@
       <label>{Nest_Visit}</label>
       <group ref="Nest_Measurement">
         <label>{Nest_Visit}</label>
-        <input faims_attribute_name="Nest Measurement Nest ID" faims_attribute_type="measure" ref="Nest_Measurement_Nest_ID" faims_read_only="true" faims_annotation="false" faims_certainty="false">
+        <input faims_attribute_name="Nest Measurement Nest ID" faims_attribute_type="measure" ref="Nest_Measurement_Nest_ID" faims_read_only="true">
           <label>{Nest_ID}</label>
         </input>
+        <group ref="Colgroup_1" faims_style="orientation">
+          <label/>
+          <group ref="Col_1" faims_style="even">
+            <label/>
+            <input faims_attribute_name="Nest Measurement author" faims_attribute_type="measure" ref="Nest_Measurement_author" faims_read_only="true">
+              <label>{Author}</label>
+            </input>
+          </group>
+          <group ref="Col_2" faims_style="even">
+            <label/>
+            <input faims_attribute_name="Nest Measurement timestamp" faims_attribute_type="measure" ref="Nest_Measurement_timestamp" faims_read_only="true">
+              <label>{Timestamp}</label>
+            </input>
+          </group>
+        </group>
         <select1 faims_attribute_name="Nest Status" faims_attribute_type="vocab" ref="Nest_Status">
           <label>{Nest_Status}</label>
           <item>
@@ -293,7 +321,7 @@
             <value>Options not loaded</value>
           </item>
         </select1>
-        <group ref="Colgroup_1" faims_style="orientation">
+        <group ref="Colgroup_2" faims_style="orientation">
           <label/>
           <group ref="Col_1" faims_style="even">
             <label/>
@@ -330,6 +358,22 @@
         <trigger ref="Picture_Button_1">
           <label>{Picture}</label>
         </trigger>
+      </group>
+      <group ref="Vars" faims_hidden="true">
+        <label>{Vars}</label>
+        <input faims_attribute_name="Box ID" faims_attribute_type="measure" ref="Box_ID">
+          <label>{Box_ID}</label>
+        </input>
+        <select1 faims_attribute_name="Location Name" faims_attribute_type="vocab" ref="Location_Name">
+          <label>{Location_Name}</label>
+          <item>
+            <label>Options not loaded</label>
+            <value>Options not loaded</value>
+          </item>
+        </select1>
+        <input faims_attribute_name="Nest ID" faims_attribute_type="measure" ref="Nest_ID">
+          <label>{Nest_ID}</label>
+        </input>
       </group>
     </group>
     <group ref="Day_of_Lay">

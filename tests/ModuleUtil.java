@@ -112,6 +112,15 @@ public class ModuleUtil extends ModuleHelper {
         String ref = "Nest_Measurement/Nest_Measurement";
         return (android.view.View) solo.getView((Object) ref);
     }
+
+    /*
+        Type: tab
+        Ref:  Nest_Measurement/Vars
+     */
+    public static View get_NestMeasurement_Vars(Solo solo) {
+        String ref = "Nest_Measurement/Vars";
+        return (android.view.View) solo.getView((Object) ref);
+    }
     /*
         Type: button
         Ref:  Actual_Day_of_Hatching/Actual_Day_of_Hatching/Cancel
@@ -266,6 +275,15 @@ public class ModuleUtil extends ModuleHelper {
     }
 
     /*
+        Type: dropdown
+        Ref:  Nest_Measurement/Vars/Location_Name
+     */
+    public static View get_NestMeasurement_Vars_LocationName(Solo solo) {
+        String ref = "Nest_Measurement/Vars/Location_Name";
+        return (android.view.View) solo.getView((Object) ref);
+    }
+
+    /*
         Type: input
         Ref:  Actual_Day_of_Hatching/Actual_Day_of_Hatching/Actual_Day_of_Hatching
      */
@@ -397,6 +415,24 @@ public class ModuleUtil extends ModuleHelper {
      */
     public static EditText get_NestMeasurement_NestMeasurement_Notes(Solo solo) {
         String ref = "Nest_Measurement/Nest_Measurement/Notes";
+        return (android.widget.EditText) solo.getView((Object) ref);
+    }
+
+    /*
+        Type: input
+        Ref:  Nest_Measurement/Vars/Box_ID
+     */
+    public static EditText get_NestMeasurement_Vars_BoxID(Solo solo) {
+        String ref = "Nest_Measurement/Vars/Box_ID";
+        return (android.widget.EditText) solo.getView((Object) ref);
+    }
+
+    /*
+        Type: input
+        Ref:  Nest_Measurement/Vars/Nest_ID
+     */
+    public static EditText get_NestMeasurement_Vars_NestID(Solo solo) {
+        String ref = "Nest_Measurement/Vars/Nest_ID";
         return (android.widget.EditText) solo.getView((Object) ref);
     }
 
