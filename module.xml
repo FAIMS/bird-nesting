@@ -65,7 +65,7 @@
         <opt>No Observation</opt>
       </opts>
     </Box_Status>
-    <Add_Nest_Visit t="button" l="Nest_Measurement"/>
+    <Add_Nest_Visit t="button" lc="Nest_Measurement"/>
   </Nest>
 </Nest>
 

@@ -1,5 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
 <dataSchema>
+  <RelationshipElement name="Nest - Nest Measurement" type="hierarchical">
+    <description>A 1-to-n relationship between the parent and its children, respectively.</description>
+    <parent>Parent Of</parent>
+    <child>Child Of</child>
+  </RelationshipElement>
   <ArchaeologicalElement name="Nest">
     <description></description>
     <property name="Box ID" type="measure" isIdentifier="true">

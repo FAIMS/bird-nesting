@@ -229,7 +229,7 @@
           </group>
           <group ref="Col_2" faims_style="even">
             <label/>
-            <input faims_attribute_name="Nest ID" faims_attribute_type="measure" ref="Nest_ID">
+            <input faims_attribute_name="Nest ID" faims_attribute_type="measure" ref="Nest_ID" faims_certainty="false">
               <label>{Nest_ID}</label>
             </input>
           </group>
@@ -248,7 +248,7 @@
           </group>
           <group ref="Col_2" faims_style="even">
             <label/>
-            <input faims_attribute_name="Nest timestamp" faims_attribute_type="measure" ref="Nest_timestamp" faims_read_only="true">
+            <input faims_attribute_name="Nest timestamp" faims_attribute_type="measure" ref="Nest_timestamp" faims_read_only="true" faims_annotation="false" faims_certainty="false">
               <label>{Nest_Record_Created_at}</label>
             </input>
           </group>
@@ -277,7 +277,7 @@
         <trigger ref="Set_Actual_Day_of_Hatching">
           <label>{Set_Actual_Day_of_Hatching___}</label>
         </trigger>
-        <input faims_attribute_name="Actual Day of Hatching" faims_attribute_type="measure" ref="Actual_Day_of_Hatching" faims_read_only="true">
+        <input faims_attribute_name="Actual Day of Hatching" faims_attribute_type="measure" ref="Actual_Day_of_Hatching" faims_read_only="true" faims_annotation="false" faims_certainty="false">
           <label>{Actual_Day_of_Hatching}</label>
         </input>
         <select1 faims_attribute_name="Box Status" faims_attribute_type="vocab" ref="Box_Status">
@@ -296,7 +296,7 @@
       <label>{Nest_Visit}</label>
       <group ref="Nest_Measurement">
         <label>{Nest_Visit}</label>
-        <input faims_attribute_name="Nest Measurement Nest ID" faims_attribute_type="measure" ref="Nest_Measurement_Nest_ID" faims_read_only="true">
+        <input faims_attribute_name="Nest Measurement Nest ID" faims_attribute_type="measure" ref="Nest_Measurement_Nest_ID" faims_read_only="true" faims_annotation="false" faims_certainty="false">
           <label>{Nest_ID}</label>
         </input>
         <group ref="Colgroup_1" faims_style="orientation">

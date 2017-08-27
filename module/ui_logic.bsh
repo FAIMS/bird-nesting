@@ -1,5 +1,5 @@
 /*
- * GENERATED WITH FAIMS-TOOLS, SHA1: 19e89c419f2b92e99caafab6c65f25ada4e7690e
+ * GENERATED WITH FAIMS-TOOLS, SHA1: 72e3c444cb2e51af485b5c72a41f3304d57e9fab
  */
 import android.util.Log;
 import android.os.Build.MODEL;
@@ -1279,11 +1279,15 @@ void timedPopulateCursorList(String ref, String q, int limit) {
 void setUpTypeHierarchy() {
   //- 
   //  - Nest
+  //    - Nest Measurement
 
   n0 = Tree("", 1);
   n1 = Tree("Nest", 1);
+  n2 = Tree("Nest Measurement", 1);
 
   n0.addChild(n1);
+
+  n1.addChild(n2);
 
 
   PERF_TYPE_TREE = n0;
@@ -2903,18 +2907,15 @@ void onClickControlAddNewNest () {
   newNest();
 }
 
+
+
+
+
+
+
 void onClickNestAddNestVisit () {
-  parentTabgroup__ = "Nest";
-  newNestMeasurement();
+  newNestMeasurement("Nest");
 }
-
-
-
-
-
-
-
-
 addOnEvent("Login/Login/User", "click", "onClickLoginUser()");
 addOnEvent("Control/Control/Add_New_Nest", "click", "onClickControlAddNewNest()");
 addOnEvent("Nest/Nest/Set_Day_of_Lay", "click", "onClickNestSetDayofLay()");
