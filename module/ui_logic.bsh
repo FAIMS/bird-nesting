@@ -1,5 +1,5 @@
 /*
- * GENERATED WITH FAIMS-TOOLS, SHA1: 7ea24bec266e26c86292fb0d82edb654fabc1f67
+ * GENERATED WITH FAIMS-TOOLS, SHA1: 72e3c444cb2e51af485b5c72a41f3304d57e9fab
  */
 import android.util.Log;
 import android.os.Build.MODEL;
@@ -276,6 +276,7 @@ DATA_REFS.add("Nest/Nest/Nest_Completed_at");
 DATA_REFS.add("Nest/Nest/Day_of_Lay");
 DATA_REFS.add("Nest/Nest/Estimated_Day_of_Hatching");
 DATA_REFS.add("Nest/Nest/Actual_Day_of_Hatching");
+DATA_REFS.add("Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits");
 DATA_REFS.add("Nest_Measurement/Nest_Measurement/Nest_Measurement_Nest_ID");
 DATA_REFS.add("Nest_Measurement/Nest_Measurement/Nest_Status");
 DATA_REFS.add("Nest_Measurement/Nest_Measurement/Egg_Count");
@@ -1509,7 +1510,7 @@ void enqueueTestFiles(int numFiles, String cb) {
   numPhotosToMake -= PERF_FILES.size();
   numPhotosToMake  = Math.max(0, numPhotosToMake);
   // We're going to count returns from attachFile too, hence multiplication by 2
-  PERF_NUM_CBS_TODO_FILE = new AtomicInteger(2*numPhotosToMake);
+  PERF_NUM_CBS_TODO_FILE = new AtomicInteger(numPhotosToMake + 1);
   PERF_NUM_CBS_DONE_FILE = new AtomicInteger(0);
 
   // Make records
@@ -1522,8 +1523,8 @@ void enqueueTestFiles(int numFiles, String cb) {
     );
 
     PERF_FILES.add(fileName);
-    checkEnqueueTestFilesIsDone(cb);
   }
+  checkEnqueueTestFilesIsDone(cb);
 }
 
 void checkEnqueueTestFilesIsDone(String onDone) {
@@ -3766,12 +3767,7 @@ String getEntityMenuPopulationFunction(String[] menuDescriptor) {
 }
 
 ENTITY_MENUS = new ArrayList();
-ENTITY_MENUS.add(new String[] {
-    "Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits",
-    "getUuid(\"Nest\")",
-    "Nest Measurement",
-    "Nest - Nest Measurement"
-});
+
 for (m : ENTITY_MENUS) {
   String functionCall = getEntityMenuPopulationFunction(m);
   execute(functionCall);
@@ -3787,7 +3783,7 @@ for (m : ENTITY_MENUS) {
   addOnEvent(ref, evt, cmd);
 }
 
-addOnEvent("Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits", "click", "loadEntity()");
+
 /******************************************************************************/
 /*                             HANDWRITTEN LOGIC                              */
 /******************************************************************************/

@@ -65,10 +65,9 @@
     </Set_Actual_Day_of_Hatching>
     <Actual_Day_of_Hatching f="readonly noannotation nocertainty"/>
     <Add_Nest_Visit t="button" lc="Nest_Measurement"/>
-
   </Nest>
   <List_of_Nest_Visits f="noscroll">
-    <Most_Recent_Three_Nest_Visits t="list" ec="Nest_Measurement"/>
+    <Most_Recent_Three_Nest_Visits t="list"/>
   </List_of_Nest_Visits>
 </Nest>
 
