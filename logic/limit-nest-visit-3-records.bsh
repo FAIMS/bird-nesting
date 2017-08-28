@@ -1,0 +1,50 @@
+/********************************* Limit By 3 *********************************/
+addOnEvent("Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits", "show", "loadMostRecentThree()");
+
+void loadMostRecentThree() {
+  String refExistingNestVisit = "Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits";
+  String tabgroup = "Nest";
+  String uuid = getUuid(tabgroup);
+  if(isNull(uuid))
+    return;
+  String query =  "select uuid, response " +
+                  "  from latestNonDeletedArchEntFormattedIdentifiers" +
+                  " where aenttypename = 'Nest Measurement'" +
+                  "   and uuid in (select childuuid" +
+                  "                  from parentchild" +
+                  "                 where parentuuid = {puuid}" +
+                  "                 order by createdat desc" +
+                  "                 limit 3)" +
+                  "   order by substr(uuid, 7, 13) desc" +
+                  " ;";
+
+  query = dbReplaceFirst(query, "{puuid}", uuid);
+
+  fetchAll(query, new FetchCallback() {
+    onFetch(result) {
+      populateList(refExistingNestVisit,result);
+    }
+  });
+  Log.d("Module", "Search query: " + q);
+}
+
+void reallyDeleteRecord(String tabgroup) {
+  System.out.println(getUuid(tabgroup));
+
+  String query =  "select childuuid"    +
+                  "  from parentchild"  +
+                  "  where parentuuid = {puuid};";
+  query = dbReplaceFirst(query, "{puuid}", getUuid(tabgroup));
+
+  fetchAll(query, new FetchCallback() {
+    onFetch(result) {
+      deleteArchEnt(getUuid(tabgroup));
+      for (List row : result) {
+        deleteArchEnt(row.get(0));
+      }
+    }
+  });
+  cancelTabGroup(tabgroup, false);
+  populateEntityListsOfArchEnt(tabgroup);
+  executeOnEvent(tabgroup, "delete");
+}

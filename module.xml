@@ -11,7 +11,6 @@
 <Control f="nodata">
   <Control f="noscroll">
     <Add_New_Nest t="button" l="Nest"/>
-    <Existing_Nests t="list" e="Nest"/>
   </Control>
   <search/>
 </Control>
@@ -40,6 +39,14 @@
         Nest Record Created at
       </timestamp>
     </cols>
+    <Box_Status>
+      <opts>
+        <opt>Empty</opt>
+        <opt>Active</opt>
+        <opt>Terminated</opt>
+        <opt>No Observation</opt>
+      </opts>
+    </Box_Status>
     <Nest_Completed t="button">
       Nest Found Completed
     </Nest_Completed>
@@ -57,36 +64,28 @@
       Set Actual Day of Hatching...
     </Set_Actual_Day_of_Hatching>
     <Actual_Day_of_Hatching f="readonly noannotation nocertainty"/>
-    <Box_Status>
-      <opts>
-        <opt>Empty</opt>
-        <opt>Active</opt>
-        <opt>Terminated</opt>
-        <opt>No Observation</opt>
-      </opts>
-    </Box_Status>
     <Add_Nest_Visit t="button" lc="Nest_Measurement"/>
+
   </Nest>
+  <List_of_Nest_Visits f="noscroll">
+    <Most_Recent_Three_Nest_Visits t="list" ec="Nest_Measurement"/>
+  </List_of_Nest_Visits>
 </Nest>
 
 <Nest_Measurement>
   Nest Visit
-  <fmt>{{Box_ID}} - {{Location_Name}} - Nest {{Nest_ID}} - {{timestamp}}</fmt>
+  <fmt>{{Box_ID}} - {{Location_Name}} - Nest {{Nest_ID}} - {{timestamp}}}</fmt>
   <Nest_Measurement>
     Nest Visit
     <Nest_Measurement_Nest_ID
           f="id noannotation nocertainty readonly"
           i="Nest/Nest/Nest_ID">
       Nest ID
-      <desc>
-        This should be a unique number for this box, please search for the most
-        recent record in this box if unsure.
-      </desc>
+    <desc>
+      This should be a unique number for this box, please search for the most
+      recent record in this box if unsure.
+    </desc>
     </Nest_Measurement_Nest_ID>
-    <cols>
-      <author/>
-      <timestamp/>
-    </cols>
     <Nest_Status>
       <desc>If near 100%, go visit the next day.</desc>
       <opts>
@@ -101,7 +100,19 @@
       <Hatched_Chick_Count_Live b="decimal"/>
       <Hatched_Chick_Count_Dead b="decimal"/>
     </cols>
-    <Measurements/>
+    <Egg_Measurements/>
+    <Tarsus>
+      <desc>TARSUS hfl:1.2;hfr:1.3;hbl:1.5 (unit=mm)</desc>
+    </Tarsus>
+    <Wing>
+      <desc>WING hfl:4.3;hfr:4.5;hbl:4 (unit=mm)</desc>
+    </Wing>
+    <Weight>
+      <desc>WEIGHT hfl:5;hfr:5.1;hbl:4.8 (unit=gr)</desc>
+    </Weight>
+    <Blood>
+      <desc>BLEEDING hfl:yes;hfr:yes;hbl:no</desc>
+    </Blood>
     <Notes/>
     <Picture t="camera"/>
   </Nest_Measurement>
@@ -119,7 +130,7 @@
         <opt>W19F</opt>
       </opts>
     </Location_Name>
-    <Nest_ID i="Nest/Nest/Nest_ID"/>
+    <timestamp/>
   </Vars>
 </Nest_Measurement>
 
@@ -154,5 +165,7 @@
   <!--@SOURCE: logic/day-of-lay.bsh-->
   <!--@SOURCE: logic/init-nest-status.bsh-->
   <!--@SOURCE: logic/duplicate-button.bsh-->
+  <!--@SOURCE: logic/custom-search.bsh-->
+  <!--@SOURCE: logic/limit-nest-visit-3-records.bsh-->
 ]]></logic>
 </module>
