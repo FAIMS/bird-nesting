@@ -121,7 +121,7 @@
     </property>
     <property name="Nest Measurement timestamp" type="measure" isIdentifier="true">
       <description></description>
-      <formatString> - $2}</formatString>
+      <formatString> - $2</formatString>
       <appendCharacterString> - </appendCharacterString>
     </property>
     <property name="Nest Status" type="vocab">

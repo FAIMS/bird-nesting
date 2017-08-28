@@ -74,11 +74,11 @@
 
 <Nest_Measurement>
   Nest Visit
-  <fmt>{{Box_ID}} - {{Location_Name}} - Nest {{Nest_Measurement_Nest_ID}} - {{timestamp}}}</fmt>
+  <fmt>{{Box_ID}} - {{Location_Name}} - Nest {{Nest_Measurement_Nest_ID}} - {{timestamp}}</fmt>
   <Nest_Measurement>
     Nest Visit
     <Nest_Measurement_Nest_ID
-          f="id noannotation nocertainty readonly"
+          f="noannotation nocertainty readonly"
           i="Nest/Nest/Nest_ID">
       Nest ID
     <desc>
