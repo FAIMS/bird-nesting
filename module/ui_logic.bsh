@@ -276,7 +276,6 @@ DATA_REFS.add("Nest/Nest/Nest_Completed_at");
 DATA_REFS.add("Nest/Nest/Day_of_Lay");
 DATA_REFS.add("Nest/Nest/Estimated_Day_of_Hatching");
 DATA_REFS.add("Nest/Nest/Actual_Day_of_Hatching");
-DATA_REFS.add("Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits");
 DATA_REFS.add("Nest_Measurement/Nest_Measurement/Nest_Measurement_Nest_ID");
 DATA_REFS.add("Nest_Measurement/Nest_Measurement/Nest_Status");
 DATA_REFS.add("Nest_Measurement/Nest_Measurement/Egg_Count");
@@ -1018,7 +1017,7 @@ AtomicInteger         PERF_NUM_CBS_TODO_SET  = null;
 boolean               PERF_ALLOW_CREATION    = false;
 String                PERF_TEST_IMG          = "";
                       PERF_TYPE_TREE         = null;
-int                   PERF_PHOTOS_PER_FIELD  = 1;
+int                   PERF_PHOTOS_PER_FIELD  = 0;
 
 int getNumPhotos() {
   return getNumPhotos(PERF_TYPE_TREE);
@@ -1624,7 +1623,7 @@ void enableRecordCreation() {
 }
 
 boolean isInPerfTestTime() {
-  return false;
+  return true;
 }
 
 // Produce entity number specification
@@ -1816,7 +1815,7 @@ void insertIntoLocalSettings(String key, String val, boolean doOverwrite) {
 
   q = dbReplaceFirst(q, key);
   q = dbReplaceFirst(q, val);
-  fetchOne(q);
+  timedFetchOne(q);
 }
 
 void insertIntoLocalSettings(String key, String val) {
@@ -1860,7 +1859,7 @@ void setFieldValueFromLocalSettings(
     }
   };
 
-  fetchOne(q, set);
+  timedFetchOne(q, set);
 }
 
 void setFieldValueFromLocalSettings(
@@ -2142,7 +2141,7 @@ void fetchVocab(String vocabName, List storageList) {
 }
 
 void fetchVocab(String vocabName, List storageList, String callbackFunction) {
-  fetchAll("select vocabid, vocabname from vocabulary left join attributekey using (attributeid) where attributename = '" + vocabName + "';", new FetchCallback() {
+  timedFetchAll("select vocabid, vocabname from vocabulary left join attributekey using (attributeid) where attributename = '" + vocabName + "';", new FetchCallback() {
     onFetch(result) {
       if (isNull(result))
         result = new ArrayList();
@@ -2400,7 +2399,7 @@ void fetchMenuValues() {
   };
 
   incJobsTillLoaded();
-  fetchAll(q, populateHashMap);
+  timedFetchAll(q, populateHashMap);
 }
 
 addOnEvent("module", "load", "makeVocabs()");
@@ -2629,7 +2628,7 @@ void populateListForUsers(){
   q += "   FROM user ";
   q += "  WHERE userdeleted is null";
 
-  fetchAll(q, new FetchCallback() {
+  timedFetchAll(q, new FetchCallback() {
     onFetch(result) {
       populateMenu(USER_MENU_PATH, result);
     }
@@ -3069,7 +3068,7 @@ void newRecord(String tabgroup, boolean doUpdateRelVars) {
         newRecord(tabgroup, false);
       }
     };
-    fetchAll(q, updateRelVars);
+    timedFetchAll(q, updateRelVars);
     return;
   }
 
@@ -3198,7 +3197,7 @@ void loadEntityFrom(String entityID, String onFail) {
                            "  JOIN aenttype " +
                            " USING (aenttypeid) " +
                            " WHERE uuid = '" + entityID + "'";
-  fetchAll(getEntTypeNameQ, new FetchCallback() {
+  timedFetchAll(getEntTypeNameQ, new FetchCallback() {
     onFetch(result) {
       if (
           result               == null ||
@@ -3413,7 +3412,7 @@ void search(){
   searchQuery = dbReplaceFirst(searchQuery, "{type}", type);
   searchQuery = dbReplaceFirst(searchQuery, "{type}", type);
 
-  populateCursorList(refEntityList, searchQuery, 25);
+  timedPopulateCursorList(refEntityList, searchQuery, 25);
   refreshTabgroupCSS("Control");
 
   Log.d("Module", "Search query: " + searchQuery);
@@ -3516,7 +3515,7 @@ void fillInGPS(String tabgroup) {
                  "  FROM latestnondeletedarchent " +
                  " WHERE uuid = '" + currentUuid + "';";
 
-  fetchOne(query, new FetchCallback() {
+  timedFetchOne(query, new FetchCallback() {
     onFetch(result) {
       print("[fillInGPS()] Fetched DB transformed geometry: " + result);
       setFieldValue(tabgroupToTabRef.get(tabgroup) + "/Longitude" , result.get(0));
@@ -3707,8 +3706,8 @@ void populateMenuWithEntities (
   else                    q = getChildEntitiesQ;
 
   switch (viewType) {
-    case "dropdown": fetchAll(q, cbPopulateDropDown); break;
-    case "list":     populateCursorList(ref, q, 25); break;
+    case "dropdown": timedFetchAll(q, cbPopulateDropDown); break;
+    case "list":     timedPopulateCursorList(ref, q, 25); break;
   }
 }
 
@@ -3914,8 +3913,8 @@ populateHatchedChickCount() {
   };
 
   // Fetch
-  fetchAll(qLive, populateLive);
-  fetchAll(qDead, populateDead);
+  timedFetchAll(qLive, populateLive);
+  timedFetchAll(qDead, populateDead);
 }
 
 getHatchedChickCountQuery(Boolean isLive, nestMeasurementUuid) {
@@ -4027,7 +4026,7 @@ initNestStatus() {
     }
   };
 
-  fetchOne(q, cb);
+  timedFetchOne(q, cb);
 }
 
 addOnEvent("Nest_Measurement", "create", "initNestStatus()");
@@ -4057,7 +4056,7 @@ void populateSelectUser(){
                                    " UNION " +
                                    "SELECT -1, '{All}'";
 
-  fetchAll(getNonDeletedUsersQuery, new FetchCallback() {
+  timedFetchAll(getNonDeletedUsersQuery, new FetchCallback() {
     onFetch(result) {
       populateDropDown(refSearchUsers, result, false);
       search();
@@ -4095,7 +4094,7 @@ void search(){
   searchQuery = replaceFirst(searchQuery, "{user}", user);
   searchQuery = replaceFirst(searchQuery, "{user}", user);
 
-  populateCursorList(refEntityList, searchQuery, 25);
+  timedPopulateCursorList(refEntityList, searchQuery, 25);
   refreshTabgroupCSS(tabgroup);
 
   Log.d("Module", "Search query: " + searchQuery);
@@ -4122,7 +4121,7 @@ void loadMostRecentThree() {
 
   query = dbReplaceFirst(query, "{puuid}", uuid);
 
-  fetchAll(query, new FetchCallback() {
+  timedFetchAll(query, new FetchCallback() {
     onFetch(result) {
       populateList(refExistingNestVisit,result);
     }
@@ -4138,7 +4137,7 @@ void reallyDeleteRecord(String tabgroup) {
                   "  where parentuuid = {puuid};";
   query = dbReplaceFirst(query, "{puuid}", getUuid(tabgroup));
 
-  fetchAll(query, new FetchCallback() {
+  timedFetchAll(query, new FetchCallback() {
     onFetch(result) {
       deleteArchEnt(getUuid(tabgroup));
       for (List row : result) {

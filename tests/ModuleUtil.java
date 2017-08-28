@@ -97,6 +97,15 @@ public class ModuleUtil extends ModuleHelper {
 
     /*
         Type: tab
+        Ref:  Nest/List_of_Nest_Visits
+     */
+    public static View get_Nest_ListofNestVisits(Solo solo) {
+        String ref = "Nest/List_of_Nest_Visits";
+        return (android.view.View) solo.getView((Object) ref);
+    }
+
+    /*
+        Type: tab
         Ref:  Nest/Nest
      */
     public static View get_Nest_Nest(Solo solo) {
@@ -366,10 +375,28 @@ public class ModuleUtil extends ModuleHelper {
 
     /*
         Type: input
+        Ref:  Nest_Measurement/Nest_Measurement/Blood
+     */
+    public static EditText get_NestMeasurement_NestMeasurement_Blood(Solo solo) {
+        String ref = "Nest_Measurement/Nest_Measurement/Blood";
+        return (android.widget.EditText) solo.getView((Object) ref);
+    }
+
+    /*
+        Type: input
         Ref:  Nest_Measurement/Nest_Measurement/Egg_Count
      */
     public static EditText get_NestMeasurement_NestMeasurement_EggCount(Solo solo) {
         String ref = "Nest_Measurement/Nest_Measurement/Egg_Count";
+        return (android.widget.EditText) solo.getView((Object) ref);
+    }
+
+    /*
+        Type: input
+        Ref:  Nest_Measurement/Nest_Measurement/Egg_Measurements
+     */
+    public static EditText get_NestMeasurement_NestMeasurement_EggMeasurements(Solo solo) {
+        String ref = "Nest_Measurement/Nest_Measurement/Egg_Measurements";
         return (android.widget.EditText) solo.getView((Object) ref);
     }
 
@@ -393,15 +420,6 @@ public class ModuleUtil extends ModuleHelper {
 
     /*
         Type: input
-        Ref:  Nest_Measurement/Nest_Measurement/Measurements
-     */
-    public static EditText get_NestMeasurement_NestMeasurement_Measurements(Solo solo) {
-        String ref = "Nest_Measurement/Nest_Measurement/Measurements";
-        return (android.widget.EditText) solo.getView((Object) ref);
-    }
-
-    /*
-        Type: input
         Ref:  Nest_Measurement/Nest_Measurement/Nest_Measurement_Nest_ID
      */
     public static View get_NestMeasurement_NestMeasurement_NestMeasurementNestID(Solo solo) {
@@ -420,29 +438,38 @@ public class ModuleUtil extends ModuleHelper {
 
     /*
         Type: input
-        Ref:  Nest_Measurement/Vars/Box_ID
+        Ref:  Nest_Measurement/Nest_Measurement/Tarsus
      */
-    public static EditText get_NestMeasurement_Vars_BoxID(Solo solo) {
-        String ref = "Nest_Measurement/Vars/Box_ID";
+    public static EditText get_NestMeasurement_NestMeasurement_Tarsus(Solo solo) {
+        String ref = "Nest_Measurement/Nest_Measurement/Tarsus";
         return (android.widget.EditText) solo.getView((Object) ref);
     }
 
     /*
         Type: input
-        Ref:  Nest_Measurement/Vars/Nest_ID
+        Ref:  Nest_Measurement/Nest_Measurement/Weight
      */
-    public static EditText get_NestMeasurement_Vars_NestID(Solo solo) {
-        String ref = "Nest_Measurement/Vars/Nest_ID";
+    public static EditText get_NestMeasurement_NestMeasurement_Weight(Solo solo) {
+        String ref = "Nest_Measurement/Nest_Measurement/Weight";
         return (android.widget.EditText) solo.getView((Object) ref);
     }
 
     /*
-        Type: list
-        Ref:  Control/Control/Existing_Nests
+        Type: input
+        Ref:  Nest_Measurement/Nest_Measurement/Wing
      */
-    public static View get_Control_Control_ExistingNests(Solo solo) {
-        String ref = "Control/Control/Existing_Nests";
-        return (android.view.View) solo.getView((Object) ref);
+    public static EditText get_NestMeasurement_NestMeasurement_Wing(Solo solo) {
+        String ref = "Nest_Measurement/Nest_Measurement/Wing";
+        return (android.widget.EditText) solo.getView((Object) ref);
+    }
+
+    /*
+        Type: input
+        Ref:  Nest_Measurement/Vars/Box_ID
+     */
+    public static EditText get_NestMeasurement_Vars_BoxID(Solo solo) {
+        String ref = "Nest_Measurement/Vars/Box_ID";
+        return (android.widget.EditText) solo.getView((Object) ref);
     }
 
     /*
@@ -460,6 +487,15 @@ public class ModuleUtil extends ModuleHelper {
      */
     public static View get_Login_Login_User(Solo solo) {
         String ref = "Login/Login/User";
+        return (android.view.View) solo.getView((Object) ref);
+    }
+
+    /*
+        Type: list
+        Ref:  Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits
+     */
+    public static View get_Nest_ListofNestVisits_MostRecentThreeNestVisits(Solo solo) {
+        String ref = "Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits";
         return (android.view.View) solo.getView((Object) ref);
     }
 

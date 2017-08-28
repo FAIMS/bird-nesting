@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--@POSTPROC: ./proc/post.sh-->
-<module>
+<module test_mode="true">
 
 <Login f="nodata">
   <Login f="noscroll">
@@ -67,7 +67,7 @@
     <Add_Nest_Visit t="button" lc="Nest_Measurement"/>
   </Nest>
   <List_of_Nest_Visits f="noscroll">
-    <Most_Recent_Three_Nest_Visits t="list"/>
+    <Most_Recent_Three_Nest_Visits t="list" f="nodata"/>
   </List_of_Nest_Visits>
 </Nest>
 

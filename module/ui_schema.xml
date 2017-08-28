@@ -307,7 +307,7 @@
       </group>
       <group ref="List_of_Nest_Visits" faims_scrollable="false">
         <label>{List_of_Nest_Visits}</label>
-        <select1 appearance="compact" faims_attribute_name="Most Recent Three Nest Visits" faims_attribute_type="vocab" ref="Most_Recent_Three_Nest_Visits">
+        <select1 appearance="compact" ref="Most_Recent_Three_Nest_Visits">
           <label>{Most_Recent_Three_Nest_Visits}</label>
           <item>
             <label>Options not loaded</label>
