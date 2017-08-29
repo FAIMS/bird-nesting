@@ -1,0 +1,164 @@
+/****************************** SEARCH EXTENSION ******************************/
+/* Implements an extension to the search page which allows users to           */
+/* constrain their searches by user.                                          */
+/******************************************************************************/
+delOnEvent("Control/Search", "show", "search()");
+delOnEvent("Control/Search/Entity_Types", "click" , "search()");
+
+addOnEvent("Control/Search", "show", "initSearchResultList()");
+addOnEvent("Control/Search", "show", "populateSelectUser()");
+
+void populateSelectUser(){
+  String refSearchUsers = "Control/Search/Select_User";
+  String getNonDeletedUsersQuery = "SELECT userid, fname || ' ' || lname "+
+                                   "  FROM user "+
+                                   " WHERE userdeleted is null "+
+                                   " UNION " +
+                                   "SELECT -1, '{All}'";
+
+  fetchAll(getNonDeletedUsersQuery, new FetchCallback() {
+    onFetch(result) {
+      populateDropDown(refSearchUsers, result, false);
+    }
+  });
+}
+
+void search(){
+  String tabgroup = "Control";
+  String refEntityList  = tabgroup + "/Search/Entity_List";
+  String refSearchTerm  = tabgroup + "/Search/Search_Term";
+  String refEntityTypes = tabgroup + "/Search/Entity_Types";
+  String refSelectUser  = tabgroup + "/Search/Select_User";
+
+  String type = getFieldValue(refEntityTypes);
+  String term = getFieldValue(refSearchTerm);
+  String user = getFieldValue(refSelectUser);
+  if (isNull(user)) return;
+
+  String searchQuery = "";
+  String drop1Q = "";
+  String make1Q = "";
+  String drop2Q = "";
+  String make2Q = "";
+  String doRegenQ = "";
+
+  searchQuery = "SELECT uuid, response" +
+                "  FROM latestNonDeletedMaterialisedArchEntFormattedIdentifiers" +
+                " WHERE uuid in (SELECT uuid" +
+                "                 FROM materialisedlatestnondeletedaentvalue" +
+                "                 WHERE measure = {term}" +
+                "                   AND attributeid in (select attributeid from attributekey where attributename = 'Box ID')" +
+                "                   AND ( userid = {user} OR -1 = {user})" +
+                "             )" +
+                " AND ( aenttypename = {type} OR '' = {type} )" +
+                " ORDER BY substr(uuid, 7, 13) desc, response" +
+                "  LIMIT ? "+
+                " OFFSET ? ";
+
+  searchQuery = dbReplaceFirst(searchQuery, "{term}", term);
+  searchQuery = dbReplaceFirst(searchQuery, "{type}", type);
+  searchQuery = dbReplaceFirst(searchQuery, "{type}", type);
+  searchQuery =   replaceFirst(searchQuery, "{user}", user);
+  searchQuery =   replaceFirst(searchQuery, "{user}", user);
+
+  drop1Q  = " drop table if exists materialisedlatestnondeletedaentvalue";
+
+  make1Q  = " create table materialisedlatestnondeletedaentvalue as";
+  make1Q += " select * from latestnondeletedaentvalue";
+
+  drop2Q  = " drop table if exists latestNonDeletedMaterialisedArchEntFormattedIdentifiers";
+
+  make2Q  = " create table if not exists latestNonDeletedMaterialisedArchEntFormattedIdentifiers as";
+  make2Q += "   select uuid, aenttypeid, aenttypename, group_concat(response, '') as response, null as deleted";
+  make2Q += "   from (";
+  make2Q += "     select uuid, aenttypeid, aenttypename, group_concat(format(formatstring, vocabname, measure, freetext, certainty), appendcharacterstring) as response, null as deleted, aentcountorder";
+  make2Q += "     from (";
+  make2Q += "       select uuid, aenttypeid, aenttypename, formatstring, vocabname, measure, freetext, certainty, appendcharacterstring, null as deleted, aentcountorder, vocabcountorder, attributeid";
+  make2Q += "       from latestNonDeletedArchent";
+  make2Q += "         JOIN aenttype using (aenttypeid)";
+  make2Q += "         JOIN (select * from idealaent where isIdentifier='true') using (aenttypeid)";
+  make2Q += "         join attributekey  using (attributeid)";
+  make2Q += "         join materialisedlatestnondeletedaentvalue using (uuid, attributeid)";
+  make2Q += "         left outer join vocabulary using (attributeid, vocabid)";
+  make2Q += "       order by uuid, aentcountorder, vocabcountorder";
+  make2Q += "     )";
+  make2Q += "     group by uuid, attributeid";
+  make2Q += "     having response is not null";
+  make2Q += "     order by uuid, aentcountorder)";
+  make2Q += "   group by uuid";
+  make2Q += "   order by uuid";
+
+  doRegenQ  = "select matTS != avTS";
+  doRegenQ += "  from (";
+  doRegenQ += "        select max(valuetimestamp) as matTS";
+  doRegenQ += "          from materialisedlatestnondeletedaentvalue),";
+  doRegenQ += "               (select max(valuetimestamp) as avTS";
+  doRegenQ += "               from aentvalue);";
+
+  FetchCallback search = new FetchCallback() {
+    onFetch(result) {
+      print("search");
+      populateCursorList(refEntityList, searchQuery, 25);
+    }
+    onError(message) {
+      doRegen.onFetch(null);
+    }
+  };
+
+  FetchCallback make2 = new FetchCallback() {
+    onFetch(result) {
+      print("make2");
+      fetchOne(make2Q, search);
+    }
+  };
+
+  FetchCallback drop2 = new FetchCallback() {
+    onFetch(result) {
+      print("drop2");
+      fetchOne(drop2Q, make2);
+    }
+  };
+
+  FetchCallback make1 = new FetchCallback() {
+    onFetch(result) {
+      print("make1");
+      fetchOne(make1Q, drop2);
+    }
+  };
+
+  FetchCallback doRegen = new FetchCallback() {
+    onFetch(result) {
+      if      (isNull(result)) {
+        print("null");
+        fetchOne(drop1Q, make1);
+      } else if (result.get(0).equals("1")) {
+        print("equals 1");
+        fetchOne(drop1Q, make1);
+      } else {
+        print("equals 0");
+        search.onFetch(null);
+      }
+    }
+    onError(message) {
+      fetchOne(drop1Q, make1);
+    }
+  };
+
+  loadingResults(refEntityList);
+  fetchOne(doRegenQ, doRegen);
+  refreshTabgroupCSS(tabgroup);
+
+  Log.d("Module", "Search query: " + searchQuery);
+}
+
+void initSearchResultList() {
+  List l = new ArrayList();
+  l.add(new NameValuePair("Tap 'Search' to update this list", ""));
+  populateMenu("Control/Search/Entity_List", l);
+}
+
+void loadingResults(String ref) {
+  List l = new ArrayList();
+  l.add(new NameValuePair("Loading results...", ""));
+  populateMenu(ref, l);
+}

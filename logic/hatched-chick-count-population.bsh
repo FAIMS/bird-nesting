@@ -1,5 +1,5 @@
 /*********************** HATCHED CHICK COUNT POPULATION ***********************/
-addOnEvent("Nest_Measurement/Nest_Measurement/Take_Current_Chick_Counts", "click", "populateHatchedChickCount()");
+//addOnEvent("Nest_Measurement/Nest_Measurement/Take_Current_Chick_Counts", "click", "populateHatchedChickCount()");
 
 populateHatchedChickCount() {
   String nestMeasurementUuid = getUuid("Nest_Measurement");

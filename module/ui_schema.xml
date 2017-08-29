@@ -25,27 +25,8 @@
           </Login>
           <Control>
             <Control>
-              <Add_New_Box/>
-              <Existing_Boxes/>
+              <Add_New_Nest/>
             </Control>
-            <Defaults>
-              <Next_Egg_ID/>
-              <Next_Chick_Chick_ID/>
-            </Defaults>
-            <Active_Boxes>
-              <Colgroup_1>
-                <Col_1>
-                  <Box_Prefix/>
-                </Col_1>
-                <Col_2>
-                  <Box_ID/>
-                </Col_2>
-                <Col_3>
-                  <Search/>
-                </Col_3>
-              </Colgroup_1>
-              <Active_Boxes/>
-            </Active_Boxes>
             <Search>
               <Colgroup_0>
                 <Col_0>
@@ -55,94 +36,36 @@
                   <Search_Button/>
                 </Col_1>
               </Colgroup_0>
-              <Entity_Types/>
+              <Colgroup_1>
+                <Col_0>
+                  <Entity_Types/>
+                </Col_0>
+                <Col_1>
+                  <Select_User/>
+                </Col_1>
+              </Colgroup_1>
               <Entity_List/>
             </Search>
-            <Revisit>
-              <Days/>
-              <Compute_Revisits/>
-              <Revisit/>
-            </Revisit>
           </Control>
-          <Box>
-            <Box>
-              <Box_Box_Prefix/>
-              <Box_Box_ID/>
-              <Box_Location_Name/>
-              <Colgroup_1>
-                <Col_1>
-                  <Latitude/>
-                </Col_1>
-                <Col_2>
-                  <Longitude/>
-                </Col_2>
-              </Colgroup_1>
-              <Colgroup_2>
-                <Col_1>
-                  <Northing/>
-                </Col_1>
-                <Col_2>
-                  <Easting/>
-                </Col_2>
-                <Col_3>
-                  <Accuracy/>
-                </Col_3>
-              </Colgroup_2>
-              <Take_From_GPS_1/>
-              <Height_m/>
-              <Orientation_degrees/>
-              <Comments/>
-              <Take_Photo/>
-              <Take_Photo_Button_1/>
-              <Colgroup_3>
-                <Col_1>
-                  <Box_Status/>
-                </Col_1>
-                <Col_2>
-                  <Box_Status_Spacer/>
-                </Col_2>
-              </Colgroup_3>
-              <Colgroup_4>
-                <Col_1>
-                  <Add_Box_Status/>
-                  <Box_Statuses/>
-                </Col_1>
-                <Col_2>
-                  <Add_New_Nest/>
-                  <Existing_Nests/>
-                </Col_2>
-              </Colgroup_4>
-            </Box>
-          </Box>
-          <Box_Status>
-            <Box_Status>
-              <Box_Status_Box_Prefix/>
-              <Box_Status_Box_ID/>
-              <Box_Status_timestamp/>
-              <Box_Status/>
-            </Box_Status>
-          </Box_Status>
           <Nest>
             <Nest>
               <Colgroup_1>
                 <Col_1>
-                  <Nest_Box_Prefix/>
+                  <Box_ID/>
                 </Col_1>
                 <Col_2>
-                  <Nest_Box_ID/>
+                  <Nest_ID/>
                 </Col_2>
-                <Col_3>
-                  <Nest_Location_Name/>
-                </Col_3>
               </Colgroup_1>
               <Colgroup_2>
                 <Col_1>
-                  <Nest_Nest_ID/>
+                  <Location_Name/>
                 </Col_1>
                 <Col_2>
                   <Nest_timestamp/>
                 </Col_2>
               </Colgroup_2>
+              <Box_Status/>
               <Nest_Completed/>
               <Nest_Completed_at/>
               <Set_Day_of_Lay/>
@@ -152,22 +75,43 @@
               <Estimated_Day_of_Hatching/>
               <Set_Actual_Day_of_Hatching/>
               <Actual_Day_of_Hatching/>
-              <Add_Nest_Measurement/>
-              <Nest_Measurements/>
+              <Add_Nest_Visit/>
             </Nest>
-            <Egg_Chick>
+            <List_of_Nest_Visits>
+              <Update_Visit_list/>
+              <Most_Recent_Three_Nest_Visits/>
+            </List_of_Nest_Visits>
+          </Nest>
+          <Nest_Measurement>
+            <Nest_Measurement>
+              <Nest_Measurement_Nest_ID/>
+              <Nest_Status/>
               <Colgroup_1>
                 <Col_1>
-                  <Add_New_Egg/>
-                  <Existing_Eggs/>
+                  <Egg_Count/>
                 </Col_1>
                 <Col_2>
-                  <Add_New_Chick/>
-                  <Existing_Chicks/>
+                  <Hatched_Chick_Count_Live/>
                 </Col_2>
+                <Col_3>
+                  <Hatched_Chick_Count_Dead/>
+                </Col_3>
               </Colgroup_1>
-            </Egg_Chick>
-          </Nest>
+              <Egg_Measurements/>
+              <Tarsus/>
+              <Wing/>
+              <Weight/>
+              <Blood/>
+              <Notes/>
+              <Picture/>
+              <Picture_Button_1/>
+            </Nest_Measurement>
+            <Vars>
+              <Box_ID/>
+              <Location_Name/>
+              <Nest_Measurement_timestamp/>
+            </Vars>
+          </Nest_Measurement>
           <Day_of_Lay>
             <Day_of_Lay>
               <Day_of_Lay/>
@@ -182,107 +126,14 @@
               <Cancel/>
             </Actual_Day_of_Hatching>
           </Actual_Day_of_Hatching>
-          <Nest_Measurement>
-            <Nest_Measurement>
-              <Nest_Measurement_Nest_ID/>
-              <Nest_Measurement_timestamp/>
-              <Nest_Status/>
-              <Spacer/>
-              <Colgroup_1>
-                <Col_1>
-                  <Egg_Count/>
-                </Col_1>
-                <Col_2>
-                  <Hatched_Chick_Count_Live/>
-                </Col_2>
-                <Col_3>
-                  <Hatched_Chick_Count_Dead/>
-                </Col_3>
-              </Colgroup_1>
-              <Take_Current_Chick_Counts/>
-            </Nest_Measurement>
-          </Nest_Measurement>
-          <Egg>
-            <Egg>
-              <Egg_Box_Prefix/>
-              <Egg_Box_ID/>
-              <Egg_Location_Name/>
-              <Egg_Nest_ID/>
-              <Egg_ID/>
-              <Egg_timestamp/>
-              <Egg_Length_mm/>
-              <Egg_Width_mm/>
-              <Egg_Weight_g/>
-            </Egg>
-          </Egg>
-          <Chick>
-            <Chick>
-              <Colgroup_1>
-                <Col_1>
-                  <Chick_Box_Prefix/>
-                </Col_1>
-                <Col_2>
-                  <Chick_Box_ID/>
-                </Col_2>
-                <Col_3>
-                  <Chick_Location_Name/>
-                </Col_3>
-              </Colgroup_1>
-              <Colgroup_2>
-                <Col_1>
-                  <Chick_Nest_ID/>
-                </Col_1>
-                <Col_2>
-                  <Chick_Chick_ID/>
-                </Col_2>
-              </Colgroup_2>
-              <Chick_timestamp/>
-              <Bird_Species/>
-              <Band_Number/>
-              <Notes/>
-              <Add_Chick_Measurement/>
-              <Existing_Chick_Measurements/>
-            </Chick>
-          </Chick>
-          <Chick_Measurement>
-            <Chick_Measurement>
-              <Chick_Measurement_Chick_ID/>
-              <Chick_Measurement_timestamp/>
-              <Chick_Alive/>
-              <Chick_Age_days/>
-              <Weight_g/>
-              <Head_Length_mm/>
-              <Wing_Length_mm/>
-              <Tarsus_Length_mm/>
-              <Notes/>
-              <Picture/>
-              <Picture_Button_1/>
-            </Chick_Measurement>
-          </Chick_Measurement>
         </faims>
       </instance>
-      <bind nodeset="/faims/Control/Defaults/Next_Egg_ID" type="decimal"/>
-      <bind nodeset="/faims/Control/Defaults/Next_Chick_Chick_ID" type="decimal"/>
-      <bind nodeset="/faims/Box/Box/Box_Box_ID" type="decimal"/>
-      <bind nodeset="/faims/Box/Box/Height_m" type="decimal"/>
-      <bind nodeset="/faims/Box/Box/Orientation_degrees" type="decimal"/>
-      <bind nodeset="/faims/Box_Status/Box_Status/Box_Status_Box_ID" type="decimal"/>
-      <bind nodeset="/faims/Nest/Nest/Colgroup_1/Col_2/Nest_Box_ID" type="decimal"/>
-      <bind nodeset="/faims/Day_of_Lay/Day_of_Lay/Day_of_Lay" type="date"/>
-      <bind nodeset="/faims/Actual_Day_of_Hatching/Actual_Day_of_Hatching/Actual_Day_of_Hatching" type="date"/>
+      <bind nodeset="/faims/Nest/Nest/Colgroup_1/Col_2/Nest_ID" type="decimal"/>
       <bind nodeset="/faims/Nest_Measurement/Nest_Measurement/Colgroup_1/Col_1/Egg_Count" type="decimal"/>
       <bind nodeset="/faims/Nest_Measurement/Nest_Measurement/Colgroup_1/Col_2/Hatched_Chick_Count_Live" type="decimal"/>
       <bind nodeset="/faims/Nest_Measurement/Nest_Measurement/Colgroup_1/Col_3/Hatched_Chick_Count_Dead" type="decimal"/>
-      <bind nodeset="/faims/Egg/Egg/Egg_Box_ID" type="decimal"/>
-      <bind nodeset="/faims/Egg/Egg/Egg_Length_mm" type="decimal"/>
-      <bind nodeset="/faims/Egg/Egg/Egg_Width_mm" type="decimal"/>
-      <bind nodeset="/faims/Egg/Egg/Egg_Weight_g" type="decimal"/>
-      <bind nodeset="/faims/Chick/Chick/Colgroup_1/Col_2/Chick_Box_ID" type="decimal"/>
-      <bind nodeset="/faims/Chick_Measurement/Chick_Measurement/Chick_Age_days" type="decimal"/>
-      <bind nodeset="/faims/Chick_Measurement/Chick_Measurement/Weight_g" type="decimal"/>
-      <bind nodeset="/faims/Chick_Measurement/Chick_Measurement/Head_Length_mm" type="decimal"/>
-      <bind nodeset="/faims/Chick_Measurement/Chick_Measurement/Wing_Length_mm" type="decimal"/>
-      <bind nodeset="/faims/Chick_Measurement/Chick_Measurement/Tarsus_Length_mm" type="decimal"/>
+      <bind nodeset="/faims/Day_of_Lay/Day_of_Lay/Day_of_Lay" type="date"/>
+      <bind nodeset="/faims/Actual_Day_of_Hatching/Actual_Day_of_Hatching/Actual_Day_of_Hatching" type="date"/>
     </model>
   </h:head>
   <h:body>
@@ -326,60 +177,9 @@
       <label>{Control}</label>
       <group ref="Control" faims_scrollable="false">
         <label>{Control}</label>
-        <trigger ref="Add_New_Box">
-          <label>{Add_New_Box}</label>
+        <trigger ref="Add_New_Nest">
+          <label>{Add_New_Nest}</label>
         </trigger>
-        <select1 appearance="compact" ref="Existing_Boxes">
-          <label>{Existing_Boxes}</label>
-          <item>
-            <label>Options not loaded</label>
-            <value>Options not loaded</value>
-          </item>
-        </select1>
-      </group>
-      <group ref="Defaults">
-        <label>{Defaults}</label>
-        <input ref="Next_Egg_ID" faims_style_class="required">
-          <label>{Next_Egg_ID}</label>
-        </input>
-        <input ref="Next_Chick_Chick_ID" faims_style_class="required">
-          <label>{Chick_ID}</label>
-        </input>
-      </group>
-      <group ref="Active_Boxes" faims_scrollable="false">
-        <label>{Active_Boxes}</label>
-        <group ref="Colgroup_1" faims_style="orientation">
-          <label/>
-          <group ref="Col_1" faims_style="even">
-            <label/>
-            <select1 ref="Box_Prefix">
-              <label>{Box_Prefix}</label>
-              <item>
-                <label>Options not loaded</label>
-                <value>Options not loaded</value>
-              </item>
-            </select1>
-          </group>
-          <group ref="Col_2" faims_style="even">
-            <label/>
-            <input ref="Box_ID">
-              <label>{Box_ID}</label>
-            </input>
-          </group>
-          <group ref="Col_3" faims_style="even">
-            <label/>
-            <trigger ref="Search">
-              <label>{Search}</label>
-            </trigger>
-          </group>
-        </group>
-        <select1 appearance="compact" ref="Active_Boxes">
-          <label>{Active_Boxes}</label>
-          <item>
-            <label>Options not loaded</label>
-            <value>Options not loaded</value>
-          </item>
-        </select1>
       </group>
       <group ref="Search" faims_scrollable="false">
         <label>{Search}</label>
@@ -398,154 +198,22 @@
             </trigger>
           </group>
         </group>
-        <select1 ref="Entity_Types">
-          <label>{Entity_Types}</label>
-          <item>
-            <label>Options not loaded</label>
-            <value>Options not loaded</value>
-          </item>
-        </select1>
-        <select1 appearance="compact" ref="Entity_List">
-          <label>{Entity_List}</label>
-          <item>
-            <label>Options not loaded</label>
-            <value>Options not loaded</value>
-          </item>
-        </select1>
-      </group>
-      <group ref="Revisit" faims_scrollable="false">
-        <label>{Revisit}</label>
-        <select1 ref="Days">
-          <label>{Days}</label>
-          <item>
-            <label>Options not loaded</label>
-            <value>Options not loaded</value>
-          </item>
-        </select1>
-        <trigger ref="Compute_Revisits">
-          <label>{Compute_Revisits}</label>
-        </trigger>
-        <input ref="Revisit" faims_table="true">
-          <label/>
-        </input>
-      </group>
-    </group>
-    <group ref="Box" faims_archent_type="Box">
-      <label>{Box}</label>
-      <group ref="Box">
-        <label>{Box}</label>
-        <select1 faims_attribute_name="Box Box Prefix" faims_attribute_type="vocab" ref="Box_Box_Prefix">
-          <label>{Box_Prefix}</label>
-          <item>
-            <label>Options not loaded</label>
-            <value>Options not loaded</value>
-          </item>
-        </select1>
-        <input faims_attribute_name="Box Box ID" faims_attribute_type="measure" ref="Box_Box_ID">
-          <label>{Box_Number}</label>
-        </input>
-        <select1 faims_attribute_name="Box Location Name" faims_attribute_type="vocab" ref="Box_Location_Name">
-          <label>{Location_Name}</label>
-          <item>
-            <label>Options not loaded</label>
-            <value>Options not loaded</value>
-          </item>
-        </select1>
         <group ref="Colgroup_1" faims_style="orientation">
           <label/>
-          <group ref="Col_1" faims_style="even">
+          <group ref="Col_0" faims_style="even">
             <label/>
-            <input faims_attribute_name="Latitude" faims_attribute_type="measure" ref="Latitude" faims_read_only="true">
-              <label>{Latitude}</label>
-            </input>
-          </group>
-          <group ref="Col_2" faims_style="even">
-            <label/>
-            <input faims_attribute_name="Longitude" faims_attribute_type="measure" ref="Longitude" faims_read_only="true">
-              <label>{Longitude}</label>
-            </input>
-          </group>
-        </group>
-        <group ref="Colgroup_2" faims_style="orientation">
-          <label/>
-          <group ref="Col_1" faims_style="even">
-            <label/>
-            <input faims_attribute_name="Northing" faims_attribute_type="measure" ref="Northing" faims_read_only="true">
-              <label>{Northing}</label>
-            </input>
-          </group>
-          <group ref="Col_2" faims_style="even">
-            <label/>
-            <input faims_attribute_name="Easting" faims_attribute_type="measure" ref="Easting" faims_read_only="true">
-              <label>{Easting}</label>
-            </input>
-          </group>
-          <group ref="Col_3" faims_style="even">
-            <label/>
-            <input faims_attribute_name="Accuracy" faims_attribute_type="measure" ref="Accuracy" faims_read_only="true">
-              <label>{Accuracy}</label>
-            </input>
-          </group>
-        </group>
-        <trigger ref="Take_From_GPS_1">
-          <label>{Take_From_GPS}</label>
-        </trigger>
-        <input faims_attribute_name="Height m" faims_attribute_type="measure" ref="Height_m">
-          <label>{Height__m_}</label>
-        </input>
-        <input faims_attribute_name="Orientation degrees" faims_attribute_type="measure" ref="Orientation_degrees">
-          <label>{Orientation__degrees_}</label>
-        </input>
-        <input faims_attribute_name="Comments" faims_attribute_type="measure" ref="Comments">
-          <label>{Comments}</label>
-        </input>
-        <select faims_sync="true" type="camera" faims_attribute_name="Take Photo" faims_attribute_type="measure" ref="Take_Photo">
-          <label>{Take_Photo}</label>
-          <item>
-            <label>Options not loaded</label>
-            <value>Options not loaded</value>
-          </item>
-        </select>
-        <trigger ref="Take_Photo_Button_1">
-          <label>{Take_Photo}</label>
-        </trigger>
-        <group ref="Colgroup_3" faims_style="orientation">
-          <label/>
-          <group ref="Col_1" faims_style="even">
-            <label/>
-            <input ref="Box_Status" faims_read_only="true">
-              <label>{Current_Box_Status}</label>
-            </input>
-          </group>
-          <group ref="Col_2" faims_style="even">
-            <label/>
-            <group ref="Box_Status_Spacer">
-              <label/>
-            </group>
-          </group>
-        </group>
-        <group ref="Colgroup_4" faims_style="orientation">
-          <label/>
-          <group ref="Col_1" faims_style="even">
-            <label/>
-            <trigger ref="Add_Box_Status">
-              <label>{Add_Box_Status}</label>
-            </trigger>
-            <select1 appearance="compact" ref="Box_Statuses" faims_style_class="fixedheightfive">
-              <label>{Last_5_Recorded_Box_Statuses}</label>
+            <select1 ref="Entity_Types">
+              <label>{Entity_Types}</label>
               <item>
                 <label>Options not loaded</label>
                 <value>Options not loaded</value>
               </item>
             </select1>
           </group>
-          <group ref="Col_2" faims_style="even">
+          <group ref="Col_1" faims_style="even">
             <label/>
-            <trigger ref="Add_New_Nest">
-              <label>{Add_New_Nest}</label>
-            </trigger>
-            <select1 appearance="compact" ref="Existing_Nests" faims_style_class="fixedheightfive">
-              <label>{Last_5_Recorded_Nests}</label>
+            <select1 ref="Select_User">
+              <label>{Select_User}</label>
               <item>
                 <label>Options not loaded</label>
                 <value>Options not loaded</value>
@@ -553,27 +221,8 @@
             </select1>
           </group>
         </group>
-      </group>
-    </group>
-    <group ref="Box_Status" faims_archent_type="Box Status">
-      <label>{Box_Status}</label>
-      <group ref="Box_Status">
-        <label>{Box_Status}</label>
-        <select1 faims_attribute_name="Box Status Box Prefix" faims_attribute_type="vocab" ref="Box_Status_Box_Prefix" faims_read_only="true">
-          <label>{Box_Prefix}</label>
-          <item>
-            <label>Options not loaded</label>
-            <value>Options not loaded</value>
-          </item>
-        </select1>
-        <input faims_attribute_name="Box Status Box ID" faims_attribute_type="measure" ref="Box_Status_Box_ID" faims_read_only="true">
-          <label>{Box_Number}</label>
-        </input>
-        <input faims_attribute_name="Box Status timestamp" faims_attribute_type="measure" ref="Box_Status_timestamp" faims_read_only="true">
-          <label>{Box_Status_Recorded_at}</label>
-        </input>
-        <select1 faims_attribute_name="Box Status" faims_attribute_type="vocab" ref="Box_Status">
-          <label>{Box_Status}</label>
+        <select1 appearance="compact" ref="Entity_List">
+          <label>{Entity_List}</label>
           <item>
             <label>Options not loaded</label>
             <value>Options not loaded</value>
@@ -589,8 +238,23 @@
           <label/>
           <group ref="Col_1" faims_style="even">
             <label/>
-            <select1 faims_attribute_name="Nest Box Prefix" faims_attribute_type="vocab" ref="Nest_Box_Prefix" faims_read_only="true">
-              <label>{Box_Prefix}</label>
+            <input faims_attribute_name="Box ID" faims_attribute_type="measure" ref="Box_ID">
+              <label>{Box_ID}</label>
+            </input>
+          </group>
+          <group ref="Col_2" faims_style="even">
+            <label/>
+            <input faims_attribute_name="Nest ID" faims_attribute_type="measure" ref="Nest_ID" faims_certainty="false">
+              <label>{Nest_ID}</label>
+            </input>
+          </group>
+        </group>
+        <group ref="Colgroup_2" faims_style="orientation">
+          <label/>
+          <group ref="Col_1" faims_style="even">
+            <label/>
+            <select1 faims_attribute_name="Location Name" faims_attribute_type="vocab" ref="Location_Name">
+              <label>{Location_Name}</label>
               <item>
                 <label>Options not loaded</label>
                 <value>Options not loaded</value>
@@ -599,32 +263,18 @@
           </group>
           <group ref="Col_2" faims_style="even">
             <label/>
-            <input faims_attribute_name="Nest Box ID" faims_attribute_type="measure" ref="Nest_Box_ID" faims_read_only="true">
-              <label>{Box_Number}</label>
-            </input>
-          </group>
-          <group ref="Col_3" faims_style="even">
-            <label/>
-            <input faims_attribute_name="Nest Location Name" faims_attribute_type="measure" ref="Nest_Location_Name" faims_read_only="true">
-              <label>{Location_Name}</label>
-            </input>
-          </group>
-        </group>
-        <group ref="Colgroup_2" faims_style="orientation">
-          <label/>
-          <group ref="Col_1" faims_style="even">
-            <label/>
-            <input faims_attribute_name="Nest Nest ID" faims_attribute_type="measure" ref="Nest_Nest_ID">
-              <label>{Nest_ID}</label>
-            </input>
-          </group>
-          <group ref="Col_2" faims_style="even">
-            <label/>
-            <input faims_attribute_name="Nest timestamp" faims_attribute_type="measure" ref="Nest_timestamp" faims_read_only="true">
+            <input faims_attribute_name="Nest timestamp" faims_attribute_type="measure" ref="Nest_timestamp" faims_read_only="true" faims_annotation="false" faims_certainty="false">
               <label>{Nest_Record_Created_at}</label>
             </input>
           </group>
         </group>
+        <select1 faims_attribute_name="Box Status" faims_attribute_type="vocab" ref="Box_Status">
+          <label>{Box_Status}</label>
+          <item>
+            <label>Options not loaded</label>
+            <value>Options not loaded</value>
+          </item>
+        </select1>
         <trigger ref="Nest_Completed">
           <label>{Nest_Found_Completed}</label>
         </trigger>
@@ -649,51 +299,102 @@
         <trigger ref="Set_Actual_Day_of_Hatching">
           <label>{Set_Actual_Day_of_Hatching___}</label>
         </trigger>
-        <input faims_attribute_name="Actual Day of Hatching" faims_attribute_type="measure" ref="Actual_Day_of_Hatching" faims_read_only="true">
+        <input faims_attribute_name="Actual Day of Hatching" faims_attribute_type="measure" ref="Actual_Day_of_Hatching" faims_read_only="true" faims_annotation="false" faims_certainty="false">
           <label>{Actual_Day_of_Hatching}</label>
         </input>
-        <trigger ref="Add_Nest_Measurement">
+        <trigger ref="Add_Nest_Visit">
           <label>{Add_Nest_Visit}</label>
         </trigger>
-        <select1 appearance="compact" ref="Nest_Measurements" faims_style_class="fixedheightfive">
-          <label>{Last_5_Recorded_Nest_Visits}</label>
+      </group>
+      <group ref="List_of_Nest_Visits" faims_scrollable="false">
+        <label>{List_of_Nest_Visits}</label>
+        <trigger ref="Update_Visit_list">
+          <label>{Update_Visit_list}</label>
+        </trigger>
+        <input ref="Most_Recent_Three_Nest_Visits" faims_table="true">
+          <label>{Most_Recent_Three_Nest_Visits}</label>
+        </input>
+      </group>
+    </group>
+    <group ref="Nest_Measurement" faims_archent_type="Nest Measurement">
+      <label>{Nest_Visit}</label>
+      <group ref="Nest_Measurement">
+        <label>{Nest_Visit}</label>
+        <input faims_attribute_name="Nest Measurement Nest ID" faims_attribute_type="measure" ref="Nest_Measurement_Nest_ID" faims_read_only="true" faims_annotation="false" faims_certainty="false">
+          <label>{Nest_ID}</label>
+        </input>
+        <select1 faims_attribute_name="Nest Status" faims_attribute_type="vocab" ref="Nest_Status">
+          <label>{Nest_Status}</label>
           <item>
             <label>Options not loaded</label>
             <value>Options not loaded</value>
           </item>
         </select1>
-      </group>
-      <group ref="Egg_Chick" faims_scrollable="false">
-        <label>{Egg_Chick}</label>
         <group ref="Colgroup_1" faims_style="orientation">
           <label/>
           <group ref="Col_1" faims_style="even">
             <label/>
-            <trigger ref="Add_New_Egg">
-              <label>{Add_New_Egg}</label>
-            </trigger>
-            <select1 appearance="compact" ref="Existing_Eggs">
-              <label>{Existing_Eggs}</label>
-              <item>
-                <label>Options not loaded</label>
-                <value>Options not loaded</value>
-              </item>
-            </select1>
+            <input faims_attribute_name="Egg Count" faims_attribute_type="measure" ref="Egg_Count">
+              <label>{Egg_Count}</label>
+            </input>
           </group>
           <group ref="Col_2" faims_style="even">
             <label/>
-            <trigger ref="Add_New_Chick">
-              <label>{Add_New_Chick}</label>
-            </trigger>
-            <select1 appearance="compact" ref="Existing_Chicks">
-              <label>{Existing_Chicks}</label>
-              <item>
-                <label>Options not loaded</label>
-                <value>Options not loaded</value>
-              </item>
-            </select1>
+            <input faims_attribute_name="Hatched Chick Count Live" faims_attribute_type="measure" ref="Hatched_Chick_Count_Live">
+              <label>{Hatched_Chick_Count_Live}</label>
+            </input>
+          </group>
+          <group ref="Col_3" faims_style="even">
+            <label/>
+            <input faims_attribute_name="Hatched Chick Count Dead" faims_attribute_type="measure" ref="Hatched_Chick_Count_Dead">
+              <label>{Hatched_Chick_Count_Dead}</label>
+            </input>
           </group>
         </group>
+        <input faims_attribute_name="Egg Measurements" faims_attribute_type="measure" ref="Egg_Measurements">
+          <label>{Egg_Measurements}</label>
+        </input>
+        <input faims_attribute_name="Tarsus" faims_attribute_type="measure" ref="Tarsus">
+          <label>{Tarsus}</label>
+        </input>
+        <input faims_attribute_name="Wing" faims_attribute_type="measure" ref="Wing">
+          <label>{Wing}</label>
+        </input>
+        <input faims_attribute_name="Weight" faims_attribute_type="measure" ref="Weight">
+          <label>{Weight}</label>
+        </input>
+        <input faims_attribute_name="Blood" faims_attribute_type="measure" ref="Blood">
+          <label>{Blood}</label>
+        </input>
+        <input faims_attribute_name="Notes" faims_attribute_type="measure" ref="Notes">
+          <label>{Notes}</label>
+        </input>
+        <select faims_sync="true" type="camera" faims_attribute_name="Picture" faims_attribute_type="measure" ref="Picture">
+          <label>{Picture}</label>
+          <item>
+            <label>Options not loaded</label>
+            <value>Options not loaded</value>
+          </item>
+        </select>
+        <trigger ref="Picture_Button_1">
+          <label>{Picture}</label>
+        </trigger>
+      </group>
+      <group ref="Vars" faims_hidden="true">
+        <label>{Vars}</label>
+        <input faims_attribute_name="Box ID" faims_attribute_type="measure" ref="Box_ID">
+          <label>{Box_ID}</label>
+        </input>
+        <select1 faims_attribute_name="Location Name" faims_attribute_type="vocab" ref="Location_Name">
+          <label>{Location_Name}</label>
+          <item>
+            <label>Options not loaded</label>
+            <value>Options not loaded</value>
+          </item>
+        </select1>
+        <input faims_attribute_name="Nest Measurement timestamp" faims_attribute_type="measure" ref="Nest_Measurement_timestamp" faims_read_only="true">
+          <label>{Timestamp}</label>
+        </input>
       </group>
     </group>
     <group ref="Day_of_Lay">
@@ -723,208 +424,6 @@
         </trigger>
         <trigger ref="Cancel">
           <label>{Cancel}</label>
-        </trigger>
-      </group>
-    </group>
-    <group ref="Nest_Measurement" faims_archent_type="Nest Measurement">
-      <label>{Nest_Visit}</label>
-      <group ref="Nest_Measurement">
-        <label>{Nest_Visit}</label>
-        <input faims_attribute_name="Nest Measurement Nest ID" faims_attribute_type="measure" ref="Nest_Measurement_Nest_ID" faims_read_only="true">
-          <label>{Nest_ID}</label>
-        </input>
-        <input faims_attribute_name="Nest Measurement timestamp" faims_attribute_type="measure" ref="Nest_Measurement_timestamp" faims_read_only="true">
-          <label>{Nest_Visit_Recorded_at}</label>
-        </input>
-        <select1 faims_attribute_name="Nest Status" faims_attribute_type="vocab" ref="Nest_Status">
-          <label>{Nest_Status}</label>
-          <item>
-            <label>Options not loaded</label>
-            <value>Options not loaded</value>
-          </item>
-        </select1>
-        <input faims_web="true" ref="Spacer">
-          <label/>
-        </input>
-        <group ref="Colgroup_1" faims_style="orientation">
-          <label/>
-          <group ref="Col_1" faims_style="even">
-            <label/>
-            <input faims_attribute_name="Egg Count" faims_attribute_type="measure" ref="Egg_Count">
-              <label>{Egg_Count}</label>
-            </input>
-          </group>
-          <group ref="Col_2" faims_style="even">
-            <label/>
-            <input faims_attribute_name="Hatched Chick Count Live" faims_attribute_type="measure" ref="Hatched_Chick_Count_Live">
-              <label>{Hatched_Chick_Count_Live}</label>
-            </input>
-          </group>
-          <group ref="Col_3" faims_style="even">
-            <label/>
-            <input faims_attribute_name="Hatched Chick Count Dead" faims_attribute_type="measure" ref="Hatched_Chick_Count_Dead">
-              <label>{Hatched_Chick_Count_Dead}</label>
-            </input>
-          </group>
-        </group>
-        <trigger ref="Take_Current_Chick_Counts">
-          <label>{Compute_Current_Chick_Counts}</label>
-        </trigger>
-      </group>
-    </group>
-    <group ref="Egg" faims_archent_type="Egg">
-      <label>{Egg}</label>
-      <group ref="Egg">
-        <label>{Egg}</label>
-        <select1 faims_attribute_name="Egg Box Prefix" faims_attribute_type="vocab" ref="Egg_Box_Prefix" faims_read_only="true">
-          <label>{Box_Prefix}</label>
-          <item>
-            <label>Options not loaded</label>
-            <value>Options not loaded</value>
-          </item>
-        </select1>
-        <input faims_attribute_name="Egg Box ID" faims_attribute_type="measure" ref="Egg_Box_ID" faims_read_only="true">
-          <label>{Box_Number}</label>
-        </input>
-        <input faims_attribute_name="Egg Location Name" faims_attribute_type="measure" ref="Egg_Location_Name" faims_read_only="true">
-          <label>{Location_Name}</label>
-        </input>
-        <input faims_attribute_name="Egg Nest ID" faims_attribute_type="measure" ref="Egg_Nest_ID" faims_read_only="true">
-          <label>{Nest_ID}</label>
-        </input>
-        <input faims_attribute_name="Egg ID" faims_attribute_type="measure" ref="Egg_ID">
-          <label>{Egg_ID}</label>
-        </input>
-        <input faims_attribute_name="Egg timestamp" faims_attribute_type="measure" ref="Egg_timestamp" faims_read_only="true">
-          <label>{Egg_Recorded_at}</label>
-        </input>
-        <input faims_attribute_name="Egg Length mm" faims_attribute_type="measure" ref="Egg_Length_mm">
-          <label>{Egg_Length__mm_}</label>
-        </input>
-        <input faims_attribute_name="Egg Width mm" faims_attribute_type="measure" ref="Egg_Width_mm">
-          <label>{Egg_Width__mm_}</label>
-        </input>
-        <input faims_attribute_name="Egg Weight g" faims_attribute_type="measure" ref="Egg_Weight_g">
-          <label>{Egg_Weight__g_}</label>
-        </input>
-      </group>
-    </group>
-    <group ref="Chick" faims_archent_type="Chick">
-      <label>{Chick}</label>
-      <group ref="Chick">
-        <label>{Chick}</label>
-        <group ref="Colgroup_1" faims_style="orientation">
-          <label/>
-          <group ref="Col_1" faims_style="even">
-            <label/>
-            <select1 faims_attribute_name="Chick Box Prefix" faims_attribute_type="vocab" ref="Chick_Box_Prefix" faims_read_only="true">
-              <label>{Box_Prefix}</label>
-              <item>
-                <label>Options not loaded</label>
-                <value>Options not loaded</value>
-              </item>
-            </select1>
-          </group>
-          <group ref="Col_2" faims_style="even">
-            <label/>
-            <input faims_attribute_name="Chick Box ID" faims_attribute_type="measure" ref="Chick_Box_ID" faims_read_only="true">
-              <label>{Box_Number}</label>
-            </input>
-          </group>
-          <group ref="Col_3" faims_style="even">
-            <label/>
-            <input faims_attribute_name="Chick Location Name" faims_attribute_type="measure" ref="Chick_Location_Name" faims_read_only="true">
-              <label>{Location_Name}</label>
-            </input>
-          </group>
-        </group>
-        <group ref="Colgroup_2" faims_style="orientation">
-          <label/>
-          <group ref="Col_1" faims_style="even">
-            <label/>
-            <input faims_attribute_name="Chick Nest ID" faims_attribute_type="measure" ref="Chick_Nest_ID" faims_read_only="true">
-              <label>{Nest_ID}</label>
-            </input>
-          </group>
-          <group ref="Col_2" faims_style="even">
-            <label/>
-            <input faims_attribute_name="Chick Chick ID" faims_attribute_type="measure" ref="Chick_Chick_ID">
-              <label>{Chick_ID}</label>
-            </input>
-          </group>
-        </group>
-        <input faims_attribute_name="Chick timestamp" faims_attribute_type="measure" ref="Chick_timestamp" faims_read_only="true">
-          <label>{Chick_Recorded_at}</label>
-        </input>
-        <select1 faims_attribute_name="Bird Species" faims_attribute_type="vocab" ref="Bird_Species">
-          <label>{Bird_Species}</label>
-          <item>
-            <label>Options not loaded</label>
-            <value>Options not loaded</value>
-          </item>
-        </select1>
-        <input faims_attribute_name="Band Number" faims_attribute_type="measure" ref="Band_Number">
-          <label>{Band_Number}</label>
-        </input>
-        <input faims_attribute_name="Notes" faims_attribute_type="measure" ref="Notes">
-          <label>{Notes}</label>
-        </input>
-        <trigger ref="Add_Chick_Measurement">
-          <label>{Add_Chick_Measurement}</label>
-        </trigger>
-        <select1 appearance="compact" ref="Existing_Chick_Measurements" faims_style_class="fixedheightfive">
-          <label>{Last_5_Recorded_Chick_Measurements}</label>
-          <item>
-            <label>Options not loaded</label>
-            <value>Options not loaded</value>
-          </item>
-        </select1>
-      </group>
-    </group>
-    <group ref="Chick_Measurement" faims_archent_type="Chick Measurement">
-      <label>{Chick_Measurement}</label>
-      <group ref="Chick_Measurement">
-        <label>{Chick_Measurement}</label>
-        <input faims_attribute_name="Chick Measurement Chick ID" faims_attribute_type="measure" ref="Chick_Measurement_Chick_ID" faims_read_only="true">
-          <label>{Chick_ID}</label>
-        </input>
-        <input faims_attribute_name="Chick Measurement timestamp" faims_attribute_type="measure" ref="Chick_Measurement_timestamp" faims_read_only="true">
-          <label>{Chick_Measurement_Recorded_at}</label>
-        </input>
-        <select1 appearance="full" faims_attribute_name="Chick Alive" faims_attribute_type="vocab" ref="Chick_Alive">
-          <label>{Chick_Alive_}</label>
-          <item>
-            <label>Options not loaded</label>
-            <value>Options not loaded</value>
-          </item>
-        </select1>
-        <input faims_attribute_name="Chick Age days" faims_attribute_type="measure" ref="Chick_Age_days">
-          <label>{Chick_Age__days_}</label>
-        </input>
-        <input faims_attribute_name="Weight g" faims_attribute_type="measure" ref="Weight_g">
-          <label>{Weight__g_}</label>
-        </input>
-        <input faims_attribute_name="Head Length mm" faims_attribute_type="measure" ref="Head_Length_mm">
-          <label>{Head_Length__mm_}</label>
-        </input>
-        <input faims_attribute_name="Wing Length mm" faims_attribute_type="measure" ref="Wing_Length_mm">
-          <label>{Wing_Length__mm_}</label>
-        </input>
-        <input faims_attribute_name="Tarsus Length mm" faims_attribute_type="measure" ref="Tarsus_Length_mm">
-          <label>{Tarsus_Length__mm_}</label>
-        </input>
-        <input faims_attribute_name="Notes" faims_attribute_type="measure" ref="Notes">
-          <label>{Notes}</label>
-        </input>
-        <select faims_sync="true" type="camera" faims_attribute_name="Picture" faims_attribute_type="measure" ref="Picture">
-          <label>{Picture}</label>
-          <item>
-            <label>Options not loaded</label>
-            <value>Options not loaded</value>
-          </item>
-        </select>
-        <trigger ref="Picture_Button_1">
-          <label>{Picture}</label>
         </trigger>
       </group>
     </group>

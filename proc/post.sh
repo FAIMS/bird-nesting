@@ -1,45 +1,6 @@
 #!/usr/bin/env bash
 
-#cd data
-#tar -cvzf ../module/data.tar.gz *
-#cd ..
-
 cd module
-
-# I hate this regex so much. Anyway, what it does is match everything in the
-# function definition, including the name, parens and opening curly brace, but
-# excluding the closing curly brace. This allows us to stick a line right before
-# the closing curly brace.
-string="(new([a-zA-Z]+)\\(\\){((?!\\n}).)+)"
-replacement="\\1
-  inherit\\2Fields();"
-perl -0777 -i.original -pe "s/$string/$replacement/igs" ui_logic.bsh
-
-string="(newNestMeasurement\\(\\){((?!\\n}).)+)"
-replacement="\\1
-  initNestStatus();"
-perl -0777 -i.original -pe "s/$string/$replacement/igs" ui_logic.bsh
-
-string="<input ref=\"Revisit\">"
-replacement="<input ref=\"Revisit\" faims_table=\"true\">"
-perl -0777 -i.original -pe "s/\\Q$string/$replacement/igs" ui_schema.xml
-
-string="
-  addNavigationButton(\"duplicate\", new ActionButtonCallback() {
-    actionOnLabel() {
-      \"{Duplicate}\";
-    }
-    actionOn() {
-      if(!isNull(getUuid(tabgroup))) {
-          duplicateRecord(tabgroup);
-      } else {
-          showWarning(\"{Warning}\", \"{This_record_is_unsaved_and_cannot_be_duplicated}\");
-      }
-    }
-  }, \"primary\");
-"
-replacement=""
-perl -0777 -i.original -pe "s/\\Q$string/$replacement/igs" ui_logic.bsh
 
 echo "
 .fixedheightfive {
@@ -47,5 +8,62 @@ echo "
 }
 " >> ui_styling.css
 
-rm ui_logic.bsh.original
+
+
+string="
+        <select1 ref=\"Entity_Types\">
+          <label>{Entity_Types}<\/label>
+          <item>
+            <label>Options not loaded<\/label>
+            <value>Options not loaded<\/value>
+          <\/item>
+        <\/select1>"
+replacement="
+        <group ref=\"Colgroup_1\" faims_style=\"orientation\">
+          <label\/>
+          <group ref=\"Col_0\" faims_style=\"even\">
+            <label\/>
+            <select1 ref=\"Entity_Types\">
+              <label>{Entity_Types}<\/label>
+              <item>
+                <label>Options not loaded<\/label>
+                <value>Options not loaded<\/value>
+              <\/item>
+            <\/select1>
+          <\/group>
+          <group ref=\"Col_1\" faims_style=\"even\">
+            <label\/>
+            <select1 ref=\"Select_User\">
+              <label>{Select_User}<\/label>
+              <item>
+                <label>Options not loaded<\/label>
+                <value>Options not loaded<\/value>
+              <\/item>
+            <\/select1>
+          <\/group>
+        <\/group>"
+perl -0777 -i.original -pe "s/$string/$replacement/igs" ui_schema.xml
+
+string="
+              <Entity_Types\/>"
+replacement="
+              <Colgroup_1>
+                <Col_0>
+                  <Entity_Types\/>
+                <\/Col_0>
+                <Col_1>
+                  <Select_User\/>
+                <\/Col_1>
+              <\/Colgroup_1>"
+perl -0777 -i.original -pe "s/$string/$replacement/igs" ui_schema.xml
+
+string="<input ref=\"Most_Recent_Three_Nest_Visits\">"
+replacement="<input ref=\"Most_Recent_Three_Nest_Visits\" faims_table=\"true\">"
+perl -0777 -i.original -pe "s/\\Q$string/$replacement/igs" ui_schema.xml
+
+
+cat << EOF >> english.0.properties
+Select_User=Select User
+EOF
+
 rm ui_schema.xml.original

@@ -1,60 +1,20 @@
 <?xml version='1.0' encoding='utf-8'?>
 <dataSchema>
-  <RelationshipElement name="Box - Box Status" type="hierarchical">
-    <description>A 1-to-n relationship between the parent and its children, respectively.</description>
-    <parent>Parent Of</parent>
-    <child>Child Of</child>
-  </RelationshipElement>
-  <RelationshipElement name="Box - Nest" type="hierarchical">
-    <description>A 1-to-n relationship between the parent and its children, respectively.</description>
-    <parent>Parent Of</parent>
-    <child>Child Of</child>
-  </RelationshipElement>
   <RelationshipElement name="Nest - Nest Measurement" type="hierarchical">
     <description>A 1-to-n relationship between the parent and its children, respectively.</description>
     <parent>Parent Of</parent>
     <child>Child Of</child>
   </RelationshipElement>
-  <RelationshipElement name="Nest - Egg" type="hierarchical">
-    <description>A 1-to-n relationship between the parent and its children, respectively.</description>
-    <parent>Parent Of</parent>
-    <child>Child Of</child>
-  </RelationshipElement>
-  <RelationshipElement name="Nest - Chick" type="hierarchical">
-    <description>A 1-to-n relationship between the parent and its children, respectively.</description>
-    <parent>Parent Of</parent>
-    <child>Child Of</child>
-  </RelationshipElement>
-  <RelationshipElement name="Chick - Chick Measurement" type="hierarchical">
-    <description>A 1-to-n relationship between the parent and its children, respectively.</description>
-    <parent>Parent Of</parent>
-    <child>Child Of</child>
-  </RelationshipElement>
-  <ArchaeologicalElement name="Box">
+  <ArchaeologicalElement name="Nest">
     <description></description>
-    <property name="Box Box Prefix" type="vocab" isIdentifier="true">
+    <property name="Box ID" type="measure" isIdentifier="true">
       <description></description>
-      <formatString>Box-$1</formatString>
-      <appendCharacterString> - </appendCharacterString>
-      <lookup>
-        <term>{A}
-<description></description></term>
-        <term>{B}
-<description></description></term>
-        <term>{C}
-<description></description></term>
-        <term>{D}
-<description></description></term>
-      </lookup>
-    </property>
-    <property name="Box Box ID" type="measure" isIdentifier="true">
-      <description></description>
-      <formatString>$2-</formatString>
+      <formatString>$2</formatString>
       <appendCharacterString> - </appendCharacterString>
     </property>
-    <property name="Box Location Name" type="vocab" isIdentifier="true">
+    <property name="Location Name" type="vocab" isIdentifier="true">
       <description></description>
-      <formatString>$1</formatString>
+      <formatString> - $1</formatString>
       <appendCharacterString> - </appendCharacterString>
       <lookup>
         <term>{Gap_Hills}
@@ -75,77 +35,14 @@
 <description></description></term>
       </lookup>
     </property>
-    <property name="Latitude" type="measure">
+    <property name="Nest ID" type="measure" isIdentifier="true">
+      <description></description>
+      <formatString> - Nest $2</formatString>
+      <appendCharacterString> - </appendCharacterString>
+    </property>
+    <property name="Nest timestamp" type="measure">
       <description></description>
       <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Longitude" type="measure">
-      <description></description>
-      <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Northing" type="measure">
-      <description></description>
-      <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Easting" type="measure">
-      <description></description>
-      <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Accuracy" type="measure">
-      <description></description>
-      <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Height m" type="measure">
-      <description>Measure height above ground in metres.</description>
-      <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Orientation degrees" type="measure">
-      <description>Enter degrees of azimuth.</description>
-      <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Comments" type="measure">
-      <description></description>
-      <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Take Photo" type="file" file="true" thumbnail="true">
-      <description></description>
-      <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-  </ArchaeologicalElement>
-  <ArchaeologicalElement name="Box Status">
-    <description></description>
-    <property name="Box Status Box Prefix" type="vocab" isIdentifier="true">
-      <description></description>
-      <formatString>$1</formatString>
-      <appendCharacterString> - </appendCharacterString>
-      <lookup>
-        <term>{A}
-<description></description></term>
-        <term>{B}
-<description></description></term>
-        <term>{C}
-<description></description></term>
-        <term>{D}
-<description></description></term>
-      </lookup>
-    </property>
-    <property name="Box Status Box ID" type="measure" isIdentifier="true">
-      <description></description>
-      <formatString>$2-</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Box Status timestamp" type="measure" isIdentifier="true">
-      <description></description>
-      <formatString>$2</formatString>
       <appendCharacterString> - </appendCharacterString>
     </property>
     <property name="Box Status" type="vocab">
@@ -162,44 +59,6 @@
         <term>{No_Observation}
 <description></description></term>
       </lookup>
-    </property>
-  </ArchaeologicalElement>
-  <ArchaeologicalElement name="Nest">
-    <description></description>
-    <property name="Nest Nest ID" type="measure" isIdentifier="true">
-      <description></description>
-      <formatString>Nest-$2-</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Nest Box Prefix" type="vocab" isIdentifier="true">
-      <description></description>
-      <formatString>Box-$1</formatString>
-      <appendCharacterString> - </appendCharacterString>
-      <lookup>
-        <term>{A}
-<description></description></term>
-        <term>{B}
-<description></description></term>
-        <term>{C}
-<description></description></term>
-        <term>{D}
-<description></description></term>
-      </lookup>
-    </property>
-    <property name="Nest Box ID" type="measure" isIdentifier="true">
-      <description></description>
-      <formatString>$2-</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Nest Location Name" type="measure" isIdentifier="true">
-      <description></description>
-      <formatString>$2</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Nest timestamp" type="measure">
-      <description></description>
-      <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
-      <appendCharacterString> - </appendCharacterString>
     </property>
     <property name="Nest Completed at" type="measure">
       <description></description>
@@ -224,14 +83,45 @@
   </ArchaeologicalElement>
   <ArchaeologicalElement name="Nest Measurement">
     <description></description>
-    <property name="Nest Measurement Nest ID" type="measure" isIdentifier="true">
+    <property name="Box ID" type="measure" isIdentifier="true">
       <description></description>
-      <formatString>Nest-$2-</formatString>
+      <formatString>$2</formatString>
+      <appendCharacterString> - </appendCharacterString>
+    </property>
+    <property name="Location Name" type="vocab" isIdentifier="true">
+      <description></description>
+      <formatString> - $1</formatString>
+      <appendCharacterString> - </appendCharacterString>
+      <lookup>
+        <term>{Gap_Hills}
+<description></description></term>
+        <term>{Saloon}
+<description></description></term>
+        <term>{Sandsone}
+<description></description></term>
+        <term>{White_Tank}
+<description></description></term>
+        <term>{Old_Aviary}
+<description></description></term>
+        <term>{New_Aviary}
+<description></description></term>
+        <term>{W19G}
+<description></description></term>
+        <term>{W19F}
+<description></description></term>
+      </lookup>
+    </property>
+    <property name="Nest Measurement Nest ID" type="measure" isIdentifier="true">
+      <description>
+      This should be a unique number for this box, please search for the most
+      recent record in this box if unsure.
+    </description>
+      <formatString> - Nest $2</formatString>
       <appendCharacterString> - </appendCharacterString>
     </property>
     <property name="Nest Measurement timestamp" type="measure" isIdentifier="true">
       <description></description>
-      <formatString>$2</formatString>
+      <formatString> - $2</formatString>
       <appendCharacterString> - </appendCharacterString>
     </property>
     <property name="Nest Status" type="vocab">
@@ -264,182 +154,28 @@
       <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
       <appendCharacterString> - </appendCharacterString>
     </property>
-  </ArchaeologicalElement>
-  <ArchaeologicalElement name="Egg">
-    <description></description>
-    <property name="Egg ID" type="measure" isIdentifier="true">
-      <description></description>
-      <formatString>Egg-$2-</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Egg Nest ID" type="measure" isIdentifier="true">
-      <description></description>
-      <formatString>Nest-$2-</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Egg Box Prefix" type="vocab" isIdentifier="true">
-      <description></description>
-      <formatString>Box-$1</formatString>
-      <appendCharacterString> - </appendCharacterString>
-      <lookup>
-        <term>{A}
-<description></description></term>
-        <term>{B}
-<description></description></term>
-        <term>{C}
-<description></description></term>
-        <term>{D}
-<description></description></term>
-      </lookup>
-    </property>
-    <property name="Egg Box ID" type="measure" isIdentifier="true">
-      <description></description>
-      <formatString>$2-</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Egg Location Name" type="measure" isIdentifier="true">
-      <description></description>
-      <formatString>$2-</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Egg timestamp" type="measure" isIdentifier="true">
-      <description></description>
-      <formatString>$2</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Egg Length mm" type="measure">
+    <property name="Egg Measurements" type="measure">
       <description></description>
       <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
       <appendCharacterString> - </appendCharacterString>
     </property>
-    <property name="Egg Width mm" type="measure">
-      <description></description>
+    <property name="Tarsus" type="measure">
+      <description>TARSUS hfl:1.2;hfr:1.3;hbl:1.5 (unit=mm)</description>
       <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
       <appendCharacterString> - </appendCharacterString>
     </property>
-    <property name="Egg Weight g" type="measure">
-      <description></description>
+    <property name="Wing" type="measure">
+      <description>WING hfl:4.3;hfr:4.5;hbl:4 (unit=mm)</description>
       <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
       <appendCharacterString> - </appendCharacterString>
     </property>
-  </ArchaeologicalElement>
-  <ArchaeologicalElement name="Chick">
-    <description></description>
-    <property name="Chick Chick ID" type="measure" isIdentifier="true">
-      <description></description>
-      <formatString>Chick $2-</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Chick Nest ID" type="measure" isIdentifier="true">
-      <description></description>
-      <formatString>Nest-$2-</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Chick Box Prefix" type="vocab" isIdentifier="true">
-      <description></description>
-      <formatString>Box-$1</formatString>
-      <appendCharacterString> - </appendCharacterString>
-      <lookup>
-        <term>{A}
-<description></description></term>
-        <term>{B}
-<description></description></term>
-        <term>{C}
-<description></description></term>
-        <term>{D}
-<description></description></term>
-      </lookup>
-    </property>
-    <property name="Chick Box ID" type="measure" isIdentifier="true">
-      <description></description>
-      <formatString>$2-</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Chick Location Name" type="measure" isIdentifier="true">
-      <description></description>
-      <formatString>$2-</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Chick timestamp" type="measure" isIdentifier="true">
-      <description></description>
-      <formatString>$2</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Bird Species" type="vocab">
-      <description></description>
-      <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
-      <appendCharacterString> - </appendCharacterString>
-      <lookup>
-        <term>{Zebra_Finch}
-<description></description></term>
-        <term>{Long_Tailed_Finch}
-<description></description></term>
-        <term>{House_Sparrow}
-<description></description></term>
-        <term>{Other}
-<description></description></term>
-        <term>{No_Observation}
-<description></description></term>
-      </lookup>
-    </property>
-    <property name="Band Number" type="measure">
-      <description></description>
+    <property name="Weight" type="measure">
+      <description>WEIGHT hfl:5;hfr:5.1;hbl:4.8 (unit=gr)</description>
       <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
       <appendCharacterString> - </appendCharacterString>
     </property>
-    <property name="Notes" type="measure">
-      <description></description>
-      <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-  </ArchaeologicalElement>
-  <ArchaeologicalElement name="Chick Measurement">
-    <description></description>
-    <property name="Chick Measurement Chick ID" type="measure" isIdentifier="true">
-      <description></description>
-      <formatString>Chick-$2-</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Chick Measurement timestamp" type="measure" isIdentifier="true">
-      <description></description>
-      <formatString>$2</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Chick Alive" type="vocab">
-      <description></description>
-      <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
-      <appendCharacterString> - </appendCharacterString>
-      <lookup>
-        <term>{Yes}
-<description></description></term>
-        <term>{No}
-<description></description></term>
-        <term>{No_Observation}
-<description></description></term>
-      </lookup>
-    </property>
-    <property name="Chick Age days" type="measure">
-      <description></description>
-      <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Weight g" type="measure">
-      <description></description>
-      <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Head Length mm" type="measure">
-      <description></description>
-      <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Wing Length mm" type="measure">
-      <description></description>
-      <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
-      <appendCharacterString> - </appendCharacterString>
-    </property>
-    <property name="Tarsus Length mm" type="measure">
-      <description></description>
+    <property name="Blood" type="measure">
+      <description>BLEEDING hfl:yes;hfr:yes;hbl:no</description>
       <formatString>{{if $1 then $1}}{{if and($1, $2) then " " }}{{if $2 then $2}}{{if $3 then " ($3)"}}{{if between($4,0,0.49) then "??" elsif lessThan($4,1) then "?" }}</formatString>
       <appendCharacterString> - </appendCharacterString>
     </property>
