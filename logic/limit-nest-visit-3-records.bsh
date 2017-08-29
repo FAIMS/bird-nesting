@@ -85,8 +85,10 @@ void updateNestMeasurementQuery() {
 void updateNestMeasurementQuery(String callback) {
   String drop1Q = "";
   String drop2Q = "";
+  String drop3Q = "";
   String make1Q = "";
   String make2Q = "";
+  String make3Q = "";
 
   drop1Q  = " drop table if exists materialisedlatestnondeletedaentvalue";
 
@@ -119,6 +121,28 @@ void updateNestMeasurementQuery(String callback) {
   make2Q += "            join attributekey using (attributeid)";
   make2Q += "          where attributename = 'Hatched Chick Count Live') USING (uuid)";
 
+  drop3Q = "drop table if exists latestNonDeletedMaterialisedArchEntFormattedIdentifiers";
+
+  make3Q  = "create table if not exists latestNonDeletedMaterialisedArchEntFormattedIdentifiers as";
+  make3Q += "  select uuid, aenttypeid, aenttypename, group_concat(response, '') as response, null as deleted";
+  make3Q += "  from (";
+  make3Q += "    select uuid, aenttypeid, aenttypename, group_concat(format(formatstring, vocabname, measure, freetext, certainty), appendcharacterstring) as response, null as deleted, aentcountorder";
+  make3Q += "    from (";
+  make3Q += "      select uuid, aenttypeid, aenttypename, formatstring, vocabname, measure, freetext, certainty, appendcharacterstring, null as deleted, aentcountorder, vocabcountorder, attributeid";
+  make3Q += "      from latestNonDeletedArchent";
+  make3Q += "        JOIN aenttype using (aenttypeid)";
+  make3Q += "        JOIN (select * from idealaent where isIdentifier='true') using (aenttypeid)";
+  make3Q += "        join attributekey  using (attributeid)";
+  make3Q += "        join materialisedlatestnondeletedaentvalue using (uuid, attributeid)";
+  make3Q += "        left outer join vocabulary using (attributeid, vocabid)";
+  make3Q += "      order by uuid, aentcountorder, vocabcountorder";
+  make3Q += "    )";
+  make3Q += "    group by uuid, attributeid";
+  make3Q += "    having response is not null";
+  make3Q += "    order by uuid, aentcountorder)";
+  make3Q += "  group by uuid";
+  make3Q += "  order by uuid";
+
   FetchCallback cb = new FetchCallback() {
     onFetch(result) {
       hideUpdatingVisitListDialog();
@@ -127,20 +151,37 @@ void updateNestMeasurementQuery(String callback) {
     }
   };
 
+  FetchCallback make3 = new FetchCallback() {
+    onFetch(result) {
+      print("make3");
+      fetchOne(make3Q, cb);
+    }
+  };
+
+  FetchCallback drop3 = new FetchCallback() {
+    onFetch(result) {
+      print("drop3");
+      fetchOne(drop3Q, make3);
+    }
+  };
+
   FetchCallback make2 = new FetchCallback() {
     onFetch(result) {
-      fetchOne(make2Q, cb);
+      print("make2");
+      fetchOne(make2Q, drop3);
     }
   };
 
   FetchCallback drop2 = new FetchCallback() {
     onFetch(result) {
+      print("drop2");
       fetchOne(drop2Q, make2);
     }
   };
 
   FetchCallback make1 = new FetchCallback() {
     onFetch(result) {
+      print("make1");
       fetchOne(make1Q, drop2);
     }
   };
