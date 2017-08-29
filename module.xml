@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--TODO: fix loadBoxFrom callbacks and loadXFrom callbacks-->
 <!--@POSTPROC: ./proc/post.sh-->
-<module suppressWarnings="true" test_mode="true">
+<module>
 
 <Login f="nodata">
   <Login f="noscroll">
