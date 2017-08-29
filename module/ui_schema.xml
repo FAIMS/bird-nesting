@@ -78,6 +78,7 @@
               <Add_Nest_Visit/>
             </Nest>
             <List_of_Nest_Visits>
+              <Update_Visit_list/>
               <Most_Recent_Three_Nest_Visits/>
             </List_of_Nest_Visits>
           </Nest>
@@ -307,13 +308,12 @@
       </group>
       <group ref="List_of_Nest_Visits" faims_scrollable="false">
         <label>{List_of_Nest_Visits}</label>
-        <select1 appearance="compact" ref="Most_Recent_Three_Nest_Visits">
+        <trigger ref="Update_Visit_list">
+          <label>{Update_Visit_list}</label>
+        </trigger>
+        <input ref="Most_Recent_Three_Nest_Visits" faims_table="true">
           <label>{Most_Recent_Three_Nest_Visits}</label>
-          <item>
-            <label>Options not loaded</label>
-            <value>Options not loaded</value>
-          </item>
-        </select1>
+        </input>
       </group>
     </group>
     <group ref="Nest_Measurement" faims_archent_type="Nest Measurement">

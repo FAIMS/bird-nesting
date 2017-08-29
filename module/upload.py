@@ -64,7 +64,8 @@ else:
 moduleName = moduleLocation.split(os.sep)
 if moduleName[-1] == 'module': moduleName = moduleName[-2]
 else:                          moduleName = moduleName[-1]
-moduleName += datetime.now().strftime(' %Y-%m-%d')
+#moduleName += datetime.now().strftime(' %Y-%m-%d')
+moduleName += ' 2017-08-28'
 
 # Check that all the given paths really exist
 if not os.path.exists(moduleLocation):

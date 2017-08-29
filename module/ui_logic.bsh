@@ -234,7 +234,8 @@ REF_TO_TYPE.put("Nest/Nest/Estimated_Day_of_Hatching", "input");
 REF_TO_TYPE.put("Nest/Nest/Set_Actual_Day_of_Hatching", "button");
 REF_TO_TYPE.put("Nest/Nest/Actual_Day_of_Hatching", "input");
 REF_TO_TYPE.put("Nest/Nest/Add_Nest_Visit", "button");
-REF_TO_TYPE.put("Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits", "list");
+REF_TO_TYPE.put("Nest/List_of_Nest_Visits/Update_Visit_list", "button");
+REF_TO_TYPE.put("Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits", "input");
 REF_TO_TYPE.put("Nest_Measurement/Nest_Measurement/Nest_Measurement_Nest_ID", "input");
 REF_TO_TYPE.put("Nest_Measurement/Nest_Measurement/Nest_Status", "dropdown");
 REF_TO_TYPE.put("Nest_Measurement/Nest_Measurement/Egg_Count", "input");
@@ -1017,7 +1018,7 @@ AtomicInteger         PERF_NUM_CBS_TODO_SET  = null;
 boolean               PERF_ALLOW_CREATION    = false;
 String                PERF_TEST_IMG          = "";
                       PERF_TYPE_TREE         = null;
-int                   PERF_PHOTOS_PER_FIELD  = 0;
+int                   PERF_PHOTOS_PER_FIELD  = 1;
 
 int getNumPhotos() {
   return getNumPhotos(PERF_TYPE_TREE);
@@ -4044,9 +4045,10 @@ for (tabGroup : getTabGroups())
 /* constrain their searches by user.                                          */
 /******************************************************************************/
 delOnEvent("Control/Search", "show", "search()");
-addOnEvent("Control/Search", "show", "populateSelectUser()");
-addOnEvent("Control/Search/Select_User", "click", "search()");
+delOnEvent("Control/Search/Entity_Types", "click" , "search()");
 
+addOnEvent("Control/Search", "show", "initSearchResultList()");
+addOnEvent("Control/Search", "show", "populateSelectUser()");
 
 void populateSelectUser(){
   String refSearchUsers = "Control/Search/Select_User";
@@ -4059,11 +4061,9 @@ void populateSelectUser(){
   timedFetchAll(getNonDeletedUsersQuery, new FetchCallback() {
     onFetch(result) {
       populateDropDown(refSearchUsers, result, false);
-      search();
     }
   });
 }
-
 
 void search(){
   String tabgroup = "Control";
@@ -4075,58 +4075,192 @@ void search(){
   String type = getFieldValue(refEntityTypes);
   String term = getFieldValue(refSearchTerm);
   String user = getFieldValue(refSelectUser);
-  //System.out.println(name);
   if (isNull(user)) return;
-  String searchQuery = "SELECT uuid, response " +
-                       "  FROM latestNonDeletedArchEntFormattedIdentifiers  " +
-                       " WHERE uuid in (SELECT uuid " +
-                       "                  FROM latestNonDeletedArchEntIdentifiers " +
-                       "                 WHERE measure LIKE '{term}%'  " +
-                       "                   AND ( aenttypename LIKE '{type}' OR '' = '{type}' ) " +
-                       "                   AND ( userid = {user} OR -1 = {user}) " +
-                       "                ) " +
-                       " ORDER BY substr(uuid, 7, 13) DESC " +
-                       " LIMIT ? " +
-                       "OFFSET ? ";
-  searchQuery = replaceFirst(searchQuery, "{term}", term);
-  searchQuery = replaceFirst(searchQuery, "{type}", type);
-  searchQuery = replaceFirst(searchQuery, "{type}", type);
-  searchQuery = replaceFirst(searchQuery, "{user}", user);
-  searchQuery = replaceFirst(searchQuery, "{user}", user);
 
-  timedPopulateCursorList(refEntityList, searchQuery, 25);
+  String searchQuery = "";
+  String drop1Q = "";
+  String make1Q = "";
+  String drop2Q = "";
+  String make2Q = "";
+  String doRegenQ = "";
+
+  searchQuery = "SELECT uuid, response" +
+                "  FROM latestNonDeletedMaterialisedArchEntFormattedIdentifiers" +
+                " WHERE uuid in (SELECT uuid" +
+                "                 FROM materialisedlatestnondeletedaentvalue" +
+                "                 WHERE measure = {term}" +
+                "                   AND attributeid in (select attributeid from attributekey where attributename = 'Box ID')" +
+                "                   AND ( userid = {user} OR -1 = {user})" +
+                "             )" +
+                " AND ( aenttypename = {type} OR '' = {type} )" +
+                " ORDER BY substr(uuid, 7, 13) desc, response" +
+                "  LIMIT ? "+
+                " OFFSET ? ";
+
+  searchQuery = dbReplaceFirst(searchQuery, "{term}", term);
+  searchQuery = dbReplaceFirst(searchQuery, "{type}", type);
+  searchQuery = dbReplaceFirst(searchQuery, "{type}", type);
+  searchQuery =   replaceFirst(searchQuery, "{user}", user);
+  searchQuery =   replaceFirst(searchQuery, "{user}", user);
+
+  drop1Q  = " drop table if exists materialisedlatestnondeletedaentvalue";
+
+  make1Q  = " create table materialisedlatestnondeletedaentvalue as";
+  make1Q += " select * from latestnondeletedaentvalue";
+
+  drop2Q  = " drop table if exists latestNonDeletedMaterialisedArchEntFormattedIdentifiers";
+
+  make2Q  = " create table if not exists latestNonDeletedMaterialisedArchEntFormattedIdentifiers as";
+  make2Q += "   select uuid, aenttypeid, aenttypename, group_concat(response, '') as response, null as deleted";
+  make2Q += "   from (";
+  make2Q += "     select uuid, aenttypeid, aenttypename, group_concat(format(formatstring, vocabname, measure, freetext, certainty), appendcharacterstring) as response, null as deleted, aentcountorder";
+  make2Q += "     from (";
+  make2Q += "       select uuid, aenttypeid, aenttypename, formatstring, vocabname, measure, freetext, certainty, appendcharacterstring, null as deleted, aentcountorder, vocabcountorder, attributeid";
+  make2Q += "       from latestNonDeletedArchent";
+  make2Q += "         JOIN aenttype using (aenttypeid)";
+  make2Q += "         JOIN (select * from idealaent where isIdentifier='true') using (aenttypeid)";
+  make2Q += "         join attributekey  using (attributeid)";
+  make2Q += "         join materialisedlatestnondeletedaentvalue using (uuid, attributeid)";
+  make2Q += "         left outer join vocabulary using (attributeid, vocabid)";
+  make2Q += "       order by uuid, aentcountorder, vocabcountorder";
+  make2Q += "     )";
+  make2Q += "     group by uuid, attributeid";
+  make2Q += "     having response is not null";
+  make2Q += "     order by uuid, aentcountorder)";
+  make2Q += "   group by uuid";
+  make2Q += "   order by uuid";
+
+  doRegenQ  = "select matTS != avTS";
+  doRegenQ += "  from (";
+  doRegenQ += "        select max(valuetimestamp) as matTS";
+  doRegenQ += "          from materialisedlatestnondeletedaentvalue),";
+  doRegenQ += "               (select max(valuetimestamp) as avTS";
+  doRegenQ += "               from aentvalue);";
+
+  FetchCallback search = new FetchCallback() {
+    onFetch(result) {
+      print("search");
+      timedPopulateCursorList(refEntityList, searchQuery, 25);
+    }
+    onError(message) {
+      doRegen.onFetch(null);
+    }
+  };
+
+  FetchCallback make2 = new FetchCallback() {
+    onFetch(result) {
+      print("make2");
+      timedFetchOne(make2Q, search);
+    }
+  };
+
+  FetchCallback drop2 = new FetchCallback() {
+    onFetch(result) {
+      print("drop2");
+      timedFetchOne(drop2Q, make2);
+    }
+  };
+
+  FetchCallback make1 = new FetchCallback() {
+    onFetch(result) {
+      print("make1");
+      timedFetchOne(make1Q, drop2);
+    }
+  };
+
+  FetchCallback doRegen = new FetchCallback() {
+    onFetch(result) {
+      if      (isNull(result)) {
+        print("null");
+        timedFetchOne(drop1Q, make1);
+      } else if (result.get(0).equals("1")) {
+        print("equals 1");
+        timedFetchOne(drop1Q, make1);
+      } else {
+        print("equals 0");
+        search.onFetch(null);
+      }
+    }
+    onError(message) {
+      timedFetchOne(drop1Q, make1);
+    }
+  };
+
+  loadingResults(refEntityList);
+  timedFetchOne(doRegenQ, doRegen);
   refreshTabgroupCSS(tabgroup);
 
   Log.d("Module", "Search query: " + searchQuery);
 }
+
+void initSearchResultList() {
+  List l = new ArrayList();
+  l.add(new NameValuePair("Tap 'Search' to update this list", ""));
+  populateMenu("Control/Search/Entity_List", l);
+}
+
+void loadingResults(String ref) {
+  List l = new ArrayList();
+  l.add(new NameValuePair("Loading results...", ""));
+  populateMenu(ref, l);
+}
 /********************************* Limit By 3 *********************************/
 addOnEvent("Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits", "show", "loadMostRecentThree()");
+addOnEvent("Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits", "click" , "loadEntity()");
+addOnEvent("module", "load" , "addVisitListsActionBarItem()");
+addOnEvent("Nest/List_of_Nest_Visits/Update_Visit_list", "click" , "updateVisitList()");
+
+String getMostRecentThreeQuery() {
+  String refExistingNestVisit = "Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits";
+  String boxId  = getFieldValue("Nest/Nest/Box_ID");
+  String nestId = getFieldValue("Nest/Nest/Nest_ID");
+
+  String q = "";
+  q += "   SELECT uuid, timestamp, eggCount, chickCount";
+  q += "     FROM nestMeasurementQuery";
+  q += "    WHERE boxID = {boxId}";
+  q += "      AND nestID = {nestId}";
+  q += " ORDER BY timestamp DESC";
+  q += " LIMIT 3";
+  q  = dbReplaceFirst(q, "{boxId}",  boxId);
+  q  = dbReplaceFirst(q, "{nestId}", nestId);
+
+  return q;
+}
 
 void loadMostRecentThree() {
+  String q        = getMostRecentThreeQuery();
+  String tableRef = "Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits";
+
+  headers        = new ArrayList();
+  actionName     = "Revisit";
+  actionIdx      = 0;
+  actionCallback = "loadEntityFromTable()";
+
+  headers.add("Visit");
+  headers.add("Timestamp");
+  headers.add("Egg Count");
+  headers.add("Chick Count");
+
+  populateTableRaw(
+      tableRef,
+      q,
+      headers,
+      actionName,
+      actionIdx,
+      actionCallback
+  );
+}
+
+void loadEntityFromTable() {
+  String uuid = getTableValue();
+  loadEntityFrom(uuid); // Auto-gen'd function
+}
+
+void updateVisitList() {
   String refExistingNestVisit = "Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits";
-  String tabgroup = "Nest";
-  String uuid = getUuid(tabgroup);
-  if(isNull(uuid))
-    return;
-  String query =  "select uuid, response " +
-                  "  from latestNonDeletedArchEntFormattedIdentifiers" +
-                  " where aenttypename = 'Nest Measurement'" +
-                  "   and uuid in (select childuuid" +
-                  "                  from parentchild" +
-                  "                 where parentuuid = {puuid}" +
-                  "                 order by createdat desc" +
-                  "                 limit 3)" +
-                  "   order by substr(uuid, 7, 13) desc" +
-                  " ;";
-
-  query = dbReplaceFirst(query, "{puuid}", uuid);
-
-  timedFetchAll(query, new FetchCallback() {
-    onFetch(result) {
-      populateList(refExistingNestVisit,result);
-    }
-  });
-  Log.d("Module", "Search query: " + q);
+  updatingResults(refExistingNestVisit);
+  updateNestMeasurementQuery("loadMostRecentThree()");
 }
 
 void reallyDeleteRecord(String tabgroup) {
@@ -4149,6 +4283,109 @@ void reallyDeleteRecord(String tabgroup) {
   populateEntityListsOfArchEnt(tabgroup);
   executeOnEvent(tabgroup, "delete");
 }
+
+void updateNestMeasurementQuery() {
+  updateNestMeasurementQuery("");
+}
+
+void updateNestMeasurementQuery(String callback) {
+  String drop1Q = "";
+  String drop2Q = "";
+  String make1Q = "";
+  String make2Q = "";
+
+  drop1Q  = " drop table if exists materialisedlatestnondeletedaentvalue";
+
+  make1Q  = " create table materialisedlatestnondeletedaentvalue as";
+  make1Q += " select * from latestnondeletedaentvalue";
+
+  drop2Q  = " drop table if exists nestMeasurementQuery";
+
+  make2Q  = " create table nestMeasurementQuery as";
+  make2Q += " ";
+  make2Q += " select uuid, boxID, nestID, timestamp, eggCount, chickCount";
+  make2Q += "   from (select uuid, measure as boxID";
+  make2Q += "            from latestnondeletedaentvalue";
+  make2Q += "            join attributekey using (attributeid)";
+  make2Q += "          where attributename = 'Box ID')";
+  make2Q += "   join (select uuid, measure as nestID";
+  make2Q += "            from latestnondeletedaentvalue";
+  make2Q += "            join attributekey using (attributeid)";
+  make2Q += "          where attributename = 'Nest Measurement Nest ID') USING (uuid)";
+  make2Q += "   join (select uuid, measure as timestamp";
+  make2Q += "            from latestnondeletedaentvalue";
+  make2Q += "            join attributekey using (attributeid)";
+  make2Q += "          where attributename = 'Nest Measurement timestamp') USING (uuid)";
+  make2Q += "   join (select uuid, measure as EggCount";
+  make2Q += "            from latestnondeletedaentvalue";
+  make2Q += "            join attributekey using (attributeid)";
+  make2Q += "          where attributename = 'Egg Count') USING (uuid)";
+  make2Q += "   join (select uuid, measure as chickCount";
+  make2Q += "            from latestnondeletedaentvalue";
+  make2Q += "            join attributekey using (attributeid)";
+  make2Q += "          where attributename = 'Hatched Chick Count Live') USING (uuid)";
+
+  FetchCallback cb = new FetchCallback() {
+    onFetch(result) {
+      hideUpdatingVisitListDialog();
+      if (!isNull(callback))
+        execute(callback);
+    }
+  };
+
+  FetchCallback make2 = new FetchCallback() {
+    onFetch(result) {
+      timedFetchOne(make2Q, cb);
+    }
+  };
+
+  FetchCallback drop2 = new FetchCallback() {
+    onFetch(result) {
+      timedFetchOne(drop2Q, make2);
+    }
+  };
+
+  FetchCallback make1 = new FetchCallback() {
+    onFetch(result) {
+      timedFetchOne(make1Q, drop2);
+    }
+  };
+
+  showUpdatingVisitListDialog();
+  timedFetchOne(drop1Q, make1);
+}
+
+void addVisitListsActionBarItem() {
+  ActionButtonCallback updateVisitList = new ActionButtonCallback() {
+      actionOnLabel() {
+        "Update Visit Lists";
+      }
+      actionOn() {
+        updateNestMeasurementQuery();
+      }
+  };
+  addActionBarItem("update_visit_list", updateVisitList);
+}
+
+void updatingResults(String ref) {
+  List l = new ArrayList();
+  l.add(new NameValuePair("Updating results...", ""));
+  populateMenu(ref, l);
+}
+
+void showUpdatingVisitListDialog() {
+  String head = "Updating Visit Lists...";
+  String body = "This pop-up will disappear when complete. Please wait.";
+
+  dialog = showBusy(head, body);
+}
+
+void hideUpdatingVisitListDialog() {
+  if (dialog != null)
+    dialog.dismiss();
+}
+setFileSyncEnabled(false);
+setSyncEnabled    (false);
 
 
 /******************************************************************************/

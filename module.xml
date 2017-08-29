@@ -67,7 +67,10 @@
     <Add_Nest_Visit t="button" lc="Nest_Measurement"/>
   </Nest>
   <List_of_Nest_Visits f="noscroll">
-    <Most_Recent_Three_Nest_Visits t="list" f="nodata"/>
+    <Update_Visit_list t="button"/>
+    <Most_Recent_Three_Nest_Visits f="nodata">
+      <!--@POSTPROC turns this into a tableview-->
+    </Most_Recent_Three_Nest_Visits>
   </List_of_Nest_Visits>
 </Nest>
 
@@ -166,5 +169,6 @@
   <!--@SOURCE: logic/duplicate-button.bsh-->
   <!--@SOURCE: logic/custom-search.bsh-->
   <!--@SOURCE: logic/limit-nest-visit-3-records.bsh-->
+  <!--@SOURCE: logic/sync-disable.bsh-->
 ]]></logic>
 </module>

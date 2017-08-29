@@ -57,6 +57,10 @@ replacement="
               <\/Colgroup_1>"
 perl -0777 -i.original -pe "s/$string/$replacement/igs" ui_schema.xml
 
+string="<input ref=\"Most_Recent_Three_Nest_Visits\">"
+replacement="<input ref=\"Most_Recent_Three_Nest_Visits\" faims_table=\"true\">"
+perl -0777 -i.original -pe "s/\\Q$string/$replacement/igs" ui_schema.xml
+
 
 cat << EOF >> english.0.properties
 Select_User=Select User

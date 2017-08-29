@@ -186,6 +186,15 @@ public class ModuleUtil extends ModuleHelper {
 
     /*
         Type: button
+        Ref:  Nest/List_of_Nest_Visits/Update_Visit_list
+     */
+    public static View get_Nest_ListofNestVisits_UpdateVisitlist(Solo solo) {
+        String ref = "Nest/List_of_Nest_Visits/Update_Visit_list";
+        return (android.view.View) solo.getView((Object) ref);
+    }
+
+    /*
+        Type: button
         Ref:  Nest/Nest/Add_Nest_Visit
      */
     public static View get_Nest_Nest_AddNestVisit(Solo solo) {
@@ -316,6 +325,15 @@ public class ModuleUtil extends ModuleHelper {
      */
     public static EditText get_DayofLay_DayofLay_DayofLay(Solo solo) {
         String ref = "Day_of_Lay/Day_of_Lay/Day_of_Lay";
+        return (android.widget.EditText) solo.getView((Object) ref);
+    }
+
+    /*
+        Type: input
+        Ref:  Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits
+     */
+    public static EditText get_Nest_ListofNestVisits_MostRecentThreeNestVisits(Solo solo) {
+        String ref = "Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits";
         return (android.widget.EditText) solo.getView((Object) ref);
     }
 
@@ -487,15 +505,6 @@ public class ModuleUtil extends ModuleHelper {
      */
     public static View get_Login_Login_User(Solo solo) {
         String ref = "Login/Login/User";
-        return (android.view.View) solo.getView((Object) ref);
-    }
-
-    /*
-        Type: list
-        Ref:  Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits
-     */
-    public static View get_Nest_ListofNestVisits_MostRecentThreeNestVisits(Solo solo) {
-        String ref = "Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits";
         return (android.view.View) solo.getView((Object) ref);
     }
 

@@ -1,31 +1,60 @@
 /********************************* Limit By 3 *********************************/
 addOnEvent("Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits", "show", "loadMostRecentThree()");
+addOnEvent("Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits", "click" , "loadEntity()");
+addOnEvent("module", "load" , "addVisitListsActionBarItem()");
+addOnEvent("Nest/List_of_Nest_Visits/Update_Visit_list", "click" , "updateVisitList()");
+
+String getMostRecentThreeQuery() {
+  String refExistingNestVisit = "Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits";
+  String boxId  = getFieldValue("Nest/Nest/Box_ID");
+  String nestId = getFieldValue("Nest/Nest/Nest_ID");
+
+  String q = "";
+  q += "   SELECT uuid, timestamp, eggCount, chickCount";
+  q += "     FROM nestMeasurementQuery";
+  q += "    WHERE boxID = {boxId}";
+  q += "      AND nestID = {nestId}";
+  q += " ORDER BY timestamp DESC";
+  q += " LIMIT 3";
+  q  = dbReplaceFirst(q, "{boxId}",  boxId);
+  q  = dbReplaceFirst(q, "{nestId}", nestId);
+
+  return q;
+}
 
 void loadMostRecentThree() {
+  String q        = getMostRecentThreeQuery();
+  String tableRef = "Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits";
+
+  headers        = new ArrayList();
+  actionName     = "Revisit";
+  actionIdx      = 0;
+  actionCallback = "loadEntityFromTable()";
+
+  headers.add("Visit");
+  headers.add("Timestamp");
+  headers.add("Egg Count");
+  headers.add("Chick Count");
+
+  populateTableRaw(
+      tableRef,
+      q,
+      headers,
+      actionName,
+      actionIdx,
+      actionCallback
+  );
+}
+
+void loadEntityFromTable() {
+  String uuid = getTableValue();
+  loadEntityFrom(uuid); // Auto-gen'd function
+}
+
+void updateVisitList() {
   String refExistingNestVisit = "Nest/List_of_Nest_Visits/Most_Recent_Three_Nest_Visits";
-  String tabgroup = "Nest";
-  String uuid = getUuid(tabgroup);
-  if(isNull(uuid))
-    return;
-  String query =  "select uuid, response " +
-                  "  from latestNonDeletedArchEntFormattedIdentifiers" +
-                  " where aenttypename = 'Nest Measurement'" +
-                  "   and uuid in (select childuuid" +
-                  "                  from parentchild" +
-                  "                 where parentuuid = {puuid}" +
-                  "                 order by createdat desc" +
-                  "                 limit 3)" +
-                  "   order by substr(uuid, 7, 13) desc" +
-                  " ;";
-
-  query = dbReplaceFirst(query, "{puuid}", uuid);
-
-  fetchAll(query, new FetchCallback() {
-    onFetch(result) {
-      populateList(refExistingNestVisit,result);
-    }
-  });
-  Log.d("Module", "Search query: " + q);
+  updatingResults(refExistingNestVisit);
+  updateNestMeasurementQuery("loadMostRecentThree()");
 }
 
 void reallyDeleteRecord(String tabgroup) {
@@ -47,4 +76,105 @@ void reallyDeleteRecord(String tabgroup) {
   cancelTabGroup(tabgroup, false);
   populateEntityListsOfArchEnt(tabgroup);
   executeOnEvent(tabgroup, "delete");
+}
+
+void updateNestMeasurementQuery() {
+  updateNestMeasurementQuery("");
+}
+
+void updateNestMeasurementQuery(String callback) {
+  String drop1Q = "";
+  String drop2Q = "";
+  String make1Q = "";
+  String make2Q = "";
+
+  drop1Q  = " drop table if exists materialisedlatestnondeletedaentvalue";
+
+  make1Q  = " create table materialisedlatestnondeletedaentvalue as";
+  make1Q += " select * from latestnondeletedaentvalue";
+
+  drop2Q  = " drop table if exists nestMeasurementQuery";
+
+  make2Q  = " create table nestMeasurementQuery as";
+  make2Q += " ";
+  make2Q += " select uuid, boxID, nestID, timestamp, eggCount, chickCount";
+  make2Q += "   from (select uuid, measure as boxID";
+  make2Q += "            from latestnondeletedaentvalue";
+  make2Q += "            join attributekey using (attributeid)";
+  make2Q += "          where attributename = 'Box ID')";
+  make2Q += "   join (select uuid, measure as nestID";
+  make2Q += "            from latestnondeletedaentvalue";
+  make2Q += "            join attributekey using (attributeid)";
+  make2Q += "          where attributename = 'Nest Measurement Nest ID') USING (uuid)";
+  make2Q += "   join (select uuid, measure as timestamp";
+  make2Q += "            from latestnondeletedaentvalue";
+  make2Q += "            join attributekey using (attributeid)";
+  make2Q += "          where attributename = 'Nest Measurement timestamp') USING (uuid)";
+  make2Q += "   join (select uuid, measure as EggCount";
+  make2Q += "            from latestnondeletedaentvalue";
+  make2Q += "            join attributekey using (attributeid)";
+  make2Q += "          where attributename = 'Egg Count') USING (uuid)";
+  make2Q += "   join (select uuid, measure as chickCount";
+  make2Q += "            from latestnondeletedaentvalue";
+  make2Q += "            join attributekey using (attributeid)";
+  make2Q += "          where attributename = 'Hatched Chick Count Live') USING (uuid)";
+
+  FetchCallback cb = new FetchCallback() {
+    onFetch(result) {
+      hideUpdatingVisitListDialog();
+      if (!isNull(callback))
+        execute(callback);
+    }
+  };
+
+  FetchCallback make2 = new FetchCallback() {
+    onFetch(result) {
+      fetchOne(make2Q, cb);
+    }
+  };
+
+  FetchCallback drop2 = new FetchCallback() {
+    onFetch(result) {
+      fetchOne(drop2Q, make2);
+    }
+  };
+
+  FetchCallback make1 = new FetchCallback() {
+    onFetch(result) {
+      fetchOne(make1Q, drop2);
+    }
+  };
+
+  showUpdatingVisitListDialog();
+  fetchOne(drop1Q, make1);
+}
+
+void addVisitListsActionBarItem() {
+  ActionButtonCallback updateVisitList = new ActionButtonCallback() {
+      actionOnLabel() {
+        "Update Visit Lists";
+      }
+      actionOn() {
+        updateNestMeasurementQuery();
+      }
+  };
+  addActionBarItem("update_visit_list", updateVisitList);
+}
+
+void updatingResults(String ref) {
+  List l = new ArrayList();
+  l.add(new NameValuePair("Updating results...", ""));
+  populateMenu(ref, l);
+}
+
+void showUpdatingVisitListDialog() {
+  String head = "Updating Visit Lists...";
+  String body = "This pop-up will disappear when complete. Please wait.";
+
+  dialog = showBusy(head, body);
+}
+
+void hideUpdatingVisitListDialog() {
+  if (dialog != null)
+    dialog.dismiss();
 }
