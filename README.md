@@ -9,10 +9,10 @@ Development of this module was funded by MQ Strategic Infrastructure Scheme 2011
 
 
 ## Date of release:
-July 2016
+July 2016, simplified version released in August 2017
 
 ## FAIMS Mobile version
-FAIMS **v2.2** (Android 5+)
+FAIMS **v2.5** (Android 6+)
 
 ## Licence
 This module is licensed under an international Creative Commons Attribution 4.0 Licence (**CC BY 4.0**).
